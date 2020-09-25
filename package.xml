@@ -7,7 +7,7 @@
   </description>
   <license>Apache 2.0</license>
   <author>ikebe</author>
-  <maintainer email="ikebe">ikebe</maintainer>
+  <maintainer email="ikebe@gmail.com">ikebe</maintainer>
   <buildtool_depend>catkin</buildtool_depend>
   <exec_depend>amcl</exec_depend>
   <exec_depend>map_server</exec_depend>
