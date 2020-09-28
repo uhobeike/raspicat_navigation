@@ -1,0 +1,13 @@
+digraph G {
+"odom" -> "base_link"[label="Broadcaster: /motors\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1601028685.647 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "imu_link"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1601028685.647 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "urg_lrf_link"[label="Broadcaster: /raspicat_lrf_tf_broadcaster\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1601028685.647 sec old)\nBuffer length: 0.000 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1601028685.647"[ shape=plaintext ] ;
+ }->"base_footprint";
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1601028685.647"[ shape=plaintext ] ;
+ }->"odom";
+}
