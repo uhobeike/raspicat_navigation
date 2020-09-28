@@ -21,7 +21,6 @@
 
   <!-- move_base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
-    <param name="base_footprint_frame" value="base_link"/>
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
   </include>
 
