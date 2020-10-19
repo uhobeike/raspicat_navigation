@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="raspicat_navigation" name="motor_start"
+    type="start.py" required="true" output="screen">
+  </node>
+
+</launch>

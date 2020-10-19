@@ -349,7 +349,7 @@ Visualization Manager:
   Views:
     Current:
       Angle: -1.57079637
-      Class: rviz/TopDownOrtho
+      Class: rviz/XYOrbit
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
