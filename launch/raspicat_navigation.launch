@@ -23,7 +23,10 @@
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
   </include>
-
+  <!--motor ON-->
+  <include file="$(find raspicat_gamepad_controller)/launch/start_motors.launch">
+  </include>
+  
   <!-- rviz -->
   <group if="$(arg open_rviz)"> 
     <node pkg="rviz" type="rviz" name="rviz" required="true"
