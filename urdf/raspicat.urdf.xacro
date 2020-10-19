@@ -1,10 +1,7 @@
 <?xml version="1.0" ?>
 <robot name="turtlebot3_burger" xmlns:xacro="http://ros.org/wiki/xacro">
  
-
-
   <link name="base_link">
-
 
     <collision>
       <origin xyz="-0.032 0 0.070" rpy="0 0 0"/>
@@ -22,20 +19,7 @@
     </inertial>
   </link>
 
-  <link name="imu_link">
-    <visual>
-      <origin xyz="0 0 0" />
-      <geometry>
-        <box size="0.06 0.04 0.02" />
-      </geometry>
-    </visual>
-  </link>
 
-  <joint name="imu_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="imu_link"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-  </joint>
 
 
   <joint name="scan_joint" type="fixed">
@@ -45,7 +29,6 @@
   </joint>
 
   <link name="urg_lrf_link">
-
 
     <collision>
       <origin xyz="0.015 0 -0.0065" rpy="0 0 0"/>
