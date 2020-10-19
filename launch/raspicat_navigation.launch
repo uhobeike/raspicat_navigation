@@ -24,7 +24,7 @@
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
   </include>
   <!--motor ON-->
-  <include file="$(find raspicat_gamepad_controller)/launch/start_motors.launch">
+  <include file="$(find raspicat_navigation)/launch/start_motors.launch">
   </include>
   
   <!-- rviz -->
