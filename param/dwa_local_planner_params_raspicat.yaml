@@ -1,22 +1,22 @@
 DWAPlannerROS:
 
 # Robot Configuration Parameters
-  max_vel_x: 0.22
+  max_vel_x: 0.16
   min_vel_x: -0.10
 
   max_vel_y: 0.0
   min_vel_y: 0.0
 
 # The velocity when robot is moving in a straight line
-  max_trans_vel:  0.22
+  max_trans_vel:  0.16
   min_trans_vel:  -0.10
 
-  max_rot_vel: 2.84
-  min_rot_vel: 0.0
+  max_rot_vel: 1
+  min_rot_vel: 0.05
 
-  acc_lim_x: 20
+  acc_lim_x: 2
   acc_lim_y: 0.0
-  acc_lim_theta: 10
+  acc_lim_theta: 2
 
 # Goal Tolerance Parametes
   xy_goal_tolerance: 0.05
@@ -33,8 +33,8 @@ DWAPlannerROS:
 # Trajectory Scoring Parameters
   path_distance_bias: 32
   goal_distance_bias: 24.0
-  occdist_scale: 0.03
-  forward_point_distance: 0.25
+  occdist_scale: 0.04
+  forward_point_distance: 0.3
   stop_time_buffer: 0.2
   scaling_speed: 0.25
   max_scaling_factor: 0.2

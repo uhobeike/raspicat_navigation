@@ -6,6 +6,17 @@
 
   <!-- Map server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+  
+  <!-- Robot_model import -->
+  <arg name="multi_robot_name" default=""/>
+
+  <include file="$(find raspicat_navigation)/launch/include/description.launch.xml">
+  </include>
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0" />
+    <param name="tf_prefix" value="$(arg multi_robot_name)"/>
+  </node>
 
   <!-- AMCL -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch"/>
@@ -15,6 +26,10 @@
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
   </include>
 
+  <!--motor ON-->
+  <include file="$(find raspicat_navigation)/launch/start_motors.launch">
+  </include>
+  
   <!-- rviz -->
   <group if="$(arg open_rviz)"> 
     <node pkg="rviz" type="rviz" name="rviz" required="true"
