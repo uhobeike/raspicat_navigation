@@ -22,8 +22,8 @@
     <param name="min_particles"             value="500"/>
     <param name="max_particles"             value="5000"/>
     <param name="kld_err"                   value="0.05"/>
-    <param name="update_min_d"              value="0.20"/>
-    <param name="update_min_a"              value="0.20"/>
+    <param name="update_min_d"              value="0.10"/>
+    <param name="update_min_a"              value="0.10"/>
     <param name="resample_interval"         value="1"/>
     <param name="transform_tolerance"       value="0.5"/>
     <param name="recovery_alpha_slow"       value="0.00"/>
@@ -34,25 +34,25 @@
     <param name="initial_cov_xx"            value="$(arg initial_cov_xx)"/>
     <param name="initial_cov_yy"            value="$(arg initial_cov_yy)"/>
     <param name="initial_cov_aa"            value="$(arg initial_cov_aa)"/>
-    <param name="gui_publish_rate"          value="50.0"/>
+    <param name="gui_publish_rate"          value="10.0"/>
 
     <remap from="scan"                      to="$(arg scan_topic)"/>
-    <param name="laser_max_range"           value="10"/>
-    <param name="laser_max_beams"           value="180"/>
+    
+    <param name="laser_max_beams"           value="30"/>
     <param name="laser_z_hit"               value="0.5"/>
     <param name="laser_z_short"             value="0.05"/>
     <param name="laser_z_max"               value="0.05"/>
     <param name="laser_z_rand"              value="0.5"/>
     <param name="laser_sigma_hit"           value="0.2"/>
     <param name="laser_lambda_short"        value="0.1"/>
-    <param name="laser_likelihood_max_dist" value="10.0"/>
+    <param name="laser_likelihood_max_dist" value="2"/>
     <param name="laser_model_type"          value="likelihood_field"/>
 
     <param name="odom_model_type"           value="diff"/>
-    <param name="odom_alpha1"               value="0.5"/>
-    <param name="odom_alpha2"               value="0.5"/>
-    <param name="odom_alpha3"               value="0.2"/>
-    <param name="odom_alpha4"               value="0.5"/>
+    <param name="odom_alpha1"               value="0.01"/>
+    <param name="odom_alpha2"               value="0.01"/>
+    <param name="odom_alpha3"               value="0.01"/>
+    <param name="odom_alpha4"               value="0.01"/>
     <param name="odom_frame_id"             value="odom"/>
     <param name="base_frame_id"             value="base_footprint"/>
 
