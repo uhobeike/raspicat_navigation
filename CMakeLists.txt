@@ -7,7 +7,27 @@ project(raspicat_navigation)
 ################################################################################
 # Find catkin packages and libraries for catkin and system dependencies
 ################################################################################
-find_package(catkin REQUIRED)
+## Compile as C++11, supported in ROS Kinetic and newer
+add_compile_options(-std=c++11)
+
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  std_msgs
+  move_base_msgs
+  tf
+)
+
+catkin_package(
+#  INCLUDE_DIRS include
+#  LIBRARIES goal_send
+   CATKIN_DEPENDS roscpp std_msgs
+#  DEPENDS system_lib
+#  CATKIN_DEPENDS roscpp std_msgs message_runtime
+)
+
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
 
 ################################################################################
 # Setup for python modules and scripts
@@ -24,12 +44,18 @@ find_package(catkin REQUIRED)
 ################################################################################
 # Declare catkin specific configuration to be passed to dependent projects
 ################################################################################
-catkin_package()
 
 ################################################################################
 # Build
 ################################################################################
+add_executable(4goal_waypoint_send_3 src/4goal_waypoint_send_3.cpp)
+target_link_libraries(4goal_waypoint_send_3 ${catkin_LIBRARIES})
 
+add_executable(waypoint_rviz src/waypoint_rviz_set.cpp)
+target_link_libraries(waypoint_rviz ${catkin_LIBRARIES})
+
+add_executable(goal_waypoint_control_key src/goal_waypoint_control_key.cpp)
+target_link_libraries(goal_waypoint_control_key ${catkin_LIBRARIES})
 ################################################################################
 # Install
 ################################################################################
