@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+<include file="$(find raspicat)/launch/raspicat.launch"/>
+
+  <node pkg="urg_node" name="urg_node" type="urg_node" required="true">
+    <param name="frame_id" value="urg_lrf_link" />
+    <param name="serial_port" value="/dev/ttyACM0" />
+  </node>
+</launch>
