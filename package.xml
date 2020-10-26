@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>raspicat_navigation</name>
-  <version>1.2.3</version>
+  <version>1</version>
   <description>
-    The turtlebot3_navigation provides roslaunch scripts for starting the navigation.
+    This is a navigation system developed for Raspberry Pi Cat. 
   </description>
   <license>Apache 2.0</license>
   <author>ikebe</author>
-  <maintainer email="ikebe@gmail.com">ikebe</maintainer>
+  <maintainer email="	tatuhirobeike@gmail.com">ikebe</maintainer>
   <buildtool_depend>catkin</buildtool_depend>
   <exec_depend>amcl</exec_depend>
   <exec_depend>map_server</exec_depend>
