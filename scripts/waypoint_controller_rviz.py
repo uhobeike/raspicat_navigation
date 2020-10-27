@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-    
 import rospy
 from std_msgs.msg import String
+from subprocess import * 
 import sys, select, os
 if os.name == 'nt':
   import msvcrt
@@ -13,84 +13,105 @@ msg = """
 How to
 ---------------------------
 Moving around:
-        
-        s         f  g  j  k 
-        
-
-j/k : waypoint add/waypoint add remove
+      
+    s  f  g  j  
+      c
+s   : waypoint_rviz node RUN
+j   : waypoint add remove
 g   : goal set
-f   : finish and file write waypoint
-space key, s : force stop
-
-CTRL-C to quit
-"""
-
-e = """
-Communications Failed
+c   : corner set
+f   : finish and file write waypoint and kill_node
 """
 
 def getKey():
-    if os.name == 'nt':
-      return msvcrt.getch()
+  if os.name == 'nt':
+    return msvcrt.getch()
 
-    tty.setraw(sys.stdin.fileno())
-    rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
-    if rlist:
-        key = sys.stdin.read(1)
-    else:
-        key = ''
+  tty.setraw(sys.stdin.fileno())
+  rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
+  if rlist:
+      key = sys.stdin.read(1)
+  else:
+      key = ''
 
-    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
-    return key
+  termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+  return key
+
+def kill_node(nodename): 
+  p=Popen(['rosnode','list'],stdout=PIPE) 
+  p.wait() 
+  nodelist=p.communicate() 
+  nd=nodelist[0] 
+  nd=nd.split("\n") 
+  for i in range(len(nd)): 
+    tmp=nd[i] 
+    ind=tmp.find(nodename) 
+    if ind == 1: 
+      call(['rosnode','kill',nd[i]]) 
+      break 
+
+def find_node(nodename): 
+  global flag
+  flag = 0
+  p=Popen(['rosnode','list'],stdout=PIPE) 
+  p.wait() 
+  nodelist=p.communicate() 
+  nd=nodelist[0] 
+  nd=nd.split("\n") 
+  for i in range(len(nd)): 
+    tmp=nd[i] 
+    ind=tmp.find(nodename) 
+    if ind == 1: 
+      flag = 1
+      break 
 
 if __name__=="__main__":
     if os.name != 'nt':
         settings = termios.tcgetattr(sys.stdin)
 
-    rospy.init_node('waypoint_set_controller_for_rviz')
-    pub_way = rospy.Publisher('waypoint_set_flag', String, queue_size=10)
+    rospy.init_node('waypoint_command_send_node')
+    pub_way = rospy.Publisher('waypoint_control', String, queue_size=1)
 
-    turtlebot3_model = rospy.get_param("model", "burger")
+    print(msg)
+    while(1):
+        key = getKey()
 
-    status = 0
-    pub_flag = 1
-    try:
-        print(msg)
-        while(1):
-            key = getKey()
-            if key == 'f' :
-                 str = "finish and file_write_waypoint"
-                 pub_way.publish(str)
-                 rospy.loginfo("finish and file write waypoint \(^_^)/")
-            elif key == 'g' :
-                 str = "goal_set"
-                 pub_way.publish(str)
-                 rospy.loginfo("goal_set..............")
-            elif key == 'j' :
-                 str = "way_point_add"
-                 pub_way.publish(str)
-                 rospy.loginfo("way_point_add.........")
-            elif key == 'k' :
-                 str = "way_point_remove"
-                 pub_way.publish(str)
-                 rospy.loginfo("way_point_remove.........")
-            elif key == 'q' :
-                 pub_flag = 0
-            elif key == ' ' or key == 's' :
-                
-            else:
-                if (key == '\x03'):
-                    break
+        if key == 's' :
+          global proc
+          find_node('waypoint_rviz')
+          if(flag == 0):
+            proc = Popen(["rosrun", "raspicat_navigation", "waypoint_rviz"])
+            rospy.loginfo("waypoint_rviz_set node RUN")
+          elif(flag == 1):
+            rospy.loginfo("already waypoint_rviz_set node RUN\n")
+            
+        elif key == 'j' :
+          str = "remove"
+          pub_way.publish(str)
+          rospy.loginfo("way_point_remove...")
 
-            if status == 20 :
-                print(msg)
-                status = 0
+        elif key == 'g' :
+          str = "goal"
+          pub_way.publish(str)
+          rospy.loginfo("goal_set......")
 
-    except:
-        print(e)
+        elif key == 'c' :
+          str = "corner"
+          pub_way.publish(str)
+          rospy.loginfo("corner_set...........")
 
-    finally:
-      rospy.loginfo("see you!")
+
+        elif key == 'f' :
+          str = "finish"
+          pub_way.publish(str)
+          #kill_node('waypoint_rviz')
+          rospy.loginfo("kill_node waypoint_rviz")
+          rospy.loginfo("Shutdown now ('o')/ bye bye~~~")
+          sys.exit(0)
+
+        else:
+            if (key == '\x03'):
+                break
 
     if os.name != 'nt':
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
