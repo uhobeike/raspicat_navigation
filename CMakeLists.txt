@@ -48,14 +48,14 @@ include_directories(
 ################################################################################
 # Build
 ################################################################################
-add_executable(4goal_waypoint_send_3 src/4goal_waypoint_send_3.cpp)
-target_link_libraries(4goal_waypoint_send_3 ${catkin_LIBRARIES})
+add_executable(waypoint_navigation src/waypoint_navigation.cpp)
+target_link_libraries(waypoint_navigation ${catkin_LIBRARIES})
 
 add_executable(waypoint_rviz src/waypoint_rviz_set.cpp)
 target_link_libraries(waypoint_rviz ${catkin_LIBRARIES})
 
-add_executable(goal_waypoint_control_key src/goal_waypoint_control_key.cpp)
-target_link_libraries(goal_waypoint_control_key ${catkin_LIBRARIES})
+add_executable(start_order_waypoint_navigation src/start_order_waypoint_navigation.cpp)
+target_link_libraries(start_order_waypoint_navigation ${catkin_LIBRARIES})
 ################################################################################
 # Install
 ################################################################################

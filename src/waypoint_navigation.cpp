@@ -159,15 +159,15 @@ int main(int argc, char** argv)
     ros::NodeHandle nh;
     ros::Publisher pub_pose_ini, pub_pose_way;
     ros::Time tmp_time = ros::Time::now();
-    nh.setParam("waypoint_area_threshold", 0.2);
+    nh.setParam("waypoint_area_threshold", 0.8);
 
     ros::Subscriber sub_key = nh.subscribe("goal_key", 1,  goal_key_Callback);
-    ros::Subscriber sub_pos = nh.subscribe("amcl_pose", 100,  posi_Callback);
-    ros::Subscriber sub_goal = nh.subscribe("move_base/status", 100,  goal_reached_Callback);
+    ros::Subscriber sub_pos = nh.subscribe("amcl_pose", 1,  posi_Callback);
+    ros::Subscriber sub_goal = nh.subscribe("move_base/status", 1,  goal_reached_Callback);
 
-    pub_pose_ini = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 2, true);
-    pub_pose_way = nh.advertise<geometry_msgs::PoseArray>("waypoint", 2, true);
-
+    pub_pose_ini = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1, true);
+    pub_pose_way = nh.advertise<geometry_msgs::PoseArray>("waypoint", 1, true);
+/*
     geometry_msgs::PoseWithCovarianceStamped initPose;
     initPose.header.stamp = tmp_time; 
     initPose.header.frame_id = "map"; 
@@ -175,18 +175,23 @@ int main(int argc, char** argv)
     initPose.pose.pose.position.y = 0;
     initPose.pose.pose.position.z = 0;
     initPose.pose.pose.orientation.w = 1;
-
+*/
     vector<vector<string>> waypoint_read = 
     {
-        {"1.682101","0.298596","0.080469","0.996750"},
-        {"2.293195","0.385175","0.052547","0.998611","goal"},
-        {"4.433884","0.630851","0.322288","0.946634"},
-        {"4.545833","1.225776","0.380812","0.924644"},
-        {"5.062553","1.350851","0.999918","-0.012198","goal"},
-        {"3.380071","1.284730","0.987302","0.158811"},
-        {"3.033352","1.867196","0.950085","0.311968","goal"},
-        {"1.938033","2.178706","0.964381","0.264490"},
-        {"0.879312","2.512087","-0.986923","-0.161146","goal"}
+        {"7.680957","-0.000170","0.002367","0.999997"},
+        {"19.090723","0.414794","0.365262","0.930905"},
+        {"20.049221","2.535768","0.712786","0.701381"},
+        {"20.109728","8.462751","0.860792","0.508957"},
+        {"18.021887","10.236370","-0.999981","0.006091"},
+        {"7.942166","9.938683","-0.999962","0.008733"},
+        {"-6.659242","9.561300","0.999995","0.003110"},
+        {"-13.046364","9.733968","-0.993011","0.118023"},
+        {"-14.348382","8.901632","-0.706335","0.707878"},
+        {"-14.442686","6.326262","-0.687793","0.725907"},
+        {"-14.282948","2.820924","-0.693112","0.720830"},
+        {"-14.296299","0.524044","-0.364502","0.931203"},
+        {"-12.451824","-0.086312","-0.001220","0.999999"},
+        {"-0.320502","0.118533","0.003982","0.999992","goal"}
     };
 
     geometry_msgs::PoseArray pose_array;
@@ -198,7 +203,7 @@ int main(int argc, char** argv)
 
     pub_pose_way.publish(pose_array);
 
-    pub_pose_ini.publish(initPose);
+    //pub_pose_ini.publish(initPose);
 
     MoveBaseClient ac("move_base", true);
 
@@ -213,7 +218,7 @@ int main(int argc, char** argv)
     goal.target_pose.header.frame_id = "map";                                                                     
     goal.target_pose.header.stamp = ros::Time::now();
 
-    ros::Rate loop_rate(10);//10Hz
+    ros::Rate loop_rate(5);//10Hz
 
     int vec_size = waypoint_read.size();
     int point_number=0;

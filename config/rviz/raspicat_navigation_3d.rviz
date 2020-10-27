@@ -314,8 +314,9 @@ Visualization Manager:
       Head Length: 0.300000012
       Head Radius: 0.100000001
       Name: Waypoint_Pose
-      Shaft Length: 0.2
+      Shaft Length: 0.7
       Shape: ARROW
+      Arrow Length: 0.7
       Topic: /waypoint
       Unreliable: false
       Value: true
