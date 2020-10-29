@@ -165,34 +165,28 @@ int main(int argc, char** argv)
     ros::Subscriber sub_pos = nh.subscribe("amcl_pose", 1,  posi_Callback);
     ros::Subscriber sub_goal = nh.subscribe("move_base/status", 1,  goal_reached_Callback);
 
-    pub_pose_ini = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1, true);
     pub_pose_way = nh.advertise<geometry_msgs::PoseArray>("waypoint", 1, true);
-/*
-    geometry_msgs::PoseWithCovarianceStamped initPose;
-    initPose.header.stamp = tmp_time; 
-    initPose.header.frame_id = "map"; 
-    initPose.pose.pose.position.x = 0;
-    initPose.pose.pose.position.y = 0;
-    initPose.pose.pose.position.z = 0;
-    initPose.pose.pose.orientation.w = 1;
-*/
-    vector<vector<string>> waypoint_read = 
+
+    ifstream f_r("home/raspi-cat/waypoint.csv",std::ios::in);
+
+    vector<vector<string>> waypoint_read;
+    string line,field;
+    int vec_num_int = 1;
+
+    waypoint_read.emplace_back();
+
+    while (getline(f_r, line)) 
     {
-        {"7.680957","-0.000170","0.002367","0.999997"},
-        {"19.090723","0.414794","0.365262","0.930905"},
-        {"20.049221","2.535768","0.712786","0.701381"},
-        {"20.109728","8.462751","0.860792","0.508957"},
-        {"18.021887","10.236370","-0.999981","0.006091"},
-        {"7.942166","9.938683","-0.999962","0.008733"},
-        {"-6.659242","9.561300","0.999995","0.003110"},
-        {"-13.046364","9.733968","-0.993011","0.118023"},
-        {"-14.348382","8.901632","-0.706335","0.707878"},
-        {"-14.442686","6.326262","-0.687793","0.725907"},
-        {"-14.282948","2.820924","-0.693112","0.720830"},
-        {"-14.296299","0.524044","-0.364502","0.931203"},
-        {"-12.451824","-0.086312","-0.001220","0.999999"},
-        {"-0.320502","0.118533","0.003982","0.999992","goal"}
-    };
+        istringstream stream(line);
+        while (getline(stream, field, ',') )
+        {
+            waypoint_read[vec_num_int-1].push_back(field);
+        }
+
+        waypoint_read.resize(++vec_num_int);
+    }
+    waypoint_read.resize(--vec_num_int);
+    waypoint_read.resize(--vec_num_int);
 
     geometry_msgs::PoseArray pose_array;
     geometry_msgs::Pose pose;
@@ -202,8 +196,6 @@ int main(int argc, char** argv)
     waypoint_pose_array(waypoint_read, pose_array, pose);
 
     pub_pose_way.publish(pose_array);
-
-    //pub_pose_ini.publish(initPose);
 
     MoveBaseClient ac("move_base", true);
 
@@ -218,13 +210,13 @@ int main(int argc, char** argv)
     goal.target_pose.header.frame_id = "map";                                                                     
     goal.target_pose.header.stamp = ros::Time::now();
 
-    ros::Rate loop_rate(5);//10Hz
+    ros::Rate loop_rate(1);//10Hz
 
     int vec_size = waypoint_read.size();
     int point_number=0;
     int next_point_flag = 0;
     int goal_point_flag = 0;
-    double area_threshold = 0.2;
+    double area_threshold = 1;
     while(ros::ok())
     {  
         nh.getParam("waypoint_area_threshold", area_threshold);
