@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Arguments -->
-  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/map.yaml"/>
+  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/map_tudanuma.yaml"/>
   <arg name="open_rviz" default="true"/>
 
    <!-- Run the map server -->

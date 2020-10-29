@@ -126,7 +126,7 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz/LaserScan
-      Color: 0; 255; 0
+      Color: 164; 0; 0
       Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
@@ -140,7 +140,7 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.0300000012
+      Size (m): 0.2
       Style: Flat Squares
       Topic: /scan
       Unreliable: false
@@ -317,6 +317,7 @@ Visualization Manager:
       Shaft Length: 0.7
       Shape: ARROW
       Arrow Length: 0.7
+      Arrow Length: 2
       Topic: /waypoint
       Unreliable: false
       Value: true

@@ -133,10 +133,11 @@ Visualization Manager:
       Class: rviz/PoseArray
       Color: 44; 37; 243
       Enabled: true
-      Head Length: 0.300000012
+      Head Length: 0.300000002
       Head Radius: 0.100000001
       Name: Waypoint_Pose
       Shaft Length: 0.2
+      Arrow Length: 2
       Shape: ARROW
       Topic: /waypoint
       Unreliable: false
