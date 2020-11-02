@@ -43,7 +43,6 @@
 
   <!--node launch-->     
   <node pkg="raspicat_navigation" name="waypoint_navigation" type="waypoint_navigation" output="screen"/>
-  <node pkg="raspicat_navigation" name="start_order_waypoint_navigation" type="start_order_waypoint_navigation" output="screen"/>
     
   <!-- rviz -->
   <group if="$(arg open_rviz)"> 
