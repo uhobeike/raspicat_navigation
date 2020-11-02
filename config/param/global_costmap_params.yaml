@@ -4,7 +4,7 @@ global_costmap:
 
   update_frequency: 10
   publish_frequency: 10
-  transform_tolerance: 1
+  transform_tolerance: 2
 
   static_map: true
  
