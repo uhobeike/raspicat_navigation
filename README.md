@@ -134,7 +134,7 @@ Raspberry Pi Cat上で次のコマンドでノードを起動します。
 roslaunch raspicat_navigation raspicat_bringup.launch
 ```
 
-###### Remote PC
+##### Remote PC
 
 Remote PC上で次のコマンドでノードを起動します。
 
