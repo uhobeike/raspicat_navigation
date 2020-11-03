@@ -100,7 +100,6 @@ if __name__=="__main__":
           pub_way.publish(str)
           rospy.loginfo("corner_set...........")
 
-
         elif key == 'f' :
           str = "finish"
           pub_way.publish(str)
