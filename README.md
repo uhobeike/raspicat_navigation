@@ -12,7 +12,7 @@ Raspberry Pi CatでROSの[Navigation Stack](https://wiki.ros.org/navigation)を�
 ##### ハードウェア
 
 * [Raspberry Pi Cat](https://rt-net.jp/products/raspberry-pi-cat/)
-  * with Raspberry Pi 3B
+  * with Raspberry Pi 3B, B+
   * with LiDAR
     * USB
       * URG-04LX-UG01
@@ -85,6 +85,8 @@ source devel/setup.bash
 
 ##### Raspberry Pi Cat
 
+Raspberry Pi Cat上で以下のコマンドでノードを起動します。
+
 1枚目の端末でRaspberry Pi Cat操作のための[gamepad_controller](https://gaming.logicool.co.jp/ja-jp/products/gamepads/f710-wireless-gamepad.940-000144.html)用launchを起動します。
 
 ```sh
@@ -107,6 +109,8 @@ roslaunch raspicat_slam slam_remote_robot_ether_urg.launch ip_address:="192.168.
 
 ##### Remote PC
 
+Remote PC上で以下のコマンドでノードを起動します。
+
 1枚目の端末で地図を作成するためのlaunchを起動します。
 
 ```sh
@@ -122,9 +126,9 @@ rosrun map_server map_saver -f mymap
 
 #### Navigation
 
-##### Raspberry Pi Mouse
+##### Raspberry Pi Cat
 
-Raspberry Pi Mouse上で次のコマンドでノードを起動します。
+Raspberry Pi Cat上で次のコマンドでノードを起動します。
 
 ```sh
 roslaunch raspicat_navigation raspicat_bringup.launch
