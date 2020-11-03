@@ -26,7 +26,7 @@ Raspberry Pi CatでROSの[Navigation Stack](https://wiki.ros.org/navigation)を�
 * OS
   * [Ubuntu 'classic' 18.04 LTS](https://wiki.ubuntu.com/ARM/RaspberryPi)
 * Device Driver
-  * [rt-net/RaspberryPiCat](https://github.com/rt-net/raspicat_setup_scripts)
+  * [rt-net/raspicat_setup_scripts](https://github.com/rt-net/raspicat_setup_scripts)
 * ROS
   * [Melodic](https://wiki.ros.org/melodic/Installation/Ubuntu)
 * ROS Packages
