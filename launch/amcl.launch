@@ -2,19 +2,12 @@
   <!-- Arguments -->
   <arg name="scan_topic"     default="scan"/>
   <arg name="initial_pose_x" default="0"/>
-  <arg name="initial_pose_y" default="0.2"/>
-  <arg name="initial_pose_a" default="0.05"/>
+  <arg name="initial_pose_y" default="0"/>
+  <arg name="initial_pose_a" default="0"/>
 
   <arg name="initial_cov_xx" default="0.2"/>
   <arg name="initial_cov_yy" default="0.2"/>
   <arg name="initial_cov_aa" default="0.06"/>
-
-
-<!--
-  <arg name="initial_pose_x" default="0.091920"/>
-  <arg name="initial_pose_y" default="0.164464"/>
-  <arg name="initial_pose_a" default="2.5"/>
--->
 
   <!-- AMCL -->
   <node pkg="amcl" type="amcl" name="amcl">
@@ -49,11 +42,11 @@
     <param name="laser_likelihood_max_dist" value="2"/>
     <param name="laser_model_type"          value="likelihood_field"/>
 
-    <param name="odom_model_type"           value="diff"/>
-    <param name="odom_alpha1"               value="0.2"/><!--aa-->
-    <param name="odom_alpha2"               value="2.0"/><!--la-->
-    <param name="odom_alpha3"               value="1.5"/><!--ll-->
-    <param name="odom_alpha4"               value="0.3"/><!--al-->
+    <param name="odom_model_type"           value="diff"/> <!--r is roll,l is liner-->
+    <param name="odom_alpha1"               value="0.2"/> <!--rr-->
+    <param name="odom_alpha2"               value="2.0"/> <!--lr-->
+    <param name="odom_alpha3"               value="1.5"/> <!--ll-->
+    <param name="odom_alpha4"               value="0.3"/> <!--rl-->
     <param name="odom_frame_id"             value="odom"/>
     <param name="base_frame_id"             value="base_footprint"/>
 

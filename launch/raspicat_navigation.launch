@@ -10,15 +10,15 @@
   <!-- Robot_model import -->
   <arg name="multi_robot_name" default=""/>
 
-  <include file="$(find raspicat_navigation)/launch/include/description.launch.xml">
-  </include>
+  <include file="$(find raspicat_navigation)/launch/include/description.launch.xml"/>
+ 
 
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
     <param name="publish_frequency" type="double" value="50.0" />
     <param name="tf_prefix" value="$(arg multi_robot_name)"/>
   </node>
 
-   <!-- robot localization 
+  <!-- robot localization 
   <include file="$(find robot_localization)/launch/ekf_template.launch"/>
 
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true" output="screen">
@@ -29,21 +29,22 @@
   </node>-->
   
   <!-- AMCL -->
-  <include file="$(find raspicat_navigation)/launch/amcl.launch">
-  </include>
+  <include file="$(find raspicat_navigation)/launch/amcl.launch"/>
 
   <!-- move_base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
   </include>
 
-  <!--motor ON-->
-  <include file="$(find raspicat_navigation)/launch/start_motors.launch">
-  </include>
+  <!-- motor ON -->
+  <node pkg="raspicat_navigation" name="motor_start"
+    type="motor_start.py" required="true" output="screen">
+  </node>
   
   <!-- rviz -->
   <group if="$(arg open_rviz)"> 
     <node pkg="rviz" type="rviz" name="rviz" required="true"
-          args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation_3d.rviz"/>
+      args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation_3d.rviz">
+    </node>      
   </group>
 </launch>

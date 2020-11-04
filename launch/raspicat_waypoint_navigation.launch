@@ -37,16 +37,18 @@
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
   </include>
 
-  <!--motor ON-->
-  <include file="$(find raspicat_navigation)/launch/start_motors.launch">
-  </include>
+  <!-- motor ON -->
+  <node pkg="raspicat_navigation" name="motor_start"
+    type="motor_start.py" required="true" output="screen">
+  </node>
 
-  <!--node launch-->     
+  <!-- node launch -->     
   <node pkg="raspicat_navigation" name="waypoint_navigation" type="waypoint_navigation" output="screen"/>
     
   <!-- rviz -->
   <group if="$(arg open_rviz)"> 
     <node pkg="rviz" type="rviz" name="rviz" required="true"
-          args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation_3d.rviz"/>
+      args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation_3d.rviz">
+    </node>
   </group>
 </launch>
