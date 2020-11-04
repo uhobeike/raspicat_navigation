@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import rospy
-from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger, TriggerResponse
 
 if __name__ == '__main__':
