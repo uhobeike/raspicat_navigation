@@ -87,25 +87,18 @@ source devel/setup.bash
 
 Raspberry Pi Cat上で以下のコマンドでノードを起動します。
 
-1枚目の端末でRaspberry Pi Cat操作のための[gamepad_controller](https://gaming.logicool.co.jp/ja-jp/products/gamepads/f710-wireless-gamepad.940-000144.html)用launchを起動します。
-
-```sh
-roslaunch raspicat_gamepad_controller run_with_base_nodes.launch
-```
-
-2枚目の端末で
+端末でRaspberry Pi Cat を操作する[gamepad_controller](https://gaming.logicool.co.jp/ja-jp/products/gamepads/f710-wireless-gamepad.940-000144.html)及び、測距センサーのLiDARのためのlaunchを起動します。(imuがない場合は`false`、ある場合は`true`を設定します。)
 
 * when USB URG is connected e.g.) [URG-04LX-UG01](https://www.hokuyo-aut.co.jp/search/single.php?serial=17), [UTM-30LX](https://www.hokuyo-aut.co.jp/search/single.php?serial=21)
 ```sh
-roslaunch raspicat_slam slam_remote_robot_usb_urg.launch
+roslaunch raspicat_slam slam_remote_robot_usb_urg.launch imu:=false
 ```
 
 * when Ether URG is connected e.g.) [UST-10LX](https://www.hokuyo-aut.co.jp/search/single.php?serial=16), [UST-20LX](https://www.hokuyo-aut.co.jp/search/single.php?serial=16)
 
 ```sh
-roslaunch raspicat_slam slam_remote_robot_ether_urg.launch ip_address:="192.168.0.10"
+roslaunch raspicat_slam slam_remote_robot_ether_urg.launch ip_address:="192.168.0.10" imu:=false
 ```
-
 
 ##### Remote PC
 
