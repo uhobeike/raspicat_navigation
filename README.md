@@ -87,7 +87,7 @@ source devel/setup.bash
 
 Raspberry Pi Cat上で以下のコマンドでノードを起動します。
 
-端末でRaspberry Pi Cat を操作する[gamepad_controller](https://gaming.logicool.co.jp/ja-jp/products/gamepads/f710-wireless-gamepad.940-000144.html)及び、測距センサーのLiDARのためのlaunchを起動します。(imuがない場合は`false`、ある場合は`true`を設定します。)
+端末でRaspberry Pi Cat を操作する[gamepad_controller](https://gaming.logicool.co.jp/ja-jp/products/gamepads/f710-wireless-gamepad.940-000144.html)及び、LiDARのためのlaunchを起動します。(imuがない場合は`false`、ある場合は`true`を設定します。)
 
 * when USB URG is connected e.g.) [URG-04LX-UG01](https://www.hokuyo-aut.co.jp/search/single.php?serial=17), [UTM-30LX](https://www.hokuyo-aut.co.jp/search/single.php?serial=21)
 ```sh
