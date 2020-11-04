@@ -59,7 +59,7 @@ target_link_libraries(start_order_waypoint_navigation ${catkin_LIBRARIES})
 ################################################################################
 # Install
 ################################################################################
-install(DIRECTORY launch maps param rviz
+install(DIRECTORY launch maps src config scripts
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
