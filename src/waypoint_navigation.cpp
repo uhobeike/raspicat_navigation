@@ -159,7 +159,7 @@ int main(int argc, char** argv)
     ros::NodeHandle nh;
     ros::Publisher pub_pose_ini, pub_pose_way;
     ros::Time tmp_time = ros::Time::now();
-    nh.setParam("waypoint_area_threshold", 0.8);
+    nh.setParam("waypoint_area_threshold", 3.5);
 
     ros::Subscriber sub_key = nh.subscribe("goal_key", 1,  goal_key_Callback);
     ros::Subscriber sub_pos = nh.subscribe("amcl_pose", 1,  posi_Callback);
@@ -167,7 +167,7 @@ int main(int argc, char** argv)
 
     pub_pose_way = nh.advertise<geometry_msgs::PoseArray>("waypoint", 1, true);
 
-    ifstream f_r("home/raspi-cat/waypoint.csv",std::ios::in);
+    ifstream f_r("/home/raspi-cat/waypoint.csv",std::ios::in);
 
     vector<vector<string>> waypoint_read;
     string line,field;
@@ -185,7 +185,6 @@ int main(int argc, char** argv)
 
         waypoint_read.resize(++vec_num_int);
     }
-    waypoint_read.resize(--vec_num_int);
     waypoint_read.resize(--vec_num_int);
 
     geometry_msgs::PoseArray pose_array;
@@ -210,13 +209,13 @@ int main(int argc, char** argv)
     goal.target_pose.header.frame_id = "map";                                                                     
     goal.target_pose.header.stamp = ros::Time::now();
 
-    ros::Rate loop_rate(1);//10Hz
+    ros::Rate loop_rate(5);//10Hz
 
     int vec_size = waypoint_read.size();
     int point_number=0;
     int next_point_flag = 0;
     int goal_point_flag = 0;
-    double area_threshold = 1;
+    double area_threshold;
     while(ros::ok())
     {  
         nh.getParam("waypoint_area_threshold", area_threshold);
