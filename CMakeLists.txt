@@ -56,6 +56,9 @@ target_link_libraries(waypoint_rviz ${catkin_LIBRARIES})
 
 add_executable(start_order_waypoint_navigation src/start_order_waypoint_navigation.cpp)
 target_link_libraries(start_order_waypoint_navigation ${catkin_LIBRARIES})
+
+add_executable(waypoint_view src/waypoint_view.cpp)
+target_link_libraries(waypoint_view ${catkin_LIBRARIES})
 ################################################################################
 # Install
 ################################################################################
