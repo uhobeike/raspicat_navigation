@@ -48,7 +48,7 @@
     <param name="odom_alpha3"               value="1.5"/> <!--ll-->
     <param name="odom_alpha4"               value="0.3"/> <!--rl-->
     <param name="odom_frame_id"             value="odom"/>
-    <param name="base_frame_id"             value="base_footprint"/>
+    <param name="base_frame_id"             value="base_link"/>
 
   </node>
 </launch>

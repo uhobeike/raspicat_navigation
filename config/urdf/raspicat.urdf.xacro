@@ -1,26 +1,26 @@
 <?xml version="1.0" ?>
 <robot name="raspicat" xmlns:xacro="http://ros.org/wiki/xacro">
-  <link name="base_footprint"/>
+  <link name="base_link"/>
  
   <joint name="base_joint" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
+    <parent link="base_link"/>
+    <child link="base_link_2"/>
     <origin xyz="0.0 0.0 0.0762" rpy="0 0 0"/>
   </joint> 
  
-  <link name="base_link"/>
+  <link name="base_link_2"/>
 
   <link name="imu_link"/>
 
   <joint name="imu_joint" type="fixed">
-    <parent link="base_link"/>
+    <parent link="base_link_2"/>
     <child link="imu_link"/>
     <origin xyz="0 0 0.16" rpy="0 0 0"/>
   </joint>
 
 
   <joint name="urg_joint" type="fixed">
-    <parent link="base_link"/>
+    <parent link="base_link_2"/>
     <child link="urg_lrf_link"/>
     <origin xyz="0.144 0.0 0.04" rpy="0 0 0"/>
   </joint>
