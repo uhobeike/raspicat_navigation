@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>raspicat_navigation</name>
+  <version>1.2.3</version>
+  <description>
+    This is a navigation system developed for Raspberry Pi Cat. 
+  </description>
+  <license>Apache 2.0</license>
+  <author>ikebe</author>
+  <maintainer email="tatuhirobeike@gmail.com">ikebe</maintainer>
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>amcl</exec_depend>
+  <exec_depend>map_server</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <build_depend>goal_send_msgs</build_depend>
+</package>
