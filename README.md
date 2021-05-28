@@ -37,6 +37,7 @@ Raspberry Pi CatでROSの[Navigation Stack](https://wiki.ros.org/navigation)を�
 
 #### Remote PC
 
+##### ソフトウェア
 * OS
   * [Ubuntu 18.04 LTS](https://www.ubuntulinux.jp/News/ubuntu1804-ja-remix)
 * ROS
