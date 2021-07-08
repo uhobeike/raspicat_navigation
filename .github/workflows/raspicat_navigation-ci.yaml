@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: BUILD
         run: |
-          ./.github/run_ci.sh
+          ./.github/environment_ci.sh
       - name: TEST
         run: |
           ./test/ci_test.sh
