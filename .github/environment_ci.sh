@@ -9,7 +9,7 @@ docker run \
     -e LIBGL_ALWAYS_INDIRECT=1 \
     --privileged \
     --net=host \
-ubeike/ros-ci_vi_grid_map /bin/bash -c \
+ubeike/ros-ci_vi_grid_map:latest /bin/bash -c \
     "git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git;
     git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git;
     git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git;

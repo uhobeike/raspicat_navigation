@@ -1,7 +1,7 @@
 FROM osrf/ros:melodic-desktop-full
 
-RUN apt-get update && apt-get upgrade -y && \ 
-    apt-get install -y \
+RUN apt update && apt upgrade -y && \ 
+    apt install -y \
     xvfb \
     #ROS
     python-catkin-tools \
