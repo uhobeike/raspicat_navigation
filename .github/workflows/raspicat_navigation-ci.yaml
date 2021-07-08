@@ -1,0 +1,19 @@
+name: ros1-melodic-ci
+
+on:
+  push:
+    paths-ignore:
+    - '**.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: BUILD
+        run: |
+          ./.github/run_ci.sh
+      - name: TEST
+        run: |
+          ./test/ci_test.sh
