@@ -14,8 +14,6 @@ jobs:
       - name: BUILD
         run: |
           ./.github/environment_ci.sh
-          docker ps -a
       - name: TEST
         run: |
-          docker ps -a
           ./test/ci_test.sh
