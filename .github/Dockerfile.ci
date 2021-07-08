@@ -15,4 +15,4 @@ RUN mkdir -p /home/catkin_ws/src \
 WORKDIR /home/catkin_ws/src
 
 # How to build
-# docker build -t ubeike/raspicat-ros1-navigation -f Dockerfile.ci .
+# docker build --no-cache -t ubeike/raspicat-ros1-navigation -f Dockerfile.ci .
