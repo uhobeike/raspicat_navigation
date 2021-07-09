@@ -4,10 +4,10 @@ RUN apt update && apt upgrade -y && \
     apt install -y \
     xvfb \
     psmisc \
+    python3-pip \
     #ROS
-    python-catkin-tools \
-    python3-pip
-RUN pip3 install rospkg catkin_pkg
+    python-catkin-tools && \
+    pip3 install rospkg catkin_pkg
     
 RUN mkdir -p /home/catkin_ws/src \
     && echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc \
