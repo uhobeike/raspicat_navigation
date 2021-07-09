@@ -5,4 +5,5 @@ docker exec $DOCKER_CONTAINER_ID /bin/bash -c \
     "source /opt/ros/melodic/setup.bash;
     (xvfb-run --auto-servernum  -s '-screen 0 1400x900x24' roscore&); 
     sleep 5;
-    rostopic list"
+    rostopic list;
+    killall rosmaster"
