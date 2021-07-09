@@ -12,8 +12,8 @@ RUN mkdir -p /home/catkin_ws/src \
     && echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc \
     && echo "source /home/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
-ENV ROS_MASTER_URI=http://master:11311 \
-    ROS_HOSTNAME=master
+ENV ROS_MASTER_URI=http://localhost:11311 \
+    ROS_HOSTNAME=localhost
 
 WORKDIR /home/catkin_ws/src
 
