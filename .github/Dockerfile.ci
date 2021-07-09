@@ -12,7 +12,10 @@ RUN mkdir -p /home/catkin_ws/src \
     && echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc \
     && echo "source /home/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
+ENV ROS_MASTER_URI=http://master:11311 \
+    ROS_HOSTNAME=master
+
 WORKDIR /home/catkin_ws/src
 
 # How to build
-# docker build --no-cache -t ubeike/raspicat-ros1-navigation -f Dockerfile.ci .
+# docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f Dockerfile.ci .
