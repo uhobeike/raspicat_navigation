@@ -5,9 +5,9 @@ docker exec $DOCKER_CONTAINER_ID /bin/bash -c \
     "source /ros_entrypoint.sh;
     source /home/catkin_ws/devel/setup.bash;
     export TURTLEBOT3_MODEL=burger;
-    (xvfb-run --auto-servernum  -s '-screen 0 1400x900x24' roslaunch turtlebot3_gazebo turtlebot3_world.launch &); 
+    (xvfb-run --auto-servernum  -n 1 -s '-screen 0 1400x900x24' roslaunch turtlebot3_gazebo turtlebot3_world.launch &); 
     sleep 10;
-    (xvfb-run --auto-servernum  -s '-screen 0 1400x900x24' roslaunch raspicat_navigation ci_test.launch &);
+    (xvfb-run --auto-servernum  -n 2 -s '-screen 0 1400x900x24' roslaunch raspicat_navigation ci_test.launch &);
     sleep 10;
     rostopic list"
 # (rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header: \
