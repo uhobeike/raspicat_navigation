@@ -39,7 +39,7 @@ goal:
         y: 0.0
         z: 0.5
         w: 1.0";
-        killall rosmaster"
+        killall rosmaster &"
     # while true; do sleep 1 | rostopic echo -n 1 /move_base/feedback | grep -A 10 pose; done &;
     
     # bash -c "timeout 40 echo $(rostopic echo -n 1 /move_base/result | grep "Goal reached")| sed 's/^.*"\(.*\)".*$/\1/';
