@@ -10,7 +10,7 @@ docker exec $DOCKER_CONTAINER_ID /bin/bash -c \
     (xvfb-run --auto-servernum  -s '-screen 0 1400x900x24' roslaunch raspicat_navigation ci_test.launch &);
     sleep 10;
     rostopic list;
-rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header:
+(rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header:
   seq: 0
   stamp:
     secs: 0
@@ -38,9 +38,8 @@ goal:
         x: 0.0
         y: 0.0
         z: 0.5
-        w: 1.0";
-        killall rosmaster &;
-        exit 0"
+        w: 1.0");
+        killall rosmaster &;"
     # while true; do sleep 1 | rostopic echo -n 1 /move_base/feedback | grep -A 10 pose; done &;
     
     # bash -c "timeout 40 echo $(rostopic echo -n 1 /move_base/result | grep "Goal reached")| sed 's/^.*"\(.*\)".*$/\1/';
