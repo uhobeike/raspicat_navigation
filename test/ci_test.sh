@@ -10,34 +10,34 @@ docker exec $DOCKER_CONTAINER_ID /bin/bash -c \
     (xvfb-run --auto-servernum  -s '-screen 0 1400x900x24' roslaunch raspicat_navigation ci_test.launch &);
     sleep 10;
     rostopic list;
-(rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header:
-  seq: 0
-  stamp:
-    secs: 0
-    nsecs: 0
-  frame_id: ''
-goal_id:
-  stamp:
-    secs: 0
-    nsecs: 0
-  id: ''
-goal:
-  target_pose:
-    header:
-      seq: 0
-      stamp:
-        secs: 0
-        nsecs: 0
-      frame_id: 'map'
-    pose:
-      position:
-        x: 1.0
-        y: 0.0
-        z: 0.0
-      orientation:
-        x: 0.0
-        y: 0.0
-        z: 0.5
+(rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header: \
+  seq: 0 \
+  stamp: \
+    secs: 0 \
+    nsecs: 0 \
+  frame_id: '' \
+goal_id: \
+  stamp: \
+    secs: 0 \
+    nsecs: 0 \
+  id: '' \
+goal: \
+  target_pose: \
+    header: \
+      seq: 0 \
+      stamp: \
+        secs: 0 \
+        nsecs: 0 \
+      frame_id: 'map' \
+    pose: \
+      position: \
+        x: 1.0 \
+        y: 0.0 \
+        z: 0.0 \
+      orientation: \
+        x: 0.0 \
+        y: 0.0 \
+        z: 0.5 \
         w: 1.0");
         killall rosmaster &;"
     # while true; do sleep 1 | rostopic echo -n 1 /move_base/feedback | grep -A 10 pose; done &;
