@@ -1,6 +1,6 @@
 #!/bin/bash -xve
 github_actions_usr="runner"
-if [ $whoami -eq $github_actions_usr ]; then
+if [ $(whoami) -eq $github_actions_usr ]; then
     DOCKER_CONTAINER_ID=$(docker ps -a | grep "ros_entrypoint.sh" | awk '{print $1}')
     docker start $DOCKER_CONTAINER_ID
 
@@ -13,6 +13,7 @@ if [ $whoami -eq $github_actions_usr ]; then
         killall rosmaster &;
         exit 0"
 else 
+    whoami
     whoami
 fi
 # (rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header: \
