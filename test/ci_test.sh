@@ -1,6 +1,6 @@
 #!/bin/bash -xve
 github_actions_usr="runner"
-if [ $(whoami) -eq $github_actions_usr ]; then
+if [ $(whoami) = "runner" ]; then
     DOCKER_CONTAINER_ID=$(docker ps -a | grep "ros_entrypoint.sh" | awk '{print $1}')
     docker start $DOCKER_CONTAINER_ID
 
