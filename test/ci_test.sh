@@ -1,5 +1,6 @@
 #!/bin/bash -xve
-if [ $whoami -eq "runner" ]; then
+github_actions_usr="runner"
+if [ $whoami -eq $github_actions_usr ]; then
     DOCKER_CONTAINER_ID=$(docker ps -a | grep "ros_entrypoint.sh" | awk '{print $1}')
     docker start $DOCKER_CONTAINER_ID
 
@@ -8,9 +9,8 @@ if [ $whoami -eq "runner" ]; then
         source /home/catkin_ws/devel/setup.bash;
         export TURTLEBOT3_MODEL=burger;
         (xvfb-run --auto-servernum -s '-screen 0 1400x900x24' roslaunch turtlebot3_gazebo turtlebot3_world.launch &); 
-        (sleep 15 &);
-        echo "Kill all ros nodes!"
-        ps aux | grep ros | grep -v grep | awk '{ print "kill -9", $2 }' | sh
+        sleep 15;
+        killall rosmaster &;
         exit 0"
 else 
     whoami
