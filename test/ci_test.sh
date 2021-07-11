@@ -1,19 +1,19 @@
 #!/bin/bash -xve
-if [ $whoami -eq "runner" ] then
-DOCKER_CONTAINER_ID=$(docker ps -a | grep "ros_entrypoint.sh" | awk '{print $1}')
-docker start $DOCKER_CONTAINER_ID
+if [ $whoami -eq "runner" ]; then
+    DOCKER_CONTAINER_ID=$(docker ps -a | grep "ros_entrypoint.sh" | awk '{print $1}')
+    docker start $DOCKER_CONTAINER_ID
 
-docker exec $DOCKER_CONTAINER_ID /bin/bash -c \
-    "source /ros_entrypoint.sh;
-    source /home/catkin_ws/devel/setup.bash;
-    export TURTLEBOT3_MODEL=burger;
-    (xvfb-run --auto-servernum -s '-screen 0 1400x900x24' roslaunch turtlebot3_gazebo turtlebot3_world.launch &); 
-    (sleep 15 &);
-    echo "Kill all ros nodes!"
-    ps aux | grep ros | grep -v grep | awk '{ print "kill -9", $2 }' | sh
-    exit 0"
+    docker exec $DOCKER_CONTAINER_ID /bin/bash -c \
+        "source /ros_entrypoint.sh;
+        source /home/catkin_ws/devel/setup.bash;
+        export TURTLEBOT3_MODEL=burger;
+        (xvfb-run --auto-servernum -s '-screen 0 1400x900x24' roslaunch turtlebot3_gazebo turtlebot3_world.launch &); 
+        (sleep 15 &);
+        echo "Kill all ros nodes!"
+        ps aux | grep ros | grep -v grep | awk '{ print "kill -9", $2 }' | sh
+        exit 0"
 else 
-whoami
+    whoami
 fi
 # (rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header: \
 #   seq: 0 \
