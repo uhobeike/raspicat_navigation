@@ -22,8 +22,7 @@ docker exec $DOCKER_CONTAINER_ID /bin/bash -c \
     rostopic list;
     rostopic list;
     rostopic list;
-    rostopic list;
-    ls"
+    rostopic list"
 # (rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header: \
 #   seq: 0 \
 #   stamp: \
