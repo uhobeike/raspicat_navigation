@@ -1,5 +1,4 @@
 #!/bin/bash -xve
-github_actions_usr="runner"
 if [ $(whoami) = "runner" ]; then
     DOCKER_CONTAINER_ID=$(docker ps -a | grep "ros_entrypoint.sh" | awk '{print $1}')
     docker start $DOCKER_CONTAINER_ID
@@ -8,8 +7,12 @@ if [ $(whoami) = "runner" ]; then
         "source ~/.bashrc && \
         ./raspicat_navigation/test/ci_test.sh"
 else 
-    whoami
-    whoami
+    source ~/.bashrc
+    export TURTLEBOT3_MODEL=burger
+    (xvfb-run --auto-servernum -s '-screen 0 1400x900x24' roslaunch turtlebot3_gazebo turtlebot3_world.launch &)
+    sleep 15
+    killall rosmaster &
+    exit 0
 fi
 # source /home/catkin_ws/devel/setup.bash;
 # export TURTLEBOT3_MODEL=burger;
