@@ -6,7 +6,7 @@ docker exec $DOCKER_CONTAINER_ID /bin/bash -c \
     source /home/catkin_ws/devel/setup.bash;
     export TURTLEBOT3_MODEL=burger;
     (xvfb-run --auto-servernum -s '-screen 0 1400x900x24' roslaunch turtlebot3_gazebo turtlebot3_world.launch &); 
-    sleep 15;
+    (sleep 15 &);
     killall rosmaster"
 # (rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header: \
 #   seq: 0 \
