@@ -6,9 +6,10 @@ if [ $(whoami) = "runner" ]; then
     docker start $DOCKER_CONTAINER_ID
 
     docker exec $DOCKER_CONTAINER_ID /bin/bash -c \
-        "source ~/.bashrc && \
-        ./raspicat_navigation/test/ci_test.sh"
-else 
+        "./raspicat_navigation/test/ci_test.sh"
+else
+    source /opt/ros/melodic/setup.bash
+    source /home/catkin_ws/devel/setup.bash
     export TURTLEBOT3_MODEL=burger
     xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch turtlebot3_gazebo turtlebot3_world.launch &
     watch -n 0.1 free -g
