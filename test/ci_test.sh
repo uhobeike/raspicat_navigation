@@ -11,6 +11,7 @@ if [ $(whoami) = "runner" ]; then
 else 
     export TURTLEBOT3_MODEL=burger
     xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch turtlebot3_gazebo turtlebot3_world.launch &
+    watch -n 0.1 free -g
     sleep 15
     killall rosmaster &
 fi
