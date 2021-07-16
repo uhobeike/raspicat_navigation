@@ -13,7 +13,7 @@ else
     export TURTLEBOT3_MODEL=burger
     xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch turtlebot3_gazebo turtlebot3_world.launch &
     # while true; do sleep 0.1 && free -g; done
-    # sleep 15
+    sleep 15
     # killall rosmaster &
 fi
 # source /home/catkin_ws/devel/setup.bash;
