@@ -13,11 +13,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: BUILD
         run: |
-          ls
-          docker build \
-            --no-cache \
-            -t ubeike/raspicat-ros1-melodic-navigation \ 
-            -f ./.github/Dockerfile.ci ./.github
+          ls -a
+          docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
       - name: TEST
         run: |
           docker run \
