@@ -1,5 +1,7 @@
 FROM osrf/ros:melodic-desktop-full
 
+SHELL ["/bin/bash", "-c"]
+
 RUN apt update && apt upgrade -y && \ 
     apt install -y \
     xvfb \
@@ -13,10 +15,21 @@ RUN mkdir -p /home/catkin_ws/src \
     && echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc \
     && echo "source /home/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
-ENV ROS_MASTER_URI=http://localhost:11311 \
-    ROS_HOSTNAME=localhost
+RUN cd /home/catkin_ws/src && \
+    git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git && \
+    git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git && \
+    git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git && \
+    git clone https://github.com/uhobeike/raspicat_navigation.git
 
-WORKDIR /home/catkin_ws/src
+ENV ROS_MASTER_URI=http://localhost:11311 \
+    ROS_HOSTNAME=localhost \
+    TURTLEBOT3_MODEL=burger
+
+RUN source /opt/ros/melodic/setup.bash && \
+    cd /home/catkin_ws && rosdep install -r -y --from-paths --ignore-src . && \
+    catkin init && catkin build
+
+WORKDIR /home/catkin_ws/src/raspicat_navigation
 
 # How to build
 # docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f Dockerfile.ci .
