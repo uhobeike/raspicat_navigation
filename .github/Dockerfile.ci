@@ -23,7 +23,7 @@ RUN cd /home/catkin_ws/src && \
     git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git && \
     git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git && \
     git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git && \
-    git clone https://github.com/uhobeike/raspicat_navigation.git
+    git clone -b "${GITHUB_REF#refs/heads/}" https://github.com/uhobeike/raspicat_navigation.git
 
 RUN source /opt/ros/melodic/setup.bash && \
     cd /home/catkin_ws && rosdep install -r -y --from-paths --ignore-src . && \
