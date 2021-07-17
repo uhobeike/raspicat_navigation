@@ -16,4 +16,4 @@ jobs:
           docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
       - name: TEST
         run: |
-          docker run --init ubeike/raspicat-ros1-melodic-navigation ./test/ci_test.sh
+          docker run --init ubeike/raspicat-ros1-melodic-navigation /bin/bash -c "source /home/.bashrc && ./test/ci_test.sh"

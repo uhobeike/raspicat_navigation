@@ -12,8 +12,8 @@ RUN apt update && apt upgrade -y && \
     pip3 install rospkg catkin_pkg
     
 RUN mkdir -p /home/catkin_ws/src \
-    && echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc \
-    && echo "source /home/catkin_ws/devel/setup.bash" >> ~/.bashrc
+    && echo "source /opt/ros/melodic/setup.bash" >> /home/.bashrc \
+    && echo "source /home/catkin_ws/devel/setup.bash" >> /home/.bashrc
 
 RUN cd /home/catkin_ws/src && \
     git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git && \
@@ -27,9 +27,11 @@ ENV ROS_MASTER_URI=http://localhost:11311 \
 
 RUN source /opt/ros/melodic/setup.bash && \
     cd /home/catkin_ws && rosdep install -r -y --from-paths --ignore-src . && \
-    catkin init && catkin build
+    catkin build
 
 WORKDIR /home/catkin_ws/src/raspicat_navigation
 
-# How to build
+# How to local build
 # docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f Dockerfile.ci .
+# How to ci build
+# docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
