@@ -13,8 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: BUILD
         run: |
-          ls -a
           docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
       - name: TEST
         run: |
-          docker run --init ubeike/raspicat-ros1-melodic-navigation /bin/bash -c "ls;source ~/.bashrc && ./test/ci_test.sh"
+          docker run --init ubeike/raspicat-ros1-melodic-navigation /bin/bash -c "source ~/.bashrc && ./test/ci_test.sh"

@@ -19,7 +19,7 @@ RUN cd /home/catkin_ws/src && \
     git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git && \
     git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git && \
     git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git && \
-    git clone https://github.com/uhobeike/raspicat_navigation.git
+    git clone -b raspicat_navigation-ci https://github.com/uhobeike/raspicat_navigation.git
 
 ENV ROS_MASTER_URI=http://localhost:11311 \
     ROS_HOSTNAME=localhost \
