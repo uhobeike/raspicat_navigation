@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: BUILD
         run: |
-          sed -i -e "s/branch-arg/"${GITHUB_REF#refs/heads/}"/g" ./.github/Dockerfile.ci
+          sed -i -e "s/branch-arg/${GITHUB_REF#refs/heads/}/g" ./.github/Dockerfile.ci
           docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
       - name: TEST
         run: |
