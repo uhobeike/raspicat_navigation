@@ -21,11 +21,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: BUILD
         if: ${{ github.event == 'pull_request' }}
-          run: |
-            echo "a"      
+        run: |
+          echo "a"      
         if: ${{ github.event == 'push' }}
-          run: |
-            echo "b"
+        run: |
+          echo "b"
       #      sed -i -e "s;-b master;-b ${GITHUB_REF#refs/heads/};" ./.github/Dockerfile.ci
       #      docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
 
