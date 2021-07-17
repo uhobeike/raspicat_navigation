@@ -9,7 +9,7 @@
 #         "./raspicat_navigation/test/ci_test.sh"
 # else
     xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch turtlebot3_gazebo turtlebot3_world.launch &
-    sleep 15
+    sleep 300
     # killall rosmaster &
 # fi
 # source /home/catkin_ws/devel/setup.bash;
