@@ -15,7 +15,7 @@ rostopic  pub /initialpose geometry_msgs/PoseWithCovarianceStamped "header:
 pose:
   pose:
     position: {x: -1.862, y: -0.621, z: 0.0}
-    orientation: {x: 0.0, y: 0.0, z: 0.03052, w: 0.0.99953}"
+    orientation: {x: 0.0, y: 0.0, z: 0.03052, w: 0.99953}"
 sleep 5 
 
 rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header:
