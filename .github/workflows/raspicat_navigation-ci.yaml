@@ -14,19 +14,15 @@ on:
     - '**.md'
 
 jobs:
-  OS-Set:
+  build:
     runs-on: ubuntu-18.04
 
-  checkout@v2:
-    - uses: actions/checkout@v2
-    - name: BUILD
-
-  build:
-    if: ${{ github.event == 'pull_request' }}
     steps:
-      run: |
-        echo "a"      
-    if: ${{ github.event == 'push' }}
-    steps:
-      run: |
-        echo "b"
+      - uses: actions/checkout@v2
+      - name: BUILD
+        if: ${{ github.event == 'pull_request' }}
+        run_1: |
+          echo "a"      
+        if: ${{ github.event == 'push' }}
+        run_2: |
+          echo "b"
