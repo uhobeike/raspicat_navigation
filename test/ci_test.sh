@@ -11,7 +11,7 @@ rostopic  pub /initialpose geometry_msgs/PoseWithCovarianceStamped "header:
   stamp:
     secs: 0
     nsecs: 0
-  frame_id: ''
+  frame_id: 'map'
 pose:
   pose:
     position: {x: -1.862, y: -0.621, z: 0.0}
