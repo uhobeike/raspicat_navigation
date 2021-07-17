@@ -1,4 +1,5 @@
 # raspicat_navigation
+[![ros-melodic](https://github.com/uhobeike/raspicat_navigation/actions/workflows/raspicat_navigation-ci.yaml/badge.svg)](https://github.com/uhobeike/raspicat_navigation/actions/workflows/raspicat_navigation-ci.yaml)
 
 Raspberry Pi CatでROSの[Navigation Stack](https://wiki.ros.org/navigation)を使ってナビゲーションをするためのパッケージです。
 
