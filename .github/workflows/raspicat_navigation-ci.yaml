@@ -20,9 +20,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: BUILD
-        run: |
-          sed -i -e "s;-b master;-b ${GITHUB_REF#refs/heads/};" ./.github/Dockerfile.ci
-          docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
-      - name: TEST
-        run: |
-          docker run --init ubeike/raspicat-ros1-melodic-navigation /bin/bash -c "source /home/.bashrc && ./test/ci_test.sh"
+        if: ${{ github.event.inputs.name }} == "pull_request"
+          run: |
+            echo "a"      
+        if: ${{ github.event.inputs.name }} == "push"
+          run: |
+            echo "b"
+      #      sed -i -e "s;-b master;-b ${GITHUB_REF#refs/heads/};" ./.github/Dockerfile.ci
+      #      docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
+
+      #      sed -i -e "s;-b master;-b ${GITHUB_REF#refs/heads/};" ./.github/Dockerfile.ci
+      #      docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
+      #- name: TEST
+      #  run: |
+      #    docker run --init ubeike/raspicat-ros1-melodic-navigation /bin/bash -c "source /home/.bashrc && ./test/ci_test.sh"
