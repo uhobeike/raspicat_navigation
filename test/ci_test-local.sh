@@ -39,14 +39,14 @@ goal:
       frame_id: 'map'
     pose:
       position:
-        x: 1.0
-        y: 0.0
+        x: 0.658029079437
+        y: -0.549129128456
         z: 0.0
       orientation:
         x: 0.0
         y: 0.0
-        z: 0.5
-        w: 1.0"
+        z: -0.0150406081599
+        w: 0.999886883655"
 
 while true; do sleep 1 | rostopic echo -n 1 /move_base/feedback | grep -A 10 pose; done &
 

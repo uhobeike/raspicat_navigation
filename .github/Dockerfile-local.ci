@@ -35,8 +35,22 @@ RUN source /opt/ros/melodic/setup.bash && \
 WORKDIR /home/catkin_ws/src/raspicat_navigation
 
 # How to local build
-# docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation-local -f local_Dockerfile.ci .
+# docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation-local -f Dockerfile-local.ci .
 # How to local run 
+# xhost +local:docker && \
+# docker run -it --rm --gpus all \
+#     -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+#     -e DISPLAY=$DISPLAY \
+#     -e QT_X11_NO_MITSHM=1 \
+#     -e LIBGL_ALWAYS_INDIRECT=1 \
+#     --privileged \
+#     --net=host \
+# ubeike/raspicat-ros1-melodic-navigation-local /bin/bash -c \
+#     "source /home/.bashrc && \
+#     ./test/ci_test-local.sh && \
+#     /bin/bash" && \
+# xhost -local:docker
+
 # xhost +local:docker && \
 # docker run -it --rm --gpus all \
 #     -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
