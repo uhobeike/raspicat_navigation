@@ -36,10 +36,9 @@ goal:
         z: 0.5
         w: 1.0"
 
-exit 0
-# while true; do sleep 1 | rostopic echo -n 1 /move_base/feedback | grep -A 10 pose; done &;
+while true; do sleep 1 | rostopic echo -n 1 /move_base/feedback | grep -A 10 pose; done &;
 
-# bash -c "timeout 40 echo $(rostopic echo -n 1 /move_base/result | grep "Goal reached")| sed 's/^.*"\(.*\)".*$/\1/';
+bash -c "timeout 40 echo $(rostopic echo -n 1 /move_base/result | grep "Goal reached")| sed 's/^.*"\(.*\)".*$/\1/';
 # if [ $? -eq 0 ];then echo "a"; break;else echo "b";break;fi"
 
-# if [ $? -eq 0 ];then killall rosmaster; break;else exit 1 | exit 1;break;fi
+if [ $? -eq 0 ];then killall rosmaster && exit 0; break;else exit 1 ;break;fi

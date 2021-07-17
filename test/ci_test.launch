@@ -1,13 +1,21 @@
 <launch>
-  <!-- Arguments -->
+  <!-- Turtlebot3 arg-->
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
   <arg name="map_file" default="$(find turtlebot3_navigation)/maps/map.yaml"/>
+
+  <!-- Turtlebot3 model-->
+  <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+    <arg name="model" value="$(arg model)" />
+  </include>
+
+  <!-- Arguments -->
   <arg name="open_rviz" default="true"/>
   <arg name="move_forward_only" default="false"/>
 
   <!-- Map server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
   
-  <!-- Robot_model import -->
+  <!-- Robot_model import
   <arg name="multi_robot_name" default=""/>
 
   <include file="$(find raspicat_navigation)/launch/include/description.launch.xml"/>
@@ -16,7 +24,7 @@
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
     <param name="publish_frequency" type="double" value="50.0" />
     <param name="tf_prefix" value="$(arg multi_robot_name)"/>
-  </node>
+  </node> -->
 
   <!-- robot localization 
   <include file="$(find robot_localization)/launch/ekf_template.launch"/>
