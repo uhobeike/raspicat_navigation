@@ -28,4 +28,5 @@ jobs:
         run: |
           sed -i -e "s;false;true;" ./.github/Dockerfile.ci
           sed -i -e "s;pull/ID/head;"$(echo "${GITHUB_REF#refs/heads/}" | sed -e "s;refs/;;")";" ./.github/Dockerfile.ci
-          cat ./.github/Dockerfile.ci
+          docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
+          
