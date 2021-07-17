@@ -37,18 +37,18 @@ WORKDIR /home/catkin_ws/src/raspicat_navigation
 # How to local build
 # docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation-local -f local_Dockerfile.ci .
 # How to local run 
-xhost +local:docker && \
-docker run -it --rm --gpus all \
-    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
-    -e DISPLAY=$DISPLAY \
-    -e QT_X11_NO_MITSHM=1 \
-    -e LIBGL_ALWAYS_INDIRECT=1 \
-    --privileged \
-    --net=host \
-ubeike/raspicat-ros1-melodic-navigation-local /bin/bash -c \
-    "source /home/.bashrc && \
-    (roslaunch turtlebot3_gazebo turtlebot3_world.launch &) && \
-    (sleep 10) && \ 
-    (roslaunch raspicat_navigation ci_test.launch &) && \
-    /bin/bash" && \
-xhost -local:docker
+# xhost +local:docker && \
+# docker run -it --rm --gpus all \
+#     -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+#     -e DISPLAY=$DISPLAY \
+#     -e QT_X11_NO_MITSHM=1 \
+#     -e LIBGL_ALWAYS_INDIRECT=1 \
+#     --privileged \
+#     --net=host \
+# ubeike/raspicat-ros1-melodic-navigation-local /bin/bash -c \
+#     "source /home/.bashrc && \
+#     (roslaunch turtlebot3_gazebo turtlebot3_world.launch &) && \
+#     (sleep 10) && \ 
+#     (roslaunch raspicat_navigation ci_test.launch &) && \
+#     /bin/bash" && \
+# xhost -local:docker
