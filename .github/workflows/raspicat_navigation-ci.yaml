@@ -19,10 +19,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: BUILD
-        if: ${{ github.event == 'pull_request' }}
-        run_1: |
-          echo "a"      
+      - name: BUILD_PUSH
         if: ${{ github.event == 'push' }}
-        run_2: |
+        run: |
+          echo "a"
+      - name: BUILD_PR
+        if: ${{ github.event == 'pull_request' }}
+        run: |
           echo "b"
