@@ -6,6 +6,18 @@ sleep 10
 xvfb-run --auto-servernum -s '-screen 0 1400x900x24' roslaunch raspicat_navigation ci_test.launch &
 sleep 10
 
+rostopic  pub /initialpose geometry_msgs/PoseWithCovarianceStamped "header:
+  seq: 0
+  stamp:
+    secs: 0
+    nsecs: 0
+  frame_id: ''
+pose:
+  pose:
+    position: {x: -1.862, y: -0.621, z: 0.0}
+    orientation: {x: 0.0, y: 0.0, z: 0.03052, w: 0.0.99953}"
+sleep 5 
+
 rostopic pub -1 /move_base/goal move_base_msgs/MoveBaseActionGoal "header:
   seq: 0
   stamp:

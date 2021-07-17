@@ -2,6 +2,9 @@ FROM osrf/ros:melodic-desktop-full
 
 SHELL ["/bin/bash", "-c"]
 
+ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
+ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
+
 ENV ROS_MASTER_URI=http://localhost:11311 \
     ROS_HOSTNAME=localhost \
     TURTLEBOT3_MODEL=burger
@@ -32,6 +35,20 @@ RUN source /opt/ros/melodic/setup.bash && \
 WORKDIR /home/catkin_ws/src/raspicat_navigation
 
 # How to local build
-# docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f Dockerfile.ci .
-# How to ci build
-# docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
+# docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation-local -f local_Dockerfile.ci .
+# How to local run 
+xhost +local:docker && \
+docker run -it --rm --gpus all \
+    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+    -e DISPLAY=$DISPLAY \
+    -e QT_X11_NO_MITSHM=1 \
+    -e LIBGL_ALWAYS_INDIRECT=1 \
+    --privileged \
+    --net=host \
+ubeike/raspicat-ros1-melodic-navigation-local /bin/bash -c \
+    "source /home/.bashrc && \
+    (roslaunch turtlebot3_gazebo turtlebot3_world.launch &) && \
+    (sleep 10) && \ 
+    (roslaunch raspicat_navigation ci_test.launch &) && \
+    /bin/bash" && \
+xhost -local:docker
