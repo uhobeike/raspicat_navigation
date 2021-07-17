@@ -22,9 +22,9 @@ jobs:
       - name: BUILD
         if: ${{ github.event == 'pull_request' }}
           steps:
-          run: |
-            echo "a"      
+            run: |
+              echo "a"      
         if: ${{ github.event == 'push' }}
           steps:
-          run: |
-            echo "b"
+            run: |
+              echo "b"
