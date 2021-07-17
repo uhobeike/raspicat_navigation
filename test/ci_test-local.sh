@@ -54,11 +54,11 @@ timeout 40 echo $(rostopic echo -n 1 /move_base/result | grep "Goal reached")| s
 
 if [ $? -eq 0 ];then 
     killall rosmaster
-    printf '\033[31m%s\033[m\n' 'DOCKER TEST SUCCEED'
+    printf '\033[42m%s\033[m\n' 'DOCKER TEST SUCCEED'
     exit 0
     break
 else
-    printf '\033[42m%s\033[m\n' 'DOCKER TEST FAILED'
+    printf '\033[31m%s\033[m\n' 'DOCKER TEST FAILED'
     exit 1
     break
 fi
