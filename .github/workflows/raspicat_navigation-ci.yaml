@@ -20,9 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: BUILD_PUSH
+        if: ${{ github.event_name == 'push' }}
         run: |
-          echo "${{ github.event_name }}"
+          echo "a"
       - name: BUILD_PR
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
-          echo "${{ github.head_ref }}"
-          echo "${{ github.ref }}"
+          echo "b"
