@@ -50,7 +50,15 @@ goal:
 
 while true; do sleep 1 | rostopic echo -n 1 /move_base/feedback | grep -A 10 pose; done &
 
-bash -c "timeout 40 echo $(rostopic echo -n 1 /move_base/result | grep "Goal reached")| sed 's/^.*"\(.*\)".*$/\1/'
-# if [ $? -eq 0 ];then echo "a"; break;else echo "b";break;fi"
+timeout 40 echo $(rostopic echo -n 1 /move_base/result | grep "Goal reached")| sed 's/^.*"\(.*\)".*$/\1/'
 
-if [ $? -eq 0 ];then killall rosmaster && exit 0; break;else exit 1 ;break;fi
+if [ $? -eq 0 ];then 
+    killall rosmaster
+    printf '\033[31m%s\033[m\n' 'DOCKER TEST SUCCEED'
+    exit 0
+    break
+else
+    printf '\033[42m%s\033[m\n' 'DOCKER TEST FAILED'
+    exit 1
+    break
+fi
