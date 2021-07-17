@@ -6,7 +6,7 @@ sleep 10
 xvfb-run --auto-servernum -s '-screen 0 1400x900x24' roslaunch raspicat_navigation ci_test.launch &
 sleep 10
 
-rostopic  pub /initialpose geometry_msgs/PoseWithCovarianceStamped "header:
+rostopic pub -1 /initialpose geometry_msgs/PoseWithCovarianceStamped "header:
   seq: 0
   stamp:
     secs: 0
