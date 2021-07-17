@@ -2,6 +2,14 @@ name: ros1-melodic-ci
 
 on:
   push:
+    branches:
+      - master
+    paths-ignore:
+    - '**.md'
+    
+  pull_request:
+    branches:
+      - master
     paths-ignore:
     - '**.md'
 

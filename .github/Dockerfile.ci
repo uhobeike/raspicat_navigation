@@ -11,7 +11,7 @@ RUN apt update && apt upgrade -y && \
     xvfb \
     psmisc \
     python3-pip \
-    #ROS
+    # Install ros related
     python-catkin-tools && \
     pip3 install rospkg catkin_pkg
     
@@ -33,5 +33,6 @@ WORKDIR /home/catkin_ws/src/raspicat_navigation
 
 # How to local build
 # docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f Dockerfile.ci .
+
 # How to ci build
 # docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
