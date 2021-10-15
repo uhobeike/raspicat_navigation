@@ -44,7 +44,7 @@
   </node>
 
   <!-- node launch -->     
-  <node pkg="turtlebot3_navigation" name="WaypointNav_node" type="WaypointNav_node" args="$(arg csv_file)" output="screen"/>
+  <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" args="$(arg csv_file)" output="screen"/>
     
   <!-- rviz -->
   <group if="$(arg open_rviz)"> 
