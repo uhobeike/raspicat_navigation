@@ -1,17 +1,58 @@
-shutdown_costmaps: false
-
-controller_frequency: 20.0
+#Global
 planner_frequency: 5.0
-
 planner_patience: 5.0
+navfn:
+  allow_unknown: true
+
+#Local
+controller_frequency: 20.0
 controller_patience: 15.0
+base_local_planner: dwa_local_planner/DWAPlannerROS
+
+#recovery_behavior
+recovery_behavior_enabled: true
 conservative_reset_dist: 3.0
 oscillation_timeout: 10.0
 oscillation_distance: 0.2
 max_planning_retries: -1
 
-base_local_planner: dwa_local_planner/DWAPlannerROS
+recovery_behaviors:
+  - name: 'conservative_reset'
+    type: 'clear_costmap_recovery/ClearCostmapRecovery'
+  - name: 'rotate_recovery0'
+    type: 'rotate_recovery/RotateRecovery'
+  - name: 'aggressive_reset'
+    type: 'clear_costmap_recovery/ClearCostmapRecovery'
+  - name: 'rotate_recovery1'
+    type: 'rotate_recovery/RotateRecovery'
+  - name: 'all_reset'
+    type: 'clear_costmap_recovery/ClearCostmapRecovery'
+  - name: 'rotate_recovery2'
+    type: 'rotate_recovery/RotateRecovery'
 
-navfn:
-  allow_unknown: true
+conservative_reset:
+  reset_distance: 2.0
 
+rotate_recovery0:
+  frequency: 20.0
+  sim_granularity: 0.017
+
+aggressive_reset:
+  reset_distance: 1.2
+
+rotate_recovery1:
+  frequency: 20.0
+  sim_granularity: 0.017
+
+all_reset:
+  reset_distance: 0.0
+
+rotate_recovery2:
+  frequency: 20.0
+  sim_granularity: 0.017
+
+TrajectoryPlannerROS:
+  yaw_goal_tolerance: 0.2
+  acc_lim_theta: 2.0
+  max_vel_theta: 1.05
+  min_in_place_vel_theta: 0.17

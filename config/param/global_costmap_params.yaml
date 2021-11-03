@@ -1,8 +1,3 @@
-plugins:
-  - {name: static_layer, type: "costmap_2d::StaticLayer" }
-  - {name: obstacles_layer, type: "costmap_2d::ObstacleLayer" }
-  - {name: inflation_layer,  type: "costmap_2d::InflationLayer" }
-
 global_frame: map
 robot_base_frame: base_link
 
@@ -15,5 +10,9 @@ publish_frequency: 5
 transform_tolerance: 2
 
 rolling_window: false
-# static_map: true
 always_send_full_costmap: true
+
+plugins:
+  - {name: static_layer, type: "costmap_2d::StaticLayer" }
+  - {name: obstacles_layer, type: "costmap_2d::ObstacleLayer" }
+  - {name: inflation_layer,  type: "costmap_2d::InflationLayer" }

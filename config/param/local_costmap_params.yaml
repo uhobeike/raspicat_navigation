@@ -1,7 +1,3 @@
-plugins:
-  - {name: obstacles_layer, type: "costmap_2d::ObstacleLayer" }
-  - {name: inflation_layer,  type: "costmap_2d::InflationLayer" }
-
 global_frame: odom
 robot_base_frame: base_link
 
@@ -16,5 +12,9 @@ transform_tolerance: 2
 rolling_window: true
 width: 3
 height: 3
-resolution: 0.05
+resolution: 0.01
 always_send_full_costmap: true
+
+plugins:
+  - {name: obstacles_layer, type: "costmap_2d::ObstacleLayer" }
+  - {name: inflation_layer,  type: "costmap_2d::InflationLayer" }
