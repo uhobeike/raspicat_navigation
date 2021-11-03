@@ -1,0 +1,20 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/map_tudanuma.yaml"/>
+  <arg name="open_rviz" default="true"/>
+
+  <!-- Run the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+  
+  <!-- Node Run -->
+  <node pkg="raspicat_navigation" name="waypoint_set"
+    type="waypoint_controller_rviz.py" required="true" output="screen">
+  </node>
+
+  <!-- rviz -->
+  <group if="$(arg open_rviz)"> 
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+      args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation_2d.rviz">
+    </node>
+  </group>
+</launch>

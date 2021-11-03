@@ -22,8 +22,8 @@
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
     <arg name="raspicat_sim" value="true"/>
-    <arg name="local_costmap/robot_base_frame" value="base_footprint"/>
-    <arg name="scan/sensor_frame" value="lidar_link"/>
+    <arg name="robot_base_frame" value="base_footprint"/>
+    <arg name="obstacles_layer/scan/sensor_frame" value="lidar_link"/>
   </include>
   
   <!-- rviz -->
