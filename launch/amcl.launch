@@ -5,9 +5,9 @@
   <arg name="initial_pose_y" default="0"/>
   <arg name="initial_pose_a" default="0"/>
 
-  <arg name="initial_cov_xx" default="0.2"/>
-  <arg name="initial_cov_yy" default="0.2"/>
-  <arg name="initial_cov_aa" default="0.06"/>
+  <arg name="initial_cov_xx" default="0.001"/>
+  <arg name="initial_cov_yy" default="0.001"/>
+  <arg name="initial_cov_aa" default="0.001"/>
 
   <arg name="base_frame_id" default="base_link"/>
 

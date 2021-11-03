@@ -7,15 +7,15 @@
 
   <arg name="raspicat_sim" default="false"/>
   <arg name="local_costmap/robot_base_frame" default="base_link"/>
-  <arg name="scan/sensor_frame" default="urg_lrf_link"/>
+  <arg name="obstacles_layer/scan/sensor_frame" default="urg_lrf_link"/>
 
   <!-- move_base -->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
     <rosparam file="$(find raspicat_navigation)/config/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find raspicat_navigation)/config/param/global_costmap_params.yaml" command="load" ns="global_costmap"/>
     <rosparam file="$(find raspicat_navigation)/config/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap"/>
-    <rosparam file="$(find raspicat_navigation)/config/param/local_costmap_params.yaml" command="load"/>
-    <rosparam file="$(find raspicat_navigation)/config/param/global_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find raspicat_navigation)/config/param/local_costmap_params.yaml" command="load" ns="local_costmap"/>
     <rosparam file="$(find raspicat_navigation)/config/param/move_base_params.yaml" command="load"/>
     <rosparam file="$(find raspicat_navigation)/config/param/dwa_local_planner_params_$(arg model).yaml" command="load"/>
     <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
@@ -23,6 +23,6 @@
     <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)"/>
     
     <param name="local_costmap/robot_base_frame" value="$(arg local_costmap/robot_base_frame)" if="$(arg raspicat_sim)"/>
-    <param name="local_costmap/scan/sensor_frame" value="$(arg scan/sensor_frame)" if="$(arg raspicat_sim)"/>
+    <param name="local_costmap/obstacles_layer/scan/sensor_frame" value="$(arg obstacles_layer/scan/sensor_frame)" if="$(arg raspicat_sim)"/>
   </node>
 </launch>
