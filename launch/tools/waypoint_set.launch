@@ -1,15 +1,14 @@
 <launch>
   <!-- Arguments -->
-  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/map_tudanuma.yaml"/>
   <arg name="open_rviz" default="true"/>
+  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/map_tudanuma.yaml"/>
+  <arg name="csv_file_path" default="$(find raspicat_navigation)/config/csv/"/>
 
   <!-- Run the map server -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
   
   <!-- Node Run -->
-  <node pkg="raspicat_navigation" name="waypoint_set"
-    type="waypoint_controller_rviz.py" required="true" output="screen">
-  </node>
+  <node pkg="raspicat_navigation" name="waypoint_set_controller" type="waypoint_set_controller.py" args="$(arg csv_file_path)" required="true" output="screen"/>
 
   <!-- rviz -->
   <group if="$(arg open_rviz)"> 

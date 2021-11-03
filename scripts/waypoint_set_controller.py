@@ -80,7 +80,8 @@ if __name__=="__main__":
           global proc
           find_node('waypoint_rviz')
           if(flag == 0):
-            proc = Popen(["rosrun", "raspicat_navigation", "waypoint_rviz"])
+            args = sys.argv
+            proc = Popen(["rosrun", "raspicat_navigation", "waypoint_rviz", args[1]])
             rospy.loginfo("waypoint_rviz_set node RUN")
           elif(flag == 1):
             rospy.loginfo("already waypoint_rviz_set node RUN\n")
