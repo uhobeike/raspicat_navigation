@@ -15,14 +15,14 @@
     <arg name="initial_pose_x" value="-0.0688619613647"/>
     <arg name="initial_pose_y" value="-1.71242249012"/>
     <arg name="initial_pose_a" value="0"/>
-    <arg name="base_frame_id" default="base_link"/>
+    <arg name="base_frame_id" default="base_footprint"/>
   </include>
 
   <!-- move_base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
     <arg name="raspicat_sim" value="true"/>
-    <arg name="local_costmap/robot_base_frame" value="base_link"/>
+    <arg name="robot_base_frame" value="base_footprint"/>
     <arg name="obstacles_layer/scan/sensor_frame" value="lidar_link"/>
   </include>
   
