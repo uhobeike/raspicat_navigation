@@ -1,11 +1,39 @@
-obstacle_range: 3
-raytrace_range: 3.5
+obstacles_layer:
+  enabled: true
+  track_unknown_space: false
+  trinary_costmap: false
+  obstacle_range: 3
+  raytrace_range: 3.5
+  observation_sources: scan
+  scan:
+    data_type: LaserScan
+    sensor_frame: urg_lrf_link
+    topic: /scan
+    marking: true
+    clearing: true
 
-footprint: [[-0.37, -0.17], [-0.37, 0.17], [0.2, 0.17], [0.2, -0.17]]
+static_layer:
+  enabled: true
+  map_topic: /map
+  subscribe_to_updates: false
 
-inflation_radius: 0.5
-cost_scaling_factor: 10
+inflation_layer:
+  enabled: true
+  track_unknown_space: false
+  trinary_costmap: false  
 
-map_type: costmap
-observation_sources: scan
-scan: {sensor_frame: urg_lrf_link, data_type: LaserScan, topic: scan, marking: true, clearing: true}
+# map_type: costmap
+# observation_sources: ls_scan
+# scan: {sensor_frame: left_side_usensor_link, data_type: LaserScan, topic: /left_side_ultrasonic_sensor, marking: true, clearing: true}
+
+# map_type: costmap
+# observation_sources: scan3
+# scan: {sensor_frame: left_front_usensor_link, data_type: LaserScan, topic: lf_scan, marking: true, clearing: true}
+
+# map_type: costmap
+# observation_sources: scan4
+# scan: {sensor_frame: right_front_usensor_link, data_type: LaserScan, topic: rf_scan, marking: true, clearing: true}
+
+# map_type: costmap
+# observation_sources: scan5
+# scan: {sensor_frame: right_side_usensor_link, data_type: LaserScan, topic: rs_scan, marking: true, clearing: true}
