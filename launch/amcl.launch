@@ -12,7 +12,7 @@
   <arg name="base_frame_id" default="base_link"/>
 
   <!-- AMCL -->
-  <node pkg="amcl" type="amcl" name="amcl">
+  <node pkg="amcl" type="amcl" name="amcl" clear_params="true" respawn="true" output="screen">
 
     <param name="min_particles"             value="500"/>
     <param name="max_particles"             value="3000"/>
@@ -51,6 +51,5 @@
     <param name="odom_alpha4"               value="0.3"/> <!--rl-->
     <param name="odom_frame_id"             value="odom"/>
     <param name="base_frame_id"             value="$(arg base_frame_id)"/>
-
   </node>
 </launch>
