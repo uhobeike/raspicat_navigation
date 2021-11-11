@@ -10,16 +10,16 @@
 
   <!-- Output messages -->
   <arg name="pose_name"               default="/mcl_pose"/>           <!-- geometry_msgs::PoseStamped -->
-  <arg name="particles_name"          default="/mcl_particles"/>      <!-- geometry_msgs::PoseArray -->
+  <arg name="particles_name"          default="/particlecloud"/>      <!-- geometry_msgs::PoseArray -->
   <arg name="unknown_scan_name"       default="/unknown_scan"/>       <!-- sensor_msgs::LaserScan -->
   <arg name="residual_errors_name"    default="/residual_errors"/>    <!-- sensor_msgs::LaserScan -->
 
   <!-- TF frames -->
-  <arg name="laser_frame"             default="/urg_lrf_link"/>
-  <arg name="base_link_frame"         default="/base_link"/>
-  <arg name="map_frame"               default="/map"/>
-  <arg name="odom_frame"              default="/odom"/>
-  <arg name="use_odom_frame"          default="true"/>
+  <arg name="laser_frame"             default="urg_lrf_link"/>
+  <arg name="base_link_frame"         default="base_link"/>
+  <arg name="map_frame"               default="map"/>
+  <arg name="odom_frame"              default="odom"/>
+  <arg name="use_odom_frame"          default="false"/>
   <!-- If use_ofom_frame is true, MCL estimates the base link pose on the odometry frame.
        E.g., the tf tree will be "/map -> /odom -> /base_link -> /laser"
        If not, MCL directly estimates the base link pose on the map frame.
