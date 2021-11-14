@@ -1,11 +1,13 @@
 <launch>
   <!-- Arguments -->
-  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/sim_map.yaml"/>
   <arg name="open_rviz" default="true"/>
   <arg name="move_forward_only" default="false"/>
+  <arg name="waypoint_navigation" default="false"/>
+  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/map_sim.yaml"/>
+  <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_sim.csv"/>
 
   <!-- gazebo -->
-  <include file="$(find raspicatv2_gazebo)/launch/raspicatv2_turtlebot3_house.launch"/>
+  <include file="$(find raspicatv2_gazebo)/launch/raspicatv2_iscas_museum.launch"/>
 
   <!-- map server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
@@ -25,6 +27,13 @@
     <arg name="robot_base_frame" value="base_footprint"/>
     <arg name="obstacles_layer/scan/sensor_frame" value="lidar_link"/>
   </include>
+
+  <!-- waypoint_nav -->
+  <group if="$(arg waypoint_navigation)"> 
+    <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" 
+      args="$(arg csv_file)" output="screen">
+    </node>
+  </group>
   
   <!-- rviz -->
   <group if="$(arg open_rviz)"> 
