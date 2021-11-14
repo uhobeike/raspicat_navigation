@@ -62,12 +62,12 @@ target_link_libraries(
   ${catkin_LIBRARIES}
 )
 
-#waypoint_rviz
-add_executable(waypoint_rviz src/waypoint_rviz_set.cpp)
-target_link_libraries(waypoint_rviz ${catkin_LIBRARIES})
+#waypoint_set
+add_executable(waypoint_set src/tools/waypoint_set.cpp)
+target_link_libraries(waypoint_set ${catkin_LIBRARIES})
 
 #waypoint_view
-add_executable(waypoint_view src/waypoint_view.cpp)
+add_executable(waypoint_view src/tools/waypoint_view.cpp)
 target_link_libraries(waypoint_view ${catkin_LIBRARIES})
 ################################################################################
 # Install
