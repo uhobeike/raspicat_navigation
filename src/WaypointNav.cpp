@@ -34,7 +34,7 @@ WaypointNav::WaypointNav(ros::NodeHandle& nodeHandle, std::string node_name, std
                         node_name_(node_name),
                         csv_fname_(file_name), waypoint_csv_index_(1), waypoint_index_(0),
                         waypoint_csv_(1, vector<string>(0)), amcl_pose_(4, 0),
-                        waypoint_area_threshold_(0.5), waypoint_area_check_(0.0),
+                        waypoint_area_threshold_(3), waypoint_area_check_(0.0),
                         NextWaypointMode_(true), FinalGoalWaypointMode_(false), ReStartWaypointMode_(false), 
                         GoalReachedMode_(false),
                         GoalReachedFlag_(false), FinalGoalFlag_(false), ReStartFlag_(false), 
