@@ -190,7 +190,7 @@ void waypoint_rviz::way_point_goal_set_(vector<vector<string>>& waypoint_goal,
                                         uint16_t& waypoint_number)
 {
   uint16_t array_number = waypoint_number - 1;
-  waypoint_goal[array_number].push_back("goal");
+  waypoint_goal[array_number].push_back("Goal");
 
   marker_mode_ = 0;
   waypoint_marker_(marker_, point_, point_color_, waypoint_goal, marker_mode_, marker_flag_,
