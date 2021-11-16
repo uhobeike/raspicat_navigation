@@ -1,0 +1,46 @@
+<library path="lib/libraspicat_navigation">
+  <class
+    name="raspicat_navigation/WaypointServer"
+    type="raspicat_navigation::WaypointServer"
+    base_class_type="raspicat_navigation::BaseWaypointServer">
+    <description>
+      Plugins for managing waypoints
+    </description>
+  </class>
+
+  <class
+    name="raspicat_navigation/WaypointRviz"
+    type="raspicat_navigation::WaypointRviz"
+    base_class_type="raspicat_navigation::BaseWaypointRviz">
+    <description>
+      Plugins for drawing in rviz with respect to waypoint
+    </description>
+  </class>
+
+  <class
+    name="raspicat_navigation/WaypointParamChange"
+    type="raspicat_navigation::WaypointParamChange"
+    base_class_type="raspicat_navigation::BaseWaypointParamChange">
+    <description>
+      Plugin to change dynamic parameters related to waypoint
+    </description>
+  </class>
+
+  <class
+    name="raspicat_navigation/CmdVelSmoother"
+    type="raspicat_navigation::CmdVelSmoother"
+    base_class_type="raspicat_navigation::WaypointNavHelperPlugin">
+    <description>
+      Plugin to prevent sudden stops during navigation and ensure smooth running
+    </description>
+  </class>
+
+  <class
+    name="raspicat_navigation/MclKidnappingMeasures"
+    type="raspicat_navigation::MclKidnappingMeasures"
+    base_class_type="raspicat_navigation::WaypointNavHelperPlugin">
+    <description>
+      Plugin to deal with self-positioning kidnapping in mcl when it happens
+    </description>
+  </class>
+</library>
