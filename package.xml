@@ -20,5 +20,8 @@
   <exec_depend>global_planner</exec_depend>
   <exec_depend>dwa_local_planner</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
-  
+
+  <export>
+    <raspicat_navigation plugin="${prefix}/plugin.xml" />
+  </export>
 </package>

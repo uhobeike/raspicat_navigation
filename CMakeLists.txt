@@ -1,13 +1,6 @@
-################################################################################
-# Set minimum required version of cmake, project name and compile options
-################################################################################
 cmake_minimum_required(VERSION 2.8.3)
 project(raspicat_navigation)
 
-################################################################################
-# Find catkin packages and libraries for catkin and system dependencies
-################################################################################
-## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -15,14 +8,13 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   move_base_msgs
   tf
+  pluginlib
 )
 
 catkin_package(
   INCLUDE_DIRS include
-#  LIBRARIES goal_send
+  LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS roscpp std_msgs
-#  DEPENDS system_lib
-#  CATKIN_DEPENDS roscpp std_msgs message_runtime
 )
 
 include_directories(
@@ -30,26 +22,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-################################################################################
-# Setup for python modules and scripts
-################################################################################
-
-################################################################################
-# Declare ROS messages, services and actions
-################################################################################
-
-################################################################################
-# Declare ROS dynamic reconfigure parameters
-################################################################################
-
-################################################################################
-# Declare catkin specific configuration to be passed to dependent projects
-################################################################################
-
-################################################################################
-# Build
-################################################################################
-##WaypointNav
+# WaypointNav
 add_library(WaypointNav
   src/WaypointNav.cpp
 )
@@ -62,20 +35,26 @@ target_link_libraries(
   ${catkin_LIBRARIES}
 )
 
-#waypoint_set
+# waypoint_set
 add_executable(waypoint_set src/tools/waypoint_set.cpp)
 target_link_libraries(waypoint_set ${catkin_LIBRARIES})
 
-#waypoint_view
+# waypoint_view
 add_executable(waypoint_view src/tools/waypoint_view.cpp)
 target_link_libraries(waypoint_view ${catkin_LIBRARIES})
-################################################################################
-# Install
-################################################################################
+
+add_library(${PROJECT_NAME}
+  src/WaypointServer.cpp
+  src/WaypointRviz.cpp
+  src/WaypointParamChange.cpp
+  src/CmdVelSmoother.cpp
+  src/MclKidnappingMeasures.cpp
+)
+
 install(DIRECTORY launch src config scripts
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
-################################################################################
-# Test
-################################################################################
+install(FILES plugin.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
