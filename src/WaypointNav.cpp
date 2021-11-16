@@ -16,6 +16,9 @@
 
 #include <geometry_msgs/PoseArray.h>
 #include <ros/ros.h>
+#include <tf/transform_datatypes.h>
+#include <tf/transform_listener.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include "raspicat_navigation/WaypointNav.hpp"
 
@@ -28,15 +31,17 @@ using namespace ::std;
 
 namespace waypoint_nav
 {
-WaypointNav::WaypointNav(ros::NodeHandle& nodeHandle, std::string node_name, std::string file_name)
+WaypointNav::WaypointNav(ros::NodeHandle& nodeHandle, std::string node_name, std::string file_name,
+                         tf2_ros::Buffer& tf)
     : nh_(nodeHandle),
+      tf_(tf),
       ac_move_base_("move_base", true),
       node_name_(node_name),
       csv_fname_(file_name),
       waypoint_csv_index_(1),
       waypoint_index_(0),
       waypoint_csv_(1, vector<string>(0)),
-      amcl_pose_(4, 0),
+      robot_pose_(2, 0),
       waypoint_area_threshold_(1.5),
       waypoint_area_check_(0.0),
       NextWaypointMode_(true),
@@ -48,6 +53,8 @@ WaypointNav::WaypointNav(ros::NodeHandle& nodeHandle, std::string node_name, std
       ReStartFlag_(false),
       MsgReceiveFlag_(false)
 {
+  initTimerCb();
+
   PubSub_Init();
   ActionClient_Init();
 
@@ -57,9 +64,13 @@ WaypointNav::WaypointNav(ros::NodeHandle& nodeHandle, std::string node_name, std
 
 WaypointNav::~WaypointNav() {}
 
+void WaypointNav::initTimerCb()
+{
+  timer_ = nh_.createTimer(ros::Duration(0.1), &WaypointNav::getRobotPose, this);
+}
+
 void WaypointNav::PubSub_Init()
 {
-  sub_amcl_pose_ = nh_.subscribe("amcl_pose", 1, &WaypointNav::AmclPoseCb, this);
   sub_movebase_goal_ = nh_.subscribe("move_base/status", 1, &WaypointNav::GoalReachedCb, this);
   sub_goal_command_ = nh_.subscribe("goal_command", 1, &WaypointNav::GoalCommandCb, this);
 
@@ -246,8 +257,8 @@ bool WaypointNav::WaypointAreaCheck()
 {
   if (NextWaypointMode_)
   {
-    waypoint_area_check_ = sqrt(pow(stod(waypoint_csv_[waypoint_index_][0]) - amcl_pose_[0], 2) +
-                                pow(stod(waypoint_csv_[waypoint_index_][1]) - amcl_pose_[1], 2));
+    waypoint_area_check_ = sqrt(pow(stod(waypoint_csv_[waypoint_index_][0]) - robot_pose_[0], 2) +
+                                pow(stod(waypoint_csv_[waypoint_index_][1]) - robot_pose_[1], 2));
 
     if (waypoint_area_check_ <= waypoint_area_threshold_)
     {
@@ -259,8 +270,8 @@ bool WaypointNav::WaypointAreaCheck()
   }
   else if (!NextWaypointMode_)
   {
-    waypoint_area_check_ = sqrt(pow(stod(waypoint_csv_[waypoint_index_][0]) - amcl_pose_[0], 2) +
-                                pow(stod(waypoint_csv_[waypoint_index_][1]) - amcl_pose_[1], 2));
+    waypoint_area_check_ = sqrt(pow(stod(waypoint_csv_[waypoint_index_][0]) - robot_pose_[0], 2) +
+                                pow(stod(waypoint_csv_[waypoint_index_][1]) - robot_pose_[1], 2));
 
     if (waypoint_area_check_ <= waypoint_area_threshold_)
     {
@@ -341,19 +352,43 @@ void WaypointNav::Run()
     {
       if (WaypointAreaCheck() && GoalReachCheck()) WaypointSet(goal_);
     }
-    ModeFlagDebug();
+    // ModeFlagDebug();
     WaypointInfoManagement();
     ros::spinOnce();
     loop_rate.sleep();
   }
 }
 
-void WaypointNav::AmclPoseCb(const geometry_msgs::PoseWithCovarianceStamped& msg)
+void WaypointNav::getRobotPose(const ros::TimerEvent&)
 {
-  amcl_pose_.at(0) = msg.pose.pose.position.x;
-  amcl_pose_.at(1) = msg.pose.pose.position.y;
-  amcl_pose_.at(2) = msg.pose.pose.orientation.z;
-  amcl_pose_.at(3) = msg.pose.pose.orientation.w;
+  geometry_msgs::PoseStamped global_pose;
+  tf2::toMsg(tf2::Transform::getIdentity(), global_pose.pose);
+  geometry_msgs::PoseStamped robot_pose;
+  tf2::toMsg(tf2::Transform::getIdentity(), robot_pose.pose);
+  robot_pose.header.frame_id = "base_link";
+  robot_pose.header.stamp = ros::Time();
+  ros::Time current_time = ros::Time::now();
+
+  std::string global_frame = "map";
+
+  try
+  {
+    tf_.transform(robot_pose, global_pose, global_frame);
+    robot_pose_.at(0) = global_pose.pose.position.x;
+    robot_pose_.at(1) = global_pose.pose.position.y;
+  }
+  catch (tf2::LookupException& ex)
+  {
+    ROS_ERROR_THROTTLE(1.0, "No Transform available Error looking up robot pose: %s\n", ex.what());
+  }
+  catch (tf2::ConnectivityException& ex)
+  {
+    ROS_ERROR_THROTTLE(1.0, "Connectivity Error looking up robot pose: %s\n", ex.what());
+  }
+  catch (tf2::ExtrapolationException& ex)
+  {
+    ROS_ERROR_THROTTLE(1.0, "Extrapolation Error looking up robot pose: %s\n", ex.what());
+  }
 }
 
 void WaypointNav::GoalReachedCb(const actionlib_msgs::GoalStatusArray& status)
