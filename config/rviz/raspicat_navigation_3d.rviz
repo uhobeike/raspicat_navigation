@@ -6,12 +6,21 @@ Panels:
       Expanded:
         - /TF1/Frames1
         - /TF1/Tree1
+        - /Mcl1/Amcl Particles1
+        - /Mcl1/Map1
+        - /Mcl1/LaserScan1
+        - /Global Map1/Polygon1
         - /Global Map1/Costmap1
         - /Global Map1/Planner Plan1
+        - /Global Map1/Map1
         - /Local Map1/Polygon1
         - /Local Map1/Costmap1
         - /Local Map1/Planner1
         - /Local Map1/PointCloud21
+        - /Waypoint Nav1/Goal1
+        - /Waypoint Nav1/Waypoint_Pose1
+        - /Waypoint Nav1/MarkerArray1
+        - /Waypoint Nav1/MarkerArray2
       Splitter Ratio: 0.5666666626930237
     Tree Height: 796
   - Class: rviz/Selection
@@ -32,7 +41,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: LaserScan
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -63,28 +72,85 @@ Visualization Manager:
       Collision Enabled: false
       Enabled: true
       Links:
-        All Links Enabled:
-          {}
+        All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        base_link_2:
+          Value: true
+        camera_color_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        imu_link:
+        camera_color_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        urg_lrf_link:
+        camera_depth_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        camera_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        caster_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        caster_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_front_usensor_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_side_usensor_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        lidar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_front_usensor_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_side_usensor_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -92,19 +158,85 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        base_footprint:
+          Value: true
+        base_link:
+          Value: true
+        camera_color_frame:
+          Value: true
+        camera_color_optical_frame:
+          Value: true
+        camera_depth_frame:
+          Value: true
+        camera_depth_optical_frame:
+          Value: true
+        camera_link:
+          Value: true
+        caster_link:
+          Value: true
+        caster_wheel_link:
+          Value: true
+        laser:
+          Value: true
+        left_front_usensor_link:
+          Value: true
+        left_side_usensor_link:
+          Value: true
+        left_wheel_link:
+          Value: true
+        lidar_link:
+          Value: true
+        map:
+          Value: true
+        odom:
+          Value: true
+        right_front_usensor_link:
+          Value: true
+        right_side_usensor_link:
+          Value: true
+        right_wheel_link:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        {}
+        map:
+          odom:
+            base_footprint:
+              base_link:
+                camera_link:
+                  camera_color_frame:
+                    camera_color_optical_frame:
+                      {}
+                  camera_depth_frame:
+                    camera_depth_optical_frame:
+                      {}
+                caster_link:
+                  caster_wheel_link:
+                    {}
+                left_front_usensor_link:
+                  {}
+                left_side_usensor_link:
+                  {}
+                left_wheel_link:
+                  {}
+                lidar_link:
+                  laser:
+                    {}
+                right_front_usensor_link:
+                  {}
+                right_side_usensor_link:
+                  {}
+                right_wheel_link:
+                  {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Class: rviz/Group
       Displays:
         - Alpha: 1
@@ -127,12 +259,12 @@ Visualization Manager:
           Class: rviz/Map
           Color Scheme: map
           Draw Behind: false
-          Enabled: true
+          Enabled: false
           Name: Map
           Topic: /map
           Unreliable: false
           Use Timestamp: false
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -175,7 +307,7 @@ Visualization Manager:
           Topic: /move_base/local_costmap/footprint
           Unreliable: false
           Value: true
-        - Alpha: 0.699999988079071
+        - Alpha: 1
           Class: rviz/Map
           Color Scheme: costmap
           Draw Behind: true
@@ -207,6 +339,16 @@ Visualization Manager:
           Shaft Length: 0.10000000149011612
           Topic: /move_base/GlobalPlanner/plan
           Unreliable: false
+          Value: true
+        - Alpha: 0.699999988079071
+          Class: rviz/Map
+          Color Scheme: map
+          Draw Behind: false
+          Enabled: true
+          Name: Map
+          Topic: /move_base_map
+          Unreliable: false
+          Use Timestamp: false
           Value: true
       Enabled: true
       Name: Global Map
@@ -323,7 +465,7 @@ Visualization Manager:
           Marker Topic: /waypoint_area
           Name: MarkerArray
           Namespaces:
-            {}
+            "": true
           Queue Size: 100
           Value: true
         - Class: rviz/MarkerArray
@@ -331,7 +473,7 @@ Visualization Manager:
           Marker Topic: /waypoint_number_txt
           Name: MarkerArray
           Namespaces:
-            {}
+            "": true
           Queue Size: 100
           Value: true
       Enabled: true
@@ -365,15 +507,15 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 16.85610580444336
+      Distance: 93.35777282714844
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.027685880661010742
-        Y: 1.2178020477294922
+        X: 0.9886791706085205
+        Y: -4.139456272125244
         Z: 0
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
@@ -391,7 +533,7 @@ Window Geometry:
   Height: 1025
   Hide Left Dock: false
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd00000004000000000000020c000003a7fc0200000007fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d000003a7000000c900fffffffb0000000a0049006d0061006700650000000317000000cc0000000000000000fb0000000a0049006d0061006700650000000330000000ce0000000000000000000000010000010f000003a0fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a005600690065007700730000000043000003a0000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004a00000003efc0100000002fb0000000800540069006d00650000000000000004a0000002eb00fffffffb0000000800540069006d006501000000000000045000000000000000000000052b000003a700000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000020c000003a7fc0200000007fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d000003a7000000c900fffffffb0000000a0049006d0061006700650000000317000000cc0000000000000000fb0000000a0049006d0061006700650000000330000000ce0000000000000000000000010000010f000003a0fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a005600690065007700730000000043000003a0000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004a00000003efc0100000002fb0000000800540069006d00650000000000000004a0000004f300fffffffb0000000800540069006d006501000000000000045000000000000000000000038e000003a700000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -400,6 +542,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 1853
-  X: 67
-  Y: 27
+  Width: 1440
+  X: 4132
+  Y: 0

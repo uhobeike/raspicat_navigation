@@ -45,8 +45,8 @@
 
     <param name="odom_model_type"           value="diff"/> <!--r is roll,l is liner-->
     <param name="odom_alpha1"               value="0.2"/> <!--rr-->
-    <param name="odom_alpha2"               value="2.0"/> <!--lr-->
-    <param name="odom_alpha3"               value="1.5"/> <!--ll-->
+    <param name="odom_alpha2"               value="0.9"/> <!--lr-->
+    <param name="odom_alpha3"               value="2.0"/> <!--ll-->
     <param name="odom_alpha4"               value="0.3"/> <!--rl-->
     <param name="odom_frame_id"             value="odom"/>
     <param name="base_frame_id"             value="$(arg base_frame_id)"/>

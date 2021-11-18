@@ -9,6 +9,9 @@
   <arg name="robot_base_frame" default="base_link"/>
   <arg name="obstacles_layer/scan/sensor_frame" default="urg_lrf_link"/>
 
+  <arg name="waypoint_nav" default="false"/>
+
+
   <!-- move_base -->
   <node pkg="move_base" type="move_base" name="move_base" clear_params="true" respawn="true" output="screen">
     <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
@@ -26,5 +29,7 @@
     <param if="$(arg raspicat_sim)" name="local_costmap/robot_base_frame" value="$(arg robot_base_frame)"/>
     <param if="$(arg raspicat_sim)" name="global_costmap/obstacles_layer/scan/sensor_frame" value="$(arg obstacles_layer/scan/sensor_frame)"/>
     <param if="$(arg raspicat_sim)" name="local_costmap/obstacles_layer/scan/sensor_frame" value="$(arg obstacles_layer/scan/sensor_frame)"/>
+    <param if="$(arg waypoint_nav)" name="global_costmap/static_layer/map_topic" value="/move_base_map"/>
+    <param if="$(arg waypoint_nav)" name="local_costmap/static_layer/map_topic" value="/move_base_map"/>
   </node>
 </launch>
