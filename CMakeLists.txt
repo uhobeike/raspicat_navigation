@@ -51,7 +51,7 @@ add_library(${PROJECT_NAME}
   src/MclKidnappingMeasures.cpp
 )
 
-install(DIRECTORY launch src config scripts
+install(DIRECTORY launch src config scripts models
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
