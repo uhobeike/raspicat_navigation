@@ -22,7 +22,7 @@ obstacles_layer:
 
 static_layer:
   enabled: true
-  map_topic: /map
+  map_topic: /move_base_map
   first_map_only: false
   lethal_cost_threshold: 100
   subscribe_to_updates: false

@@ -3,14 +3,19 @@
   <arg name="open_rviz" default="true"/>
   <arg name="move_forward_only" default="false"/>
   <arg name="waypoint_navigation" default="false"/>
-  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/tsukuba_no_grass.yaml"/>
+  <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/tsukuba_resolution_05.yaml"/>
+  <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/tsukuba_no_grass.yaml"/>
   <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_sim.csv"/>
 
   <!-- gazebo -->
   <include file="$(find raspicat_navigation)/launch/sim/raspicat_map2gazebo_world.launch"/>
 
   <!-- map server -->
-  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
+  
+  <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
+    <remap from="map" to="move_base_map"/>
+  </node>
   
   <!-- amcl -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch">
