@@ -3,18 +3,20 @@
   <arg name="open_rviz" default="true"/>
   <arg name="move_forward_only" default="false"/>
   <arg name="waypoint_navigation" default="false"/>
-  <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/tsukuba_resolution_05.yaml"/>
-  <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/tsukuba_no_grass.yaml"/>
+  <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/tsukuba_no_tent_05.yaml"/>
+  <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/tsukuba_no_grass.yaml"/>
   <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_sim.csv"/>
 
   <!-- gazebo -->
   <include file="$(find raspicat_navigation)/launch/sim/raspicat_map2gazebo_world.launch"/>
 
   <!-- map server -->
-  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
+  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)">
+    <remap from="map" to="/static_map"/>
+  </node>
   
   <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
-    <remap from="map" to="move_base_map"/>
+    <remap from="map" to="/move_base_map"/>
   </node>
   
   <!-- amcl -->
@@ -29,6 +31,7 @@
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
     <arg name="raspicat_sim" value="true"/>
+    <arg name="waypoint_nav" default="$(arg waypoint_navigation)"/>
     <arg name="robot_base_frame" value="base_footprint"/>
     <arg name="obstacles_layer/scan/sensor_frame" value="lidar_link"/>
   </include>

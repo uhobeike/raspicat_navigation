@@ -8,10 +8,12 @@
   <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_19.csv"/>
 
   <!-- map server -->
-  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
-  
+  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)">
+    <remap from="map" to="/static_map"/>
+  </node>
+
   <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
-    <remap from="map" to="move_base_map"/>
+    <remap from="map" to="/move_base_map"/>
   </node>
 
   <!-- Robot_model import -->
@@ -38,6 +40,7 @@
   <!-- move_base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
+    <arg name="waypoint_nav" default="$(arg waypoint_navigation)"/>
   </include>
 
   <!-- motor ON -->
