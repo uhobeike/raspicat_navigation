@@ -2,19 +2,10 @@
   <!-- Arguments -->
   <arg name="open_rviz" default="true"/>
   <arg name="move_forward_only" default="false"/>
-  <arg name="waypoint_navigation" default="false"/>
+  <arg name="waypoint_navigation" default="true"/>
   <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/map_19.yaml"/>
   <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/tsudanuma/map_19.yaml"/>
   <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_19.csv"/>
-
-  <!-- map server -->
-  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)">
-    <remap from="map" to="/static_map"/>
-  </node>
-
-  <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
-    <remap from="map" to="/move_base_map"/>
-  </node>
 
   <!-- Robot_model import -->
   <arg name="multi_robot_name" default=""/>
@@ -22,6 +13,14 @@
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
     <param name="publish_frequency" type="double" value="50.0" />
     <param name="tf_prefix" value="$(arg multi_robot_name)"/>
+  </node>
+
+  <!-- map server -->
+   <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
+
+  <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
+    <remap from="map" to="/move_base_map"/>
+    <remap from="static_map" to="/move_base_static_map"/>
   </node>
 
   <!-- robot localization 
