@@ -6,12 +6,21 @@ Panels:
       Expanded:
         - /TF1/Frames1
         - /TF1/Tree1
+        - /Mcl1/Amcl Particles1
+        - /Mcl1/Map1
+        - /Mcl1/LaserScan1
+        - /Global Map1/Polygon1
         - /Global Map1/Costmap1
         - /Global Map1/Planner Plan1
+        - /Global Map1/Map1
         - /Local Map1/Polygon1
         - /Local Map1/Costmap1
         - /Local Map1/Planner1
         - /Local Map1/PointCloud21
+        - /Waypoint Nav1/Goal1
+        - /Waypoint Nav1/Waypoint_Pose1
+        - /Waypoint Nav1/MarkerArray1
+        - /Waypoint Nav1/MarkerArray2
       Splitter Ratio: 0.5666666626930237
     Tree Height: 796
   - Class: rviz/Selection
@@ -149,19 +158,85 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        base_footprint:
+          Value: true
+        base_link:
+          Value: true
+        camera_color_frame:
+          Value: true
+        camera_color_optical_frame:
+          Value: true
+        camera_depth_frame:
+          Value: true
+        camera_depth_optical_frame:
+          Value: true
+        camera_link:
+          Value: true
+        caster_link:
+          Value: true
+        caster_wheel_link:
+          Value: true
+        laser:
+          Value: true
+        left_front_usensor_link:
+          Value: true
+        left_side_usensor_link:
+          Value: true
+        left_wheel_link:
+          Value: true
+        lidar_link:
+          Value: true
+        map:
+          Value: true
+        odom:
+          Value: true
+        right_front_usensor_link:
+          Value: true
+        right_side_usensor_link:
+          Value: true
+        right_wheel_link:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        {}
+        map:
+          odom:
+            base_footprint:
+              base_link:
+                camera_link:
+                  camera_color_frame:
+                    camera_color_optical_frame:
+                      {}
+                  camera_depth_frame:
+                    camera_depth_optical_frame:
+                      {}
+                caster_link:
+                  caster_wheel_link:
+                    {}
+                left_front_usensor_link:
+                  {}
+                left_side_usensor_link:
+                  {}
+                left_wheel_link:
+                  {}
+                lidar_link:
+                  laser:
+                    {}
+                right_front_usensor_link:
+                  {}
+                right_side_usensor_link:
+                  {}
+                right_wheel_link:
+                  {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Class: rviz/Group
       Displays:
         - Alpha: 1
@@ -184,22 +259,12 @@ Visualization Manager:
           Class: rviz/Map
           Color Scheme: map
           Draw Behind: false
-          Enabled: true
+          Enabled: false
           Name: Map
-          Topic: /static_map
+          Topic: /map
           Unreliable: false
           Use Timestamp: false
-          Value: true
-        - Alpha: 0.699999988079071
-          Class: rviz/Map
-          Color Scheme: map
-          Draw Behind: false
-          Enabled: true
-          Name: Map
-          Topic: /move_base_map
-          Unreliable: false
-          Use Timestamp: false
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -242,7 +307,7 @@ Visualization Manager:
           Topic: /move_base/local_costmap/footprint
           Unreliable: false
           Value: true
-        - Alpha: 0.699999988079071
+        - Alpha: 1
           Class: rviz/Map
           Color Scheme: costmap
           Draw Behind: true
@@ -274,6 +339,16 @@ Visualization Manager:
           Shaft Length: 0.10000000149011612
           Topic: /move_base/GlobalPlanner/plan
           Unreliable: false
+          Value: true
+        - Alpha: 0.699999988079071
+          Class: rviz/Map
+          Color Scheme: map
+          Draw Behind: false
+          Enabled: true
+          Name: Map
+          Topic: /move_base_map
+          Unreliable: false
+          Use Timestamp: false
           Value: true
       Enabled: true
       Name: Global Map
@@ -390,7 +465,7 @@ Visualization Manager:
           Marker Topic: /waypoint_area
           Name: MarkerArray
           Namespaces:
-            {}
+            "": true
           Queue Size: 100
           Value: true
         - Class: rviz/MarkerArray
@@ -398,7 +473,7 @@ Visualization Manager:
           Marker Topic: /waypoint_number_txt
           Name: MarkerArray
           Namespaces:
-            {}
+            "": true
           Queue Size: 100
           Value: true
       Enabled: true
@@ -432,15 +507,15 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 16.85610580444336
+      Distance: 93.35777282714844
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.027685880661010742
-        Y: 1.2178020477294922
+        X: 0.9886791706085205
+        Y: -4.139456272125244
         Z: 0
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
@@ -469,4 +544,4 @@ Window Geometry:
     collapsed: true
   Width: 1440
   X: 4132
-  Y: 132
+  Y: 0
