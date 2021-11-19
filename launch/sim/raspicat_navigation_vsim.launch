@@ -5,7 +5,7 @@
   <arg name="waypoint_navigation" default="true"/>
   <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/tsukuba_no_tent_05.yaml"/>
   <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/tsukuba_no_grass.yaml"/>
-  <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_sim.csv"/>
+  <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_tsukuba.csv"/>
 
   <!-- gazebo -->
   <include file="$(find raspicat_navigation)/launch/sim/raspicat_map2gazebo_world.launch"/>
