@@ -3,9 +3,9 @@
   <arg name="open_rviz" default="true"/>
   <arg name="move_forward_only" default="false"/>
   <arg name="waypoint_navigation" default="true"/>
-  <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/map_19.yaml"/>
-  <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/tsudanuma/map_19.yaml"/>
-  <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_19.csv"/>
+  <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/tsukuba_no_tent_05.yaml"/>
+  <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/tsukuba_no_grass.yaml"/>
+  <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_tsukuba.csv"/>
 
   <!-- Robot_model import -->
   <arg name="multi_robot_name" default=""/>
