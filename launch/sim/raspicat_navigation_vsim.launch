@@ -8,7 +8,7 @@
   <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_tsukuba.csv"/>
 
   <!-- gazebo -->
-  <include file="$(find raspicat_navigation)/launch/sim/raspicat_map2gazebo_world.launch"/>
+  <include file="$(find raspicat_navigation)/launch/sim/raspicat_tsukuba_singou_world.launch"/>
 
   <!-- map server -->
   <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
