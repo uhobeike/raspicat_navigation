@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <sdf version='1.4'>
-  <model name="map2gazebo">
+  <model name="tsukuba">
   <static>true</static>
 
     <link name='link'>
@@ -8,7 +8,7 @@
        <collision name='collision'>
         <geometry>
           <mesh>
-            <uri>model://map2gazebo/meshes/map.stl</uri>
+            <uri>model://tsukuba/meshes/map.stl</uri>
             <scale>1 1 1</scale>
           </mesh>
         </geometry>
@@ -17,7 +17,7 @@
       <visual name='visual'>
         <geometry>
           <mesh>
-            <uri>model://map2gazebo/meshes/map.stl</uri>
+            <uri>model://tsukuba/meshes/map.stl</uri>
             <scale>1 1 1</scale>
           </mesh>
         </geometry>
