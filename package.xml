@@ -24,7 +24,7 @@
 
   <export>
     <raspicat_navigation plugin="${prefix}/plugin.xml" />
-    <gazebo_ros gazebo_media_path="${prefix}/config/world"/>
-    <gazebo_ros gazebo_model_path="${prefix}/config/maps/models"/>
+    <gazebo_ros gazebo_media_path="${prefix}/config/map2gazebo/world"/>
+    <gazebo_ros gazebo_model_path="${prefix}/config/map2gazebo/models"/>
   </export>
 </package>

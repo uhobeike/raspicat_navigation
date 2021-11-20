@@ -61,14 +61,14 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <model name='map2gazebo'>
+    <model name='tsukuba_singou'>
       <static>1</static>
       <link name='link'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://map2gazebo/meshes/map.stl</uri>
+              <uri>model://tsukuba_singou/meshes/map.stl</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -89,7 +89,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://map2gazebo/meshes/map.stl</uri>
+              <uri>model://tsukuba_singou/meshes/map.stl</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -157,7 +157,7 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='map2gazebo'>
+      <model name='tsukuba_singou'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
