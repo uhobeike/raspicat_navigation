@@ -3,8 +3,8 @@
   <arg name="open_rviz" default="true"/>
   <arg name="move_forward_only" default="false"/>
   <arg name="waypoint_navigation" default="true"/>
-  <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/tsukuba_no_tent_05.yaml"/>
-  <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/tsukuba_no_grass.yaml"/>
+  <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/map_tsukuba_singou.yaml"/>
+  <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsukuba_singou.yaml"/>
   <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_tsukuba.csv"/>
 
   <!-- gazebo -->
@@ -20,8 +20,8 @@
 
   <!-- amcl -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch">
-    <arg name="initial_pose_x" value="-0.0688619613647"/>
-    <arg name="initial_pose_y" value="-1.71242249012"/>
+    <arg name="initial_pose_x" value="213.6"/>
+    <arg name="initial_pose_y" value="102.6"/>
     <arg name="initial_pose_a" value="0"/>
     <arg name="base_frame_id" default="base_footprint"/>
   </include>
@@ -34,6 +34,14 @@
     <arg name="robot_base_frame" value="base_footprint"/>
     <arg name="obstacles_layer/scan/sensor_frame" value="lidar_link"/>
   </include>
+
+  <node pkg="sound_play" name="sound_play"
+    type="soundplay_node.py" required="true" output="screen">
+  </node>
+  
+  <node pkg="raspicat_navigation" name="waypoint_passed_play_sound"
+    type="waypoint_passed_play_sound.py" required="true" output="screen">
+  </node>
 
   <!-- waypoint_nav -->
   <group if="$(arg waypoint_navigation)"> 

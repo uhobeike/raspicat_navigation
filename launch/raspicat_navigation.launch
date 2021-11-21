@@ -34,7 +34,11 @@
   </node>-->
   
   <!-- AMCL -->
-  <include file="$(find raspicat_navigation)/launch/amcl.launch"/>
+  <include file="$(find raspicat_navigation)/launch/amcl.launch">
+    <arg name="initial_pose_x" value="213.6"/>
+    <arg name="initial_pose_y" value="102.6"/>
+    <arg name="initial_pose_a" value="0"/>
+  </include>
 
   <!-- move_base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
@@ -45,6 +49,14 @@
   <!-- motor ON -->
   <node pkg="raspicat_navigation" name="motor_start"
     type="motor_start.py" required="true" output="screen">
+  </node>
+
+  <node pkg="sound_play" name="sound_play"
+    type="soundplay_node.py" required="true" output="screen">
+  </node>
+  
+  <node pkg="raspicat_navigation" name="waypoint_passed_play_sound"
+    type="waypoint_passed_play_sound.py" required="true" output="screen">
   </node>
   
   <!-- waypoint_nav -->

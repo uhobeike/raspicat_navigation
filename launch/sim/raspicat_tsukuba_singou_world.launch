@@ -3,9 +3,10 @@
   <!-- arguments -->
   <arg name="model" default="$(find raspicatv2_description)/robots/raspicatv2.urdf.xacro"/>
   <arg name="gui" default="false"/>
-  <arg name="x_init_pos" default="0.0"/>
-  <arg name="y_init_pos" default="-2.0"/>
+  <arg name="x_init_pos" default="-2.1"/>
+  <arg name="y_init_pos" default="-32.5"/>
   <arg name="z_init_pos" default="0.0"/>
+  <arg name="yaw_init_pos" default="3.5"/>
   
   <!-- prameters -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
@@ -21,6 +22,6 @@
   </include>
 
   <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" 
-    args="-urdf -model raspicatv2 -x $(arg x_init_pos) -y $(arg y_init_pos) -z $(arg z_init_pos) -param robot_description"/>
+    args="-urdf -model raspicatv2 -x $(arg x_init_pos) -y $(arg y_init_pos) -z $(arg z_init_pos) -Y $(arg yaw_init_pos) -param robot_description"/>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 </launch>

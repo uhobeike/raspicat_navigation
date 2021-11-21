@@ -76,6 +76,7 @@ void WaypointNav::PubSub_Init()
 
   way_pose_array_ = nh_.advertise<geometry_msgs::PoseArray>("waypoint", 1, true);
   way_area_array_ = nh_.advertise<visualization_msgs::MarkerArray>("waypoint_area", 1, true);
+  way_sound_ = nh_.advertise<std_msgs::Bool>("waypoint_passed", 1, true);
   way_number_txt_array_ =
       nh_.advertise<visualization_msgs::MarkerArray>("waypoint_number_txt", 1, true);
 }
@@ -265,6 +266,8 @@ bool WaypointNav::WaypointAreaCheck()
       ROS_INFO("%s: WayPoint Passing", node_name_.c_str());
       ROS_INFO("%s: Next Move Plan", node_name_.c_str());
       waypoint_index_++;
+      std_msgs::Bool data;
+      way_sound_.publish(data);
       return true;
     }
   }

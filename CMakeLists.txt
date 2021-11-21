@@ -49,8 +49,6 @@ add_library(${PROJECT_NAME}
   src/WaypointParamChange.cpp
   src/CmdVelSmoother.cpp
   src/MclKidnappingMeasures.cpp
-  src/WaypointBuzzerDebug.cpp
-  src/WaypointActionBySwitch.cpp
 )
 
 install(DIRECTORY launch src config scripts

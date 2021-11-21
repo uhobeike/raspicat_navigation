@@ -21,6 +21,7 @@
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <ros/ros.h>
+#include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
 #include <visualization_msgs/MarkerArray.h>
 
@@ -68,7 +69,7 @@ class WaypointNav
   ros::Timer timer_;
 
   ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_;
-  ros::Publisher ini_pose_, way_pose_array_, way_area_array_, way_number_txt_array_;
+  ros::Publisher ini_pose_, way_pose_array_, way_area_array_, way_number_txt_array_, way_sound_;
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac_move_base_;
 
   string node_name_;
