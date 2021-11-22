@@ -20,6 +20,7 @@
   <exec_depend>global_planner</exec_depend>
   <exec_depend>dwa_local_planner</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>sound_play</exec_depend>
   <exec_depend>gazebo_ros</exec_depend>
 
   <export>

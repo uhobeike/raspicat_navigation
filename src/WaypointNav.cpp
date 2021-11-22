@@ -73,6 +73,8 @@ void WaypointNav::PubSub_Init()
 {
   sub_movebase_goal_ = nh_.subscribe("move_base/status", 1, &WaypointNav::GoalReachedCb, this);
   sub_goal_command_ = nh_.subscribe("goal_command", 1, &WaypointNav::GoalCommandCb, this);
+  waypoint_start_ = nh_.subscribe("waypoint_start", 1, &WaypointNav::WaypointStartCb, this);
+  waypoint_restart_ = nh_.subscribe("waypoint_restart", 1, &WaypointNav::WaypointRestartCb, this);
 
   way_pose_array_ = nh_.advertise<geometry_msgs::PoseArray>("waypoint", 1, true);
   way_area_array_ = nh_.advertise<visualization_msgs::MarkerArray>("waypoint_area", 1, true);
@@ -421,6 +423,18 @@ void WaypointNav::GoalCommandCb(const std_msgs::String& msg)
     ROS_INFO("%s: Shutdown now ('o')/ bye bye~~~", node_name_.c_str());
     ros::shutdown();
   }
+}
+
+void WaypointNav::WaypointStartCb(const std_msgs::String& msg){
+  if (!MsgReceiveFlag_){
+    MsgReceiveFlag_ = true;
+    Run();
+  }
+}
+
+void WaypointNav::WaypointRestartCb(const std_msgs::String& msg){
+  ReStartFlag_ = true;
+  waypoint_index_++;
 }
 
 }  // namespace waypoint_nav
