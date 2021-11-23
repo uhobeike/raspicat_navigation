@@ -7,6 +7,10 @@ Raspberry Pi CatでROSの[Navigation Stack](https://wiki.ros.org/navigation)を�
 
 [Raspberry Pi Cat](https://rt-net.jp/products/raspberry-pi-cat/)を用いた[実機でのナビゲーションの動作確認](https://youtu.be/ObsD6C73Xr4)をしています。
 
+### つくばチャレンジでの走行(動画)
+
+[![Image from Gyazo](https://i.gyazo.com/144f8de089ce6e8d32e23afc78d66bf6.png)](https://youtu.be/TeF1nFxjLRQ)
+
 ## 実機
 ### 動作環境
 #### Raspberry Pi Cat
