@@ -3,7 +3,7 @@
   <arg name="open_rviz" default="true"/>
   <arg name="move_forward_only" default="false"/>
   <arg name="waypoint_navigation" default="false"/>
-  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/map_sim.yaml"/>
+  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/sim/map_sim.yaml"/>
   <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_sim.csv"/>
 
   <!-- gazebo -->
