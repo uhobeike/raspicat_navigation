@@ -1,58 +1,94 @@
+<?xml version="1.0"?>
 <sdf version='1.6'>
   <world name='default'>
-    <light name='sun' type='directional'>
-      <cast_shadows>1</cast_shadows>
-      <pose frame=''>0 0 10 0 -0 0</pose>
-      <diffuse>0.8 0.8 0.8 1</diffuse>
-      <specular>0.2 0.2 0.2 1</specular>
-      <attenuation>
-        <range>1000</range>
-        <constant>0.9</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <direction>-0.5 0.1 -0.9</direction>
-    </light>
-    <model name='ground_plane'>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://tsukuba_singou</uri>
+    </include>
+
+    <model name='map_satellite_36.0835594_140.07664_400_400'>
       <static>1</static>
       <link name='link'>
         <collision name='collision'>
+          <pose frame=''>0 0 -0.5 0 -0 0</pose>
           <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>100 100</size>
-            </plane>
+            <box>
+              <size>617.733 617.733 1</size>
+            </box>
           </geometry>
+          <max_contacts>10</max_contacts>
           <surface>
             <contact>
-              <collide_bitmask>65535</collide_bitmask>
               <ode/>
             </contact>
+            <bounce/>
             <friction>
-              <ode>
-                <mu>100</mu>
-                <mu2>50</mu2>
-              </ode>
               <torsional>
                 <ode/>
               </torsional>
+              <ode/>
             </friction>
-            <bounce/>
           </surface>
-          <max_contacts>10</max_contacts>
         </collision>
-        <visual name='visual'>
-          <cast_shadows>0</cast_shadows>
+        <visual name='visual0_0'>
+          <pose frame=''>-154.433 154.433 -0.5 0 -0 1.5708</pose>
           <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>100 100</size>
-            </plane>
+            <box>
+              <size>308.866 308.866 1</size>
+            </box>
           </geometry>
           <material>
             <script>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/Grey</name>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+              <name>map_satellite_36.0835594_140.07664_400_400/0_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_1'>
+          <pose frame=''>154.433 154.433 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>308.866 308.866 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+              <name>map_satellite_36.0835594_140.07664_400_400/0_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_0'>
+          <pose frame=''>-154.433 -154.433 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>308.866 308.866 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+              <name>map_satellite_36.0835594_140.07664_400_400/1_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_1'>
+          <pose frame=''>154.433 -154.433 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>308.866 308.866 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+              <name>map_satellite_36.0835594_140.07664_400_400/1_1</name>
             </script>
           </material>
         </visual>
@@ -60,47 +96,11 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
+      <pose frame=''>-69.3615 9.6139 0 0 -0 0.601607</pose>
     </model>
-    <model name='tsukuba_singou'>
-      <static>1</static>
-      <link name='link'>
-        <pose frame=''>0 0 0 0 -0 0</pose>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <uri>model://tsukuba_singou/meshes/map.stl</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://tsukuba_singou/meshes/map.stl</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-    </model>
-    <physics name='default_physics' default='0' type='ode'>
-      <real_time_update_rate>1000</real_time_update_rate>
+
+    <physics type="ode">
+      <real_time_update_rate>1000.0</real_time_update_rate>
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1</real_time_factor>
       <ode>
@@ -108,68 +108,18 @@
           <type>quick</type>
           <iters>150</iters>
           <precon_iters>0</precon_iters>
-          <sor>1.4</sor>
+          <sor>1.400000</sor>
           <use_dynamic_moi_rescaling>1</use_dynamic_moi_rescaling>
         </solver>
-        <constraints>
-          <cfm>0</cfm>
-          <erp>0.2</erp>
-          <contact_max_correcting_vel>100</contact_max_correcting_vel>
-          <contact_surface_layer>0.001</contact_surface_layer>
-        </constraints>
       </ode>
     </physics>
+
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>-43.86 -50.5976 154.718 2e-06 1.5698 -2.64301</pose>
+        <pose frame=''>52.0481 0.836069 43.0774 0 0.483643 -2.65499</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
-    <gravity>0 0 -9.8</gravity>
-    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
-    <atmosphere type='adiabatic'/>
-    <scene>
-      <ambient>0.4 0.4 0.4 1</ambient>
-      <background>0.7 0.7 0.7 1</background>
-      <shadows>1</shadows>
-    </scene>
-    <wind/>
-    <spherical_coordinates>
-      <surface_model>EARTH_WGS84</surface_model>
-      <latitude_deg>0</latitude_deg>
-      <longitude_deg>0</longitude_deg>
-      <elevation>0</elevation>
-      <heading_deg>0</heading_deg>
-    </spherical_coordinates>
-    <state world_name='default'>
-      <sim_time>203 457000000</sim_time>
-      <real_time>111 598252253</real_time>
-      <wall_time>1637420883 203128817</wall_time>
-      <iterations>101843</iterations>
-      <model name='ground_plane'>
-        <pose frame=''>0 0 0 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='tsukuba_singou'>
-        <pose frame=''>0 0 0 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <light name='sun'>
-        <pose frame=''>0 0 10 0 -0 0</pose>
-      </light>
-    </state>
   </world>
 </sdf>
