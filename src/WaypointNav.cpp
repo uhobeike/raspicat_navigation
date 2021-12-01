@@ -85,7 +85,7 @@ void WaypointNav::PubSub_Init()
 
 void WaypointNav::ActionClient_Init()
 {
-  while (!ac_move_base_.waitForServer(ros::Duration(30.0)))
+  while (!ac_move_base_.waitForServer(ros::Duration(100.0)))
   {
     ROS_ERROR("Waiting for the move_base action server to come up");
     exit(0);
