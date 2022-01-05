@@ -20,6 +20,9 @@
 #include <tf/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
+#include <pluginlib/class_loader.hpp>
+#include "raspicat_navigation/BaseWaypointRviz.hpp"
+#include "raspicat_navigation/BaseWaypointServer.hpp"
 #include "raspicat_navigation/WaypointNav.hpp"
 
 #include <algorithm>
@@ -53,12 +56,45 @@ WaypointNav::WaypointNav(ros::NodeHandle& nodeHandle, std::string node_name, std
       ReStartFlag_(false),
       MsgReceiveFlag_(false)
 {
+  pluginlib::ClassLoader<raspicat_navigation::BaseWaypointServer> base_waypoint_server_loader(
+      "raspicat_navigation", "raspicat_navigation::BaseWaypointServer");
+
+  pluginlib::ClassLoader<raspicat_navigation::BaseWaypointRviz> base_waypoint_rviz_loader(
+      "raspicat_navigation", "raspicat_navigation::BaseWaypointRviz");
+
+  std::string plugin_name1 = "raspicat_navigation/WaypointServer";
+  std::string plugin_name2 = "raspicat_navigation/WaypointRviz";
+
+  try
+  {
+    boost::shared_ptr<raspicat_navigation::BaseWaypointServer> add =
+        base_waypoint_server_loader.createInstance("raspicat_navigation/WaypointServer");
+    add->initialize(plugin_name1);
+    add->run();
+    add->WaypointCsvRead(csv_fname_, waypoint_csv_, waypoint_csv_index_);
+  }
+  catch (pluginlib::PluginlibException& ex)
+  {
+    ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
+  }
+
+  try
+  {
+    boost::shared_ptr<raspicat_navigation::BaseWaypointRviz> add =
+        base_waypoint_rviz_loader.createInstance("raspicat_navigation/WaypointRviz");
+    add->initialize(plugin_name2);
+    add->run();
+  }
+  catch (pluginlib::PluginlibException& ex)
+  {
+    ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
+  }
   initTimerCb();
 
   PubSub_Init();
   ActionClient_Init();
 
-  WaypointCsvRead();
+  // WaypointCsvRead();
   WaypointRvizVisualization();
 }
 
@@ -91,31 +127,6 @@ void WaypointNav::ActionClient_Init()
     exit(0);
   }
   ROS_INFO("MoveBase server comes up");
-}
-
-void WaypointNav::WaypointCsvRead()
-{
-  ifstream f_r(csv_fname_.c_str(), std::ios::in);
-  if (f_r.fail())
-  {
-    ROS_ERROR("std::ifstream could not open %s.", csv_fname_.c_str());
-    exit(-1);
-  }
-
-  string line, word;
-  while (getline(f_r, line))
-  {
-    istringstream stream(line);
-    while (getline(stream, word, ','))
-    {
-      waypoint_csv_[waypoint_csv_index_ - 1].push_back(word);
-    }
-    waypoint_csv_.resize(++waypoint_csv_index_);
-  }
-  /*Index adjustment__________________________*/
-  waypoint_csv_.resize(--waypoint_csv_index_);
-  --waypoint_csv_index_;
-  /*__________________________________________*/
 }
 
 void WaypointNav::WaypointRvizVisualization()
@@ -425,14 +436,17 @@ void WaypointNav::GoalCommandCb(const std_msgs::String& msg)
   }
 }
 
-void WaypointNav::WaypointStartCb(const std_msgs::String& msg){
-  if (!MsgReceiveFlag_){
+void WaypointNav::WaypointStartCb(const std_msgs::String& msg)
+{
+  if (!MsgReceiveFlag_)
+  {
     MsgReceiveFlag_ = true;
     Run();
   }
 }
 
-void WaypointNav::WaypointRestartCb(const std_msgs::String& msg){
+void WaypointNav::WaypointRestartCb(const std_msgs::String& msg)
+{
   ReStartFlag_ = true;
   waypoint_index_++;
 }

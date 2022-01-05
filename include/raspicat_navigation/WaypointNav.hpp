@@ -71,7 +71,8 @@ class WaypointNav
   tf2_ros::Buffer& tf_;
   ros::Timer timer_;
 
-  ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_, waypoint_start_, waypoint_restart_;
+  ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_, waypoint_start_,
+      waypoint_restart_;
   ros::Publisher ini_pose_, way_pose_array_, way_area_array_, way_number_txt_array_, way_sound_;
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac_move_base_;
 

@@ -19,6 +19,8 @@
 
 #include <ros/ros.h>
 
+using namespace ::std;
+
 namespace raspicat_navigation
 {
 class BaseWaypointServer
@@ -26,6 +28,8 @@ class BaseWaypointServer
  public:
   virtual void initialize(std::string name) = 0;
   virtual void run() = 0;
+  virtual void WaypointCsvRead(string &csv_fname_, vector<vector<string>> &waypoint_csv_,
+                               int &waypoint_csv_index_) = 0;
 
   virtual ~BaseWaypointServer() {}
 
