@@ -19,6 +19,8 @@
 
 #include <ros/ros.h>
 
+using namespace ::std;
+
 namespace raspicat_navigation
 {
 class BaseWaypointRviz
@@ -26,6 +28,11 @@ class BaseWaypointRviz
  public:
   virtual void initialize(std::string name) = 0;
   virtual void run() = 0;
+  virtual void WaypointRvizVisualization(vector<vector<string>> &waypoint_csv_,
+                                         int &waypoint_csv_index_, ros::Publisher &way_pose_array_,
+                                         ros::Publisher &way_area_array_,
+                                         ros::Publisher &way_number_txt_array_,
+                                         float &waypoint_area_threshold_) = 0;
 
   virtual ~BaseWaypointRviz() {}
 

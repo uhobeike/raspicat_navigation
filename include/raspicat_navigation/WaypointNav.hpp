@@ -17,10 +17,11 @@
 #ifndef WAYPOINT_NAV_
 #define WAYPOINT_NAV_
 
+#include <ros/ros.h>
+
 #include <actionlib/client/simple_action_client.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <move_base_msgs/MoveBaseAction.h>
-#include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
 #include <visualization_msgs/MarkerArray.h>
@@ -49,7 +50,6 @@ class WaypointNav
   void PubSub_Init();
   void initTimerCb();
 
-  void WaypointCsvRead();
   void WaypointRvizVisualization();
   void WaypointMarkerArraySet(visualization_msgs::MarkerArray& waypoint_area,
                               visualization_msgs::MarkerArray& waypoint_number_txt, uint8_t index,
