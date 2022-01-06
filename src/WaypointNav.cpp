@@ -14,8 +14,9 @@
  *limitations under the License.
  */
 
-#include <geometry_msgs/PoseArray.h>
 #include <ros/ros.h>
+
+#include <geometry_msgs/PoseArray.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
@@ -31,11 +32,14 @@ using namespace ::std;
 
 namespace waypoint_nav
 {
-WaypointNav::WaypointNav(ros::NodeHandle& nodeHandle, std::string node_name, std::string file_name,
-                         tf2_ros::Buffer& tf)
+WaypointNav::WaypointNav(ros::NodeHandle& nodeHandle, ros::NodeHandle& private_nodeHandle,
+                         std::string node_name, std::string file_name, tf2_ros::Buffer& tf)
     : nh_(nodeHandle),
+      pnh_(private_nodeHandle),
       tf_(tf),
       ac_move_base_("move_base", true),
+      waypoint_server_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointServer"),
+      waypoint_rviz_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointRviz"),
       node_name_(node_name),
       csv_fname_(file_name),
       waypoint_csv_index_(1),
@@ -53,23 +57,29 @@ WaypointNav::WaypointNav(ros::NodeHandle& nodeHandle, std::string node_name, std
       ReStartFlag_(false),
       MsgReceiveFlag_(false)
 {
+  readParam();
   initTimerCb();
-
-  PubSub_Init();
-  ActionClient_Init();
-
-  WaypointCsvRead();
-  WaypointRvizVisualization();
+  initPubSub();
+  initActionClient();
+  initClassLoader();
 }
 
 WaypointNav::~WaypointNav() {}
+
+void WaypointNav::readParam()
+{
+  pnh_.param("base_waypoint_server", waypoint_server_,
+             std::string("raspicat_navigation/WaypointServer"));
+
+  pnh_.param("base_waypoint_rviz", waypoint_rviz_, std::string("raspicat_navigation/WaypointRviz"));
+}
 
 void WaypointNav::initTimerCb()
 {
   timer_ = nh_.createTimer(ros::Duration(0.1), &WaypointNav::getRobotPose, this);
 }
 
-void WaypointNav::PubSub_Init()
+void WaypointNav::initPubSub()
 {
   sub_movebase_goal_ = nh_.subscribe("move_base/status", 1, &WaypointNav::GoalReachedCb, this);
   sub_goal_command_ = nh_.subscribe("goal_command", 1, &WaypointNav::GoalCommandCb, this);
@@ -83,7 +93,7 @@ void WaypointNav::PubSub_Init()
       nh_.advertise<visualization_msgs::MarkerArray>("waypoint_number_txt", 1, true);
 }
 
-void WaypointNav::ActionClient_Init()
+void WaypointNav::initActionClient()
 {
   while (!ac_move_base_.waitForServer(ros::Duration(100.0)))
   {
@@ -93,170 +103,65 @@ void WaypointNav::ActionClient_Init()
   ROS_INFO("MoveBase server comes up");
 }
 
-void WaypointNav::WaypointCsvRead()
+void WaypointNav::initClassLoader()
 {
-  ifstream f_r(csv_fname_.c_str(), std::ios::in);
-  if (f_r.fail())
+  try
   {
-    ROS_ERROR("std::ifstream could not open %s.", csv_fname_.c_str());
-    exit(-1);
+    way_srv_ = waypoint_server_loader_.createInstance("raspicat_navigation/WaypointServer");
+    way_srv_->initialize(waypoint_server_);
+    way_srv_->run();
+    way_srv_->WaypointCsvRead(csv_fname_, waypoint_csv_, waypoint_csv_index_);
+  }
+  catch (pluginlib::PluginlibException& ex)
+  {
+    ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
   }
 
-  string line, word;
-  while (getline(f_r, line))
+  try
   {
-    istringstream stream(line);
-    while (getline(stream, word, ','))
+    way_rviz_ = waypoint_rviz_loader_.createInstance("raspicat_navigation/WaypointRviz");
+    way_rviz_->initialize(waypoint_rviz_);
+    way_rviz_->run();
+    way_rviz_->WaypointRvizVisualization(waypoint_csv_, waypoint_csv_index_, way_pose_array_,
+                                         way_area_array_, way_number_txt_array_,
+                                         waypoint_area_threshold_);
+  }
+  catch (pluginlib::PluginlibException& ex)
+  {
+    ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
+  }
+}
+
+void WaypointNav::Run()
+{
+  goal_.target_pose.header.frame_id = "map";
+  setWaypoint(goal_);
+
+  ros::Rate loop_rate(5);
+  while (ros::ok())
+  {
+    if (NextWaypointMode_)
     {
-      waypoint_csv_[waypoint_csv_index_ - 1].push_back(word);
+      if (checkWaypointArea()) setWaypoint(goal_);
     }
-    waypoint_csv_.resize(++waypoint_csv_index_);
-  }
-  /*Index adjustment__________________________*/
-  waypoint_csv_.resize(--waypoint_csv_index_);
-  --waypoint_csv_index_;
-  /*__________________________________________*/
-}
-
-void WaypointNav::WaypointRvizVisualization()
-{
-  geometry_msgs::PoseArray pose_array;
-  geometry_msgs::Pose pose;
-  visualization_msgs::MarkerArray waypoint_area;
-  visualization_msgs::MarkerArray waypoint_number_txt;
-  waypoint_area.markers.resize(waypoint_csv_index_ + 1);
-  waypoint_number_txt.markers.resize(waypoint_csv_index_ + 1);
-  uint8_t vec_cnt_index(0);
-  for (auto it_t = waypoint_csv_.begin(); it_t != waypoint_csv_.end(); ++it_t)
-  {
-    vec_cnt_index = 0;
-    WaypointMarkerArraySet(waypoint_area, waypoint_number_txt,
-                           distance(waypoint_csv_.begin(), it_t),
-                           waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size());
-
-    for (auto it = (*it_t).begin(); it != (*it_t).end(); ++it)
+    else if (FinalGoalWaypointMode_)
+      setWaypoint(goal_);
+    else if (ReStartWaypointMode_)
     {
-      switch (vec_cnt_index)
-      {
-        case 0:
-          pose.position.x = stod(*it);
-          if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size() == 4)
-            waypoint_area.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.x =
-                stod(*it);
-          waypoint_number_txt.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.x =
-              stod(*it);
-          vec_cnt_index++;
-          continue;
-        case 1:
-          pose.position.y = stod(*it);
-          if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size() == 4)
-            waypoint_area.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.y =
-                stod(*it);
-          waypoint_number_txt.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.y =
-              stod(*it);
-          vec_cnt_index++;
-          continue;
-
-          pose.position.z = 0.2;
-          if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size() == 4)
-            waypoint_area.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.z = 0.1;
-          waypoint_number_txt.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.z = 0.1;
-
-        case 2:
-          pose.orientation.z = stod(*it);
-          vec_cnt_index++;
-          continue;
-        case 3:
-          pose.orientation.w = stod(*it);
-          vec_cnt_index++;
-          break;
-      }
+      if (ReStartFlag_) setWaypoint(goal_);
     }
-    pose_array.poses.push_back(pose);
-  }
-  pose_array.header.stamp = ros::Time::now();
-  pose_array.header.frame_id = "map";
-
-  way_pose_array_.publish(pose_array);
-  way_area_array_.publish(waypoint_area);
-  way_number_txt_array_.publish(waypoint_number_txt);
-}
-
-void WaypointNav::WaypointMarkerArraySet(visualization_msgs::MarkerArray& waypoint_area,
-                                         visualization_msgs::MarkerArray& waypoint_number_txt,
-                                         uint8_t index, uint8_t size)
-{
-  /*waypoint area_________________________________________________________*/
-  waypoint_area.markers[index].header.frame_id = "map";
-  waypoint_area.markers[index].header.stamp = ros::Time::now();
-  waypoint_area.markers[index].id = index;
-  waypoint_area.markers[index].type = visualization_msgs::Marker::CYLINDER;
-  waypoint_area.markers[index].action = visualization_msgs::Marker::ADD;
-  geometry_msgs::Vector3 cylinder;
-  cylinder.x = waypoint_area_threshold_ * 2;
-  cylinder.y = waypoint_area_threshold_ * 2;
-  cylinder.z = 0.03;
-  waypoint_area.markers[index].scale = cylinder;
-  if (size == 4)
-    waypoint_area.markers[index].color.a = 0.1f;
-  else
-    waypoint_area.markers[index].color.a = 0.000001f;
-  waypoint_area.markers[index].color.b = 1.0f;
-  waypoint_area.markers[index].color.g = 0.0f;
-  waypoint_area.markers[index].color.r = 0.0f;
-  waypoint_area.markers[index].pose.orientation.z = 0;
-  waypoint_area.markers[index].pose.orientation.w = 1;
-  /*______________________________________________________________________*/
-
-  /*waypoint_number_txt________________________________________________________________*/
-  waypoint_number_txt.markers[index].header.frame_id = "map";
-  waypoint_number_txt.markers[index].header.stamp = ros::Time::now();
-  waypoint_number_txt.markers[index].id = index;
-  waypoint_number_txt.markers[index].text = to_string(index + 1);
-  waypoint_number_txt.markers[index].type = visualization_msgs::Marker::TEXT_VIEW_FACING;
-  waypoint_number_txt.markers[index].action = visualization_msgs::Marker::ADD;
-  geometry_msgs::Vector3 text;
-  text.z = waypoint_area_threshold_ / 2;
-  waypoint_number_txt.markers[index].scale = text;
-  waypoint_number_txt.markers[index].color.a = 1.0f;
-  waypoint_number_txt.markers[index].color.b = 1.0f;
-  waypoint_number_txt.markers[index].color.g = 1.0f;
-  waypoint_number_txt.markers[index].color.r = 1.0f;
-  /*___________________________________________________________________________________*/
-}
-
-void WaypointNav::WaypointInfoManagement()
-{
-  if (waypoint_csv_[waypoint_index_].size() >= 0 && waypoint_csv_[waypoint_index_].size() <= 4)
-  {
-    ModeFlagOff();
-    NextWaypointMode_ = true;
-  }
-  else if (waypoint_csv_[waypoint_index_][4] == "Goal")
-  {
-    FinalGoalWaypointMode_ = true;
-    if (waypoint_index_ == waypoint_csv_index_ && GoalReachedFlag_ && WaypointAreaCheck())
-      FinalGoalFlag_ = true;
-    if (waypoint_index_ == waypoint_csv_index_) ModeFlagOff();
-    if (FinalGoalFlag_)
+    else if (GoalReachedMode_)
     {
-      ROS_INFO("%s: Final Goal Reached", node_name_.c_str());
-      ROS_INFO("%s: Please ' Ctl + c ' ", node_name_.c_str());
+      if (checkWaypointArea() && checkGoalReach()) setWaypoint(goal_);
     }
-  }
-  else if (waypoint_csv_[waypoint_index_][4] == "GoalReStart")
-  {
-    ModeFlagOff();
-    ReStartWaypointMode_ = true;
-  }
-  else if (waypoint_csv_[waypoint_index_][4] == "GoalReach")
-  {
-    ModeFlagOff();
-    GoalReachedMode_ = true;
+    // debugModeFlag();
+    managementWaypointInfo();
+    ros::spinOnce();
+    loop_rate.sleep();
   }
 }
 
-bool WaypointNav::WaypointAreaCheck()
+bool WaypointNav::checkWaypointArea()
 {
   if (NextWaypointMode_)
   {
@@ -285,83 +190,6 @@ bool WaypointNav::WaypointAreaCheck()
     }
   }
   return false;
-}
-
-bool WaypointNav::GoalReachCheck()
-{
-  if (GoalReachedFlag_)
-  {
-    ROS_INFO("%s: Goal Reached", node_name_.c_str());
-    ROS_INFO("%s: Restart", node_name_.c_str());
-    waypoint_index_++;
-    return true;
-  }
-  return false;
-}
-
-void WaypointNav::WaypointSet(move_base_msgs::MoveBaseGoal& goal)
-{
-  goal.target_pose.pose.position.x = stod(waypoint_csv_[waypoint_index_][0]);
-  goal.target_pose.pose.position.y = stod(waypoint_csv_[waypoint_index_][1]);
-  goal.target_pose.pose.orientation.z = stod(waypoint_csv_[waypoint_index_][2]);
-  goal.target_pose.pose.orientation.w = stod(waypoint_csv_[waypoint_index_][3]);
-  goal.target_pose.header.stamp = ros::Time::now();
-
-  ac_move_base_.sendGoal(goal);
-}
-
-void WaypointNav::ModeFlagOff()
-{
-  NextWaypointMode_ = false;
-  FinalGoalWaypointMode_ = false;
-  ReStartWaypointMode_ = false;
-  GoalReachedMode_ = false;
-
-  GoalReachedFlag_ = false;
-  ReStartFlag_ = false;
-}
-
-void WaypointNav::ModeFlagDebug()
-{
-  cout << "___________________\n"
-       << "NextWaypointMode : " << NextWaypointMode_ << "\n"
-       << "FinalGoalWaypointMode : " << FinalGoalWaypointMode_ << "\n"
-       << "ReStartWaypointMode : " << ReStartWaypointMode_ << "\n"
-       << "GoalReachedMode : " << GoalReachedMode_ << "\n"
-       << "GoalReachedFlag : " << GoalReachedFlag_ << "\n"
-
-       << "~~~~~~~~~~~~~~~~~~~\n"
-       << "WaypointIndex   : " << waypoint_index_ << "\n"
-       << "___________________\n";
-}
-
-void WaypointNav::Run()
-{
-  goal_.target_pose.header.frame_id = "map";
-  WaypointSet(goal_);
-
-  ros::Rate loop_rate(5);
-  while (ros::ok())
-  {
-    if (NextWaypointMode_)
-    {
-      if (WaypointAreaCheck()) WaypointSet(goal_);
-    }
-    else if (FinalGoalWaypointMode_)
-      WaypointSet(goal_);
-    else if (ReStartWaypointMode_)
-    {
-      if (ReStartFlag_) WaypointSet(goal_);
-    }
-    else if (GoalReachedMode_)
-    {
-      if (WaypointAreaCheck() && GoalReachCheck()) WaypointSet(goal_);
-    }
-    // ModeFlagDebug();
-    WaypointInfoManagement();
-    ros::spinOnce();
-    loop_rate.sleep();
-  }
 }
 
 void WaypointNav::getRobotPose(const ros::TimerEvent&)
@@ -396,6 +224,83 @@ void WaypointNav::getRobotPose(const ros::TimerEvent&)
   }
 }
 
+void WaypointNav::setWaypoint(move_base_msgs::MoveBaseGoal& goal)
+{
+  goal.target_pose.pose.position.x = stod(waypoint_csv_[waypoint_index_][0]);
+  goal.target_pose.pose.position.y = stod(waypoint_csv_[waypoint_index_][1]);
+  goal.target_pose.pose.orientation.z = stod(waypoint_csv_[waypoint_index_][2]);
+  goal.target_pose.pose.orientation.w = stod(waypoint_csv_[waypoint_index_][3]);
+  goal.target_pose.header.stamp = ros::Time::now();
+
+  ac_move_base_.sendGoal(goal);
+}
+
+void WaypointNav::ModeFlagOff()
+{
+  NextWaypointMode_ = false;
+  FinalGoalWaypointMode_ = false;
+  ReStartWaypointMode_ = false;
+  GoalReachedMode_ = false;
+
+  GoalReachedFlag_ = false;
+  ReStartFlag_ = false;
+}
+
+void WaypointNav::managementWaypointInfo()
+{
+  if (waypoint_csv_[waypoint_index_].size() >= 0 && waypoint_csv_[waypoint_index_].size() <= 4)
+  {
+    ModeFlagOff();
+    NextWaypointMode_ = true;
+  }
+  else if (waypoint_csv_[waypoint_index_][4] == "Goal")
+  {
+    FinalGoalWaypointMode_ = true;
+    if (waypoint_index_ == waypoint_csv_index_ && GoalReachedFlag_ && checkWaypointArea())
+      FinalGoalFlag_ = true;
+    if (waypoint_index_ == waypoint_csv_index_) ModeFlagOff();
+    if (FinalGoalFlag_)
+    {
+      ROS_INFO("%s: Final Goal Reached", node_name_.c_str());
+      ROS_INFO("%s: Please ' Ctl + c ' ", node_name_.c_str());
+    }
+  }
+  else if (waypoint_csv_[waypoint_index_][4] == "GoalReStart")
+  {
+    ModeFlagOff();
+    ReStartWaypointMode_ = true;
+  }
+  else if (waypoint_csv_[waypoint_index_][4] == "GoalReach")
+  {
+    ModeFlagOff();
+    GoalReachedMode_ = true;
+  }
+}
+void WaypointNav::debugModeFlag()
+{
+  cout << "___________________\n"
+       << "NextWaypointMode : " << NextWaypointMode_ << "\n"
+       << "FinalGoalWaypointMode : " << FinalGoalWaypointMode_ << "\n"
+       << "ReStartWaypointMode : " << ReStartWaypointMode_ << "\n"
+       << "GoalReachedMode : " << GoalReachedMode_ << "\n"
+       << "GoalReachedFlag : " << GoalReachedFlag_ << "\n"
+
+       << "~~~~~~~~~~~~~~~~~~~\n"
+       << "WaypointIndex   : " << waypoint_index_ << "\n"
+       << "___________________\n";
+}
+
+bool WaypointNav::checkGoalReach()
+{
+  if (GoalReachedFlag_)
+  {
+    ROS_INFO("%s: Goal Reached", node_name_.c_str());
+    ROS_INFO("%s: Restart", node_name_.c_str());
+    waypoint_index_++;
+    return true;
+  }
+  return false;
+}
 void WaypointNav::GoalReachedCb(const actionlib_msgs::GoalStatusArray& status)
 {
   if (!status.status_list.empty())
@@ -425,14 +330,17 @@ void WaypointNav::GoalCommandCb(const std_msgs::String& msg)
   }
 }
 
-void WaypointNav::WaypointStartCb(const std_msgs::String& msg){
-  if (!MsgReceiveFlag_){
+void WaypointNav::WaypointStartCb(const std_msgs::String& msg)
+{
+  if (!MsgReceiveFlag_)
+  {
     MsgReceiveFlag_ = true;
     Run();
   }
 }
 
-void WaypointNav::WaypointRestartCb(const std_msgs::String& msg){
+void WaypointNav::WaypointRestartCb(const std_msgs::String& msg)
+{
   ReStartFlag_ = true;
   waypoint_index_++;
 }
