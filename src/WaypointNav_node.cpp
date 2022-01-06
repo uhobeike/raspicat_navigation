@@ -28,7 +28,7 @@ int main(int argc, char** argv)
   tf2_ros::Buffer buffer(ros::Duration(10));
   tf2_ros::TransformListener tf(buffer);
 
-  waypoint_nav::WaypointNav wv(nh, ros::this_node::getName(), argv[1], buffer);
+  waypoint_nav::WaypointNav wv(nh, pnh, ros::this_node::getName(), argv[1], buffer);
   ROS_INFO("%s: Please ' rostopic pub  -1 /goal_command std_msgs/String go ' ",
            ros::this_node::getName().c_str());
 
