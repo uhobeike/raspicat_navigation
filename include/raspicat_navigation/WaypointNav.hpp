@@ -51,14 +51,6 @@ class WaypointNav
 
   void Run();
 
-  bool checkWaypointArea();
-  void getRobotPose(const ros::TimerEvent&);
-  void setWaypoint(move_base_msgs::MoveBaseGoal& next);
-  void ModeFlagOff();
-  void managementWaypointInfo();
-  void debugModeFlag();
-  bool checkGoalReach();
-
   void GoalReachedCb(const actionlib_msgs::GoalStatusArray& status);
   void GoalCommandCb(const std_msgs::String& msg);
   void WaypointStartCb(const std_msgs::String& msg);

@@ -30,6 +30,34 @@ class BaseWaypointServer
   virtual void run() = 0;
   virtual void WaypointCsvRead(string &csv_fname_, vector<vector<string>> &waypoint_csv_,
                                int &waypoint_csv_index_) = 0;
+  virtual void setWaypoint(
+      move_base_msgs::MoveBaseGoal &goal, vector<vector<string>> &waypoint_csv_,
+      int &waypoint_index_,
+      actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base_) = 0;
+
+  virtual bool checkWaypointArea(bool &NextWaypointMode_, float &waypoint_area_check_,
+                                 vector<vector<string>> &waypoint_csv_, int &waypoint_index_,
+                                 vector<double> &robot_pose_, float &waypoint_area_threshold_,
+                                 string &node_name_, ros::Publisher &way_sound_) = 0;
+
+  virtual bool checkGoalReach(bool &GoalReachedFlag_, string &node_name_, int &waypoint_index_) = 0;
+
+  virtual void getRobotPose(tf2_ros::Buffer &tf_, vector<double> &robot_pose_) = 0;
+
+  virtual void ModeFlagOff(bool &NextWaypointMode_, bool &FinalGoalWaypointMode_,
+                           bool &ReStartWaypointMode_, bool &GoalReachedMode_, bool &ReStartFlag_,
+                           bool &GoalReachedFlag_) = 0;
+
+  virtual void managementWaypointInfo(
+      vector<vector<string>> &waypoint_csv_, int &waypoint_csv_index_, int &waypoint_index_,
+      string &node_name_, bool &NextWaypointMode_, bool &FinalGoalWaypointMode_,
+      bool &ReStartWaypointMode_, bool &GoalReachedMode_, bool &ReStartFlag_,
+      bool &GoalReachedFlag_, bool &FinalGoalFlag_, float &waypoint_area_check_,
+      vector<double> &robot_pose_, float &waypoint_area_threshold_, ros::Publisher &way_sound_) = 0;
+
+  virtual void debugModeFlag(bool &NextWaypointMode_, bool &FinalGoalWaypointMode_,
+                             bool &ReStartWaypointMode_, bool &GoalReachedMode_,
+                             bool &GoalReachedFlag_, int &waypoint_index_) = 0;
 
   virtual ~BaseWaypointServer() {}
 
