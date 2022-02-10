@@ -32,17 +32,12 @@ class CmdVelSmoother : public raspicat_navigation::WaypointNavHelperPlugin
   ros::NodeHandle nh_, pnh_;
   ros::Publisher cmd_vel_publisher_;
   ros::Subscriber cmd_vel_subscriber_;
-  ros::Timer SmoothCmdVelTimer_;
-  ros::Duration SmoothCmdVelDuration_;
 
   ros::Time latest_cmdvel_time_, oldest_cmdvel_time_;
   std::vector<geometry_msgs::Twist> cmd_vel_que_;
   geometry_msgs::Twist publish_cmd_vel_;
-  double acc_limit_x_;
-  double acc_limit_z_;
-  double dec_x_;
-  double dec_z_;
-  bool publish_flag_;
+  double acc_limit_x_, acc_limit_z_;
+  double dec_fac_x_, dec_fac_z_;
 
  public:
   void initialize(std::string name) { ROS_INFO("raspicat_navigation::CmdVelSmoother initialize"); }
