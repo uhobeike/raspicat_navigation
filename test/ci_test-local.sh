@@ -2,11 +2,11 @@
 
 # Gazebo launch
 roslaunch turtlebot3_gazebo turtlebot3_world.launch &
-sleep 10
+sleep 30
 
 # Rviz|Navigation launch
 roslaunch raspicat_navigation ci_test.launch &
-sleep 10
+sleep 30
 
 # 2D-PoseEstimate publish
 rostopic pub -1 /initialpose geometry_msgs/PoseWithCovarianceStamped "header:
