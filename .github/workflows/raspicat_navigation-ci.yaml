@@ -14,7 +14,7 @@ on:
     - '**.md'
 
 jobs:
-  Build and Test:
+  Build-and-Test:
     runs-on: ubuntu-18.04
 
     steps:
