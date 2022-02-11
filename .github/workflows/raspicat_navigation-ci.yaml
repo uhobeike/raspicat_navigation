@@ -1,4 +1,4 @@
-name: ros1-melodic-ci
+name: ros-melodic-ci
 
 on:
   push:
@@ -19,17 +19,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: BUILD PUSH
+      - name: Build push
         if: ${{ github.event_name == 'push' }}
         run: |
           docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
-      - name: BUILD PULL REQUEST
+      - name: Build pull request
         if: ${{ github.event_name == 'pull_request' }}
         run: |
           sed -i -e "s;false;true;" ./.github/Dockerfile.ci
           sed -i -e "s;pull/ID/head;"$(echo "${GITHUB_REF#refs/heads/}" | sed -e "s;refs/;;")";" ./.github/Dockerfile.ci
           docker build --no-cache -t ubeike/raspicat-ros1-melodic-navigation -f ./.github/Dockerfile.ci ./.github
-      - name: TEST
+      - name: Test
         run: |
           docker run --init ubeike/raspicat-ros1-melodic-navigation /bin/bash -c "source /home/.bashrc && ./test/ci_test.sh"
           
