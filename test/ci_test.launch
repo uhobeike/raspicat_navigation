@@ -41,7 +41,11 @@
   </node>-->
   
   <!-- AMCL -->
-  <include file="$(find raspicat_navigation)/launch/amcl.launch"/>
+  <include file="$(find raspicat_navigation)/launch/amcl.launch">
+    <arg name="initial_pose_x" value="-1.9"/>
+    <arg name="initial_pose_y" value="-0.6"/>
+    <arg name="initial_pose_a" value="0"/>
+  </include>
 
   <!-- move_base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">

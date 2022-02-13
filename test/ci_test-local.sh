@@ -2,11 +2,11 @@
 
 # Gazebo launch
 roslaunch turtlebot3_gazebo turtlebot3_world.launch &
-sleep 30
+sleep 10
 
 # Rviz|Navigation launch
 roslaunch raspicat_navigation ci_test.launch &
-sleep 30
+sleep 10
 
 # 2D-PoseEstimate publish
 rostopic pub -1 /initialpose geometry_msgs/PoseWithCovarianceStamped "header:
@@ -54,6 +54,9 @@ goal:
 
 # Check robot motion planning
 while true; do sleep 1 | rostopic echo -n 1 /move_base/feedback | grep -A 10 pose; done &
+
+# Check ros node process
+while true; do sleep 5 | top -n 1 -b; done &
 
 # Check goal status
 timeout 40 echo $(rostopic echo -n 1 /move_base/result | grep "Goal reached")| sed 's/^.*"\(.*\)".*$/\1/'
