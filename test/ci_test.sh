@@ -56,7 +56,7 @@ goal:
 while true; do sleep 1 | rostopic echo -n 1 /move_base/feedback | grep -A 10 pose; done &
 
 # Check ros node process
-while true; do sleep 1 | top -n 1 -b; done &
+while true; do sleep 1 | top -n 1 -b | head -n 20; done &
 
 # Check goal status
 timeout 40 echo $(rostopic echo -n 1 /move_base/result | grep "Goal reached")| sed 's/^.*"\(.*\)".*$/\1/'
