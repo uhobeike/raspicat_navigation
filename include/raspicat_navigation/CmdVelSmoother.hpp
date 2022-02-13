@@ -19,11 +19,40 @@
 
 #include <ros/ros.h>
 
-namespace waypoint_nav
+#include <geometry_msgs/Twist.h>
+
+#include <vector>
+
+#include "raspicat_navigation/WaypointNavHelperPlugin.hpp"
+
+namespace raspicat_navigation
 {
-class CmdVelSmoother
+class CmdVelSmoother : public raspicat_navigation::WaypointNavHelperPlugin
 {
+  ros::NodeHandle nh_, pnh_;
+  ros::Publisher cmd_vel_publisher_;
+  ros::Subscriber cmd_vel_subscriber_;
+
+  ros::Time latest_cmdvel_time_, oldest_cmdvel_time_;
+  std::vector<geometry_msgs::Twist> cmd_vel_que_;
+  geometry_msgs::Twist publish_cmd_vel_;
+  double acc_limit_x_, acc_limit_z_;
+  double dec_fac_x_, dec_fac_z_;
+
+ public:
+  void initialize(std::string name) { ROS_INFO("raspicat_navigation::CmdVelSmoother initialize"); }
+  void run()
+  {
+    ROS_INFO("raspicat_navigation::CmdVelSmoother run");
+    readParameters();
+    initPubSub();
+  }
+
+  void readParameters();
+  void initPubSub();
+  void calculateDeceleration(double pass_sec);
+  void publishSmoothVelcity();
 };
 
-}  // namespace waypoint_nav
+}  // namespace raspicat_navigation
 #endif  // CMD_VEL_SMOOTHER_HPP_

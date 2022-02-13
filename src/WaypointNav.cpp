@@ -40,6 +40,8 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
       ac_move_base_("move_base", true),
       waypoint_server_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointServer"),
       waypoint_rviz_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointRviz"),
+      waypoint_nav_helper_loader_("raspicat_navigation",
+                                  "raspicat_navigation::WaypointNavHelperPlugin"),
       node_name_(node_name),
       csv_fname_(file_name),
       waypoint_csv_index_(1),
@@ -72,6 +74,9 @@ void WaypointNav::readParam()
              std::string("raspicat_navigation/WaypointServer"));
 
   pnh_.param("base_waypoint_rviz", waypoint_rviz_, std::string("raspicat_navigation/WaypointRviz"));
+
+  pnh_.param("waypoint_nav_helper", waypoint_nav_helper_,
+             std::string("raspicat_navigation/CmdVelSmoother"));
 }
 
 void WaypointNav::initTimerCb()
@@ -126,6 +131,17 @@ void WaypointNav::initClassLoader()
     way_rviz_->WaypointRvizVisualization(waypoint_csv_, waypoint_csv_index_, way_pose_array_,
                                          way_area_array_, way_number_txt_array_,
                                          waypoint_area_threshold_);
+  }
+  catch (pluginlib::PluginlibException &ex)
+  {
+    ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
+  }
+
+  try
+  {
+    way_helper_ = waypoint_nav_helper_loader_.createInstance("raspicat_navigation/CmdVelSmoother");
+    way_helper_->initialize(waypoint_nav_helper_);
+    way_helper_->run();
   }
   catch (pluginlib::PluginlibException &ex)
   {

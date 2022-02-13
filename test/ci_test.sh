@@ -1,5 +1,9 @@
 #!/bin/bash -xve
 
+# Check ros node process
+top -n 1 -b | head -n 20
+while true; do sleep 10 | top -n 1 -b | head -n 20; done &
+
 # Gazebo launch
 xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch turtlebot3_gazebo turtlebot3_world.launch &
 sleep 10
