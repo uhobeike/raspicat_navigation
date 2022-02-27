@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- arguments -->
+  <!-- Arguments -->
   <arg name="model" default="$(find raspicatv2_description)/robots/raspicatv2.urdf.xacro"/>
   <arg name="gui" default="false"/>
   <arg name="x_init_pos" default="0.0"/>
   <arg name="y_init_pos" default="-2.0"/>
   <arg name="z_init_pos" default="0.0"/>
   
-  <!-- prameters -->
+  <!-- Prameters -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
   
-  <!-- nodes -->
+  <!-- Nodes -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find raspicat_navigation)config/map2gazebo/world/tsukuba.world"/>
     <arg name="paused" value="false"/>

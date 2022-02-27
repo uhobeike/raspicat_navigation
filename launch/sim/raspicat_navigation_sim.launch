@@ -6,13 +6,13 @@
   <arg name="map_file" default="$(find raspicat_navigation)/config/maps/sim/map_sim.yaml"/>
   <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_sim.csv"/>
 
-  <!-- gazebo -->
+  <!-- Gazebo -->
   <include file="$(find raspicatv2_gazebo)/launch/raspicatv2_iscas_museum.launch"/>
 
-  <!-- map server -->
+  <!-- Map server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
   
-  <!-- amcl -->
+  <!-- Amcl -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch">
     <arg name="initial_pose_x" value="-0.0688619613647"/>
     <arg name="initial_pose_y" value="-1.71242249012"/>
@@ -20,7 +20,7 @@
     <arg name="base_frame_id" default="base_footprint"/>
   </include>
 
-  <!-- move_base -->
+  <!-- Move_base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
     <arg name="raspicat_sim" value="true"/>
@@ -28,14 +28,14 @@
     <arg name="obstacles_layer/scan/sensor_frame" value="lidar_link"/>
   </include>
 
-  <!-- waypoint_nav -->
+  <!-- Waypoint_nav -->
   <group if="$(arg waypoint_navigation)"> 
     <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" 
       args="$(arg csv_file)" output="screen">
     </node>
   </group>
   
-  <!-- rviz -->
+  <!-- Rviz -->
   <group if="$(arg open_rviz)"> 
     <node pkg="rviz" type="rviz" name="rviz" required="true"
       args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation_3d.rviz">

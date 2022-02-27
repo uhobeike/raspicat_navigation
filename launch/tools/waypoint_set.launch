@@ -10,7 +10,7 @@
   <!-- Node Run -->
   <node pkg="raspicat_navigation" name="waypoint_set_controller" type="waypoint_set_controller.py" args="$(arg csv_file_path)" required="true" output="screen"/>
 
-  <!-- rviz -->
+  <!-- Rviz -->
   <group if="$(arg open_rviz)"> 
     <node pkg="rviz" type="rviz" name="rviz" required="true"
       args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation_2d.rviz">
