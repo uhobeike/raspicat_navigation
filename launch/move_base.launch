@@ -12,7 +12,7 @@
   <arg name="waypoint_nav" default="false"/>
 
 
-  <!-- move_base -->
+  <!-- Move_base -->
   <node pkg="move_base" type="move_base" name="move_base" clear_params="true" respawn="true" output="screen">
     <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
     <rosparam file="$(find raspicat_navigation)/config/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap"/>

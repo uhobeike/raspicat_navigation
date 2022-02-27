@@ -11,7 +11,7 @@
 
   <arg name="base_frame_id" default="base_link"/>
 
-  <!-- AMCL -->
+  <!-- Amcl -->
   <node pkg="amcl" type="amcl" name="amcl" clear_params="true" respawn="true" output="screen">
     <param name="min_particles"             value="500"/>
     <param name="max_particles"             value="3000"/>

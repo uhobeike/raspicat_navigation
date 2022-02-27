@@ -7,10 +7,10 @@
   <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsukuba_singou.yaml"/>
   <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_tsukuba.csv"/>
 
-  <!-- gazebo -->
+  <!-- Gazebo -->
   <include file="$(find raspicat_navigation)/launch/sim/raspicat_tsukuba_singou_world.launch"/>
 
-  <!-- map server -->
+  <!-- Map_server -->
   <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
 
   <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
@@ -18,7 +18,7 @@
     <remap from="static_map" to="/move_base_static_map"/>
   </node>
 
-  <!-- amcl -->
+  <!-- Amcl -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch">
     <arg name="initial_pose_x" value="213.6"/>
     <arg name="initial_pose_y" value="102.6"/>
@@ -26,7 +26,7 @@
     <arg name="base_frame_id" default="base_footprint"/>
   </include>
 
-  <!-- move_base -->
+  <!-- Move_base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
     <arg name="raspicat_sim" value="true"/>
@@ -43,14 +43,14 @@
     type="waypoint_passed_play_sound.py" required="true" output="screen">
   </node>
 
-  <!-- waypoint_nav -->
+  <!-- Waypoint_nav -->
   <group if="$(arg waypoint_navigation)"> 
     <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" 
       args="$(arg csv_file)" output="screen">
     </node>
   </group>
   
-  <!-- rviz -->
+  <!-- Rviz -->
   <group if="$(arg open_rviz)"> 
     <node pkg="rviz" type="rviz" name="rviz" required="true"
       args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation_3d.rviz">

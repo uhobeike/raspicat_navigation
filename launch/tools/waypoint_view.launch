@@ -4,12 +4,13 @@
   <arg name="map_file" default="$(find raspicat_navigation)/config/maps/map_tudanuma.yaml"/>
   <arg name="open_rviz" default="true"/>
 
-   <!-- Run the map server -->
+  <!-- Map_server -->
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
 
+  <!-- Waypoint_view node -->
   <node pkg="raspicat_navigation" name="waypoint_view" type="waypoint_view" required="true" output="screen"/>
 
-   <!-- rviz -->
+   <!-- Rviz -->
   <group if="$(arg open_rviz)"> 
     <node pkg="rviz" type="rviz" name="rviz" required="true"
           args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation_2d.rviz"/>
