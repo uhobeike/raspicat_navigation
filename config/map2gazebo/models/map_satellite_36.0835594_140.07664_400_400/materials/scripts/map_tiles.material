@@ -1,0 +1,56 @@
+material map_satellite_36.0835594_140.07664_400_400/0_0
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture tile_36.0849467_140.074923.png
+      }
+    }
+  }
+}
+
+material map_satellite_36.0835594_140.07664_400_400/0_1
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture tile_36.0849467_140.078356.png
+      }
+    }
+  }
+}
+
+material map_satellite_36.0835594_140.07664_400_400/1_0
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture tile_36.0821721_140.074923.png
+      }
+    }
+  }
+}
+
+material map_satellite_36.0835594_140.07664_400_400/1_1
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture tile_36.0821721_140.078356.png
+      }
+    }
+  }
+}
+

@@ -1,0 +1,75 @@
+<sdf version='1.6'>
+<model name='map_satellite_36.0835594_140.07664_400_400'>
+  <static>true</static>
+  <link name='link'>
+    <collision name='collision'>
+      <pose>0 0 -0.5 0 0 0</pose>
+      <geometry>
+        <box>
+          <size>617.733 617.733 1</size>
+        </box>
+      </geometry>
+    </collision>
+    <visual name='visual0_0'>
+      <pose>-154.433 154.433 -0.5 0 0 1.5708</pose>
+      <geometry>
+        <box>
+          <size>308.866 308.866 1</size>
+        </box>
+      </geometry>
+      <material>
+        <script>
+          <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+          <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+          <name>map_satellite_36.0835594_140.07664_400_400/0_0</name>
+        </script>
+      </material>
+    </visual>
+    <visual name='visual0_1'>
+      <pose>154.433 154.433 -0.5 0 0 1.5708</pose>
+      <geometry>
+        <box>
+          <size>308.866 308.866 1</size>
+        </box>
+      </geometry>
+      <material>
+        <script>
+          <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+          <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+          <name>map_satellite_36.0835594_140.07664_400_400/0_1</name>
+        </script>
+      </material>
+    </visual>
+    <visual name='visual1_0'>
+      <pose>-154.433 -154.433 -0.5 0 0 1.5708</pose>
+      <geometry>
+        <box>
+          <size>308.866 308.866 1</size>
+        </box>
+      </geometry>
+      <material>
+        <script>
+          <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+          <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+          <name>map_satellite_36.0835594_140.07664_400_400/1_0</name>
+        </script>
+      </material>
+    </visual>
+    <visual name='visual1_1'>
+      <pose>154.433 -154.433 -0.5 0 0 1.5708</pose>
+      <geometry>
+        <box>
+          <size>308.866 308.866 1</size>
+        </box>
+      </geometry>
+      <material>
+        <script>
+          <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+          <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+          <name>map_satellite_36.0835594_140.07664_400_400/1_1</name>
+        </script>
+      </material>
+    </visual>
+  </link>
+</model>
+</sdf>
