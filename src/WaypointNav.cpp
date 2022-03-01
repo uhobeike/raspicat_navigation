@@ -48,7 +48,7 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
       waypoint_index_(0),
       waypoint_csv_(1, vector<string>(0)),
       robot_pose_(2, 0),
-      waypoint_area_threshold_(1.5),
+      waypoint_area_threshold_(5.0),
       waypoint_area_check_(0.0),
       NextWaypointMode_(true),
       FinalGoalWaypointMode_(false),
@@ -137,16 +137,16 @@ void WaypointNav::initClassLoader()
     ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
   }
 
-  try
-  {
-    way_helper_ = waypoint_nav_helper_loader_.createInstance("raspicat_navigation/CmdVelSmoother");
-    way_helper_->initialize(waypoint_nav_helper_);
-    way_helper_->run();
-  }
-  catch (pluginlib::PluginlibException &ex)
-  {
-    ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
-  }
+  // try
+  // {
+  //   way_helper_ = waypoint_nav_helper_loader_.createInstance("raspicat_navigation/CmdVelSmoother");
+  //   way_helper_->initialize(waypoint_nav_helper_);
+  //   way_helper_->run();
+  // }
+  // catch (pluginlib::PluginlibException &ex)
+  // {
+  //   ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
+  // }
 }
 
 void WaypointNav::Run()
@@ -162,6 +162,15 @@ void WaypointNav::Run()
       if (way_srv_->checkWaypointArea(NextWaypointMode_, waypoint_area_check_, waypoint_csv_,
                                       waypoint_index_, robot_pose_, waypoint_area_threshold_,
                                       node_name_, way_sound_))
+        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
+        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
+        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
+        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
+        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
+        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
+        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
+        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
+        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
         way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
     }
     else if (FinalGoalWaypointMode_)
