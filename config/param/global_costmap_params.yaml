@@ -2,11 +2,11 @@ global_frame: map
 robot_base_frame: base_link
 
 footprint: [[-0.37, -0.25], [-0.37, 0.25], [0.2, 0.25], [0.2, -0.25]]
-inflation_radius: 1.0
-cost_scaling_factor: 10
+inflation_radius: 5.0
+cost_scaling_factor: 1.0
 
-update_frequency: 5
-publish_frequency: 5
+update_frequency: 1
+publish_frequency: 1
 transform_tolerance: 2
 
 rolling_window: false
