@@ -1,0 +1,30 @@
+<sdf version='1.6'>
+<model name='map_hybrid_35.688987_140.02092_100_100'>
+  <static>true</static>
+  <link name='link'>
+    <collision name='collision'>
+      <pose>0 0 -0.5 0 0 0</pose>
+      <geometry>
+        <box>
+          <size>620.818 620.818 1</size>
+        </box>
+      </geometry>
+    </collision>
+    <visual name='visual0_0'>
+      <pose>0 0 -0.5 0 0 1.5708</pose>
+      <geometry>
+        <box>
+          <size>620.818 620.818 1</size>
+        </box>
+      </geometry>
+      <material>
+        <script>
+          <uri>model://map_hybrid_35.688987_140.02092_100_100/materials/scripts</uri>
+          <uri>model://map_hybrid_35.688987_140.02092_100_100/materials/textures</uri>
+          <name>map_hybrid_35.688987_140.02092_100_100/0_0</name>
+        </script>
+      </material>
+    </visual>
+  </link>
+</model>
+</sdf>
