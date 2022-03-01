@@ -1,14 +1,16 @@
 <launch>
   <!-- Arguments -->
-  <arg name="open_rviz" default="true"/>
-  <arg name="move_forward_only" default="false"/>
+  <arg name="open_rviz"           default="true"/>
+  <arg name="move_forward_only"   default="false"/>
   <arg name="waypoint_navigation" default="true"/>
-  <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/map_tsukuba_singou.yaml"/>
-  <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsukuba_singou.yaml"/>
-  <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_tsukuba.csv"/>
+
+  <arg name="world_name"          default="tsudanuma" doc="world_name type [tsudanema, tsukuba]"/>
+  <arg name="mcl_map_file"        default="$(find raspicat_navigation)/config/maps/$(arg world_name)/map_$(arg world_name).yaml"/>
+  <arg name="move_base_map_file"  default="$(find raspicat_navigation)/config/maps/for_move_base/map_$(arg world_name).yaml"/>
+  <arg name="csv_file"            default="$(find raspicat_navigation)/config/csv/waypoint_$(arg world_name).csv"/>
 
   <!-- Gazebo -->
-  <include file="$(find raspicat_navigation)/launch/sim/raspicat_tsukuba_singou_world.launch"/>
+  <include file="$(find raspicat_navigation)/launch/sim/raspicat_$(arg world_name)_world.launch"/>
 
   <!-- Map_server -->
   <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
@@ -20,9 +22,9 @@
 
   <!-- Amcl -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch">
-    <arg name="initial_pose_x" value="213.6"/>
-    <arg name="initial_pose_y" value="102.6"/>
-    <arg name="initial_pose_a" value="0"/>
+    <arg name="initial_pose_x" value="-70.475"/>
+    <arg name="initial_pose_y" value="-4.619"/>
+    <arg name="initial_pose_a" value="-0.038"/>
     <arg name="base_frame_id" default="base_footprint"/>
   </include>
 
@@ -35,6 +37,7 @@
     <arg name="obstacles_layer/scan/sensor_frame" value="lidar_link"/>
   </include>
 
+  <!-- Sound play -->
   <node pkg="sound_play" name="sound_play"
     type="soundplay_node.py" required="true" output="screen">
   </node>
