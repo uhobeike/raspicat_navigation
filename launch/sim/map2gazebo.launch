@@ -1,0 +1,48 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="map2gazebo_params_file"     default="$(find raspicat_navigation)/config/map2gazebo/defaults.yaml"/>
+  <arg name="map_file"                   default="$(find raspicat_navigation)/config/maps/tsudanuma/map_tsudanuma.yaml"/>
+
+  <arg name="stl_export_dir"             default="$(find raspicat_navigation)/config/map2gazebo/models/tsudanuma/meshes"/>
+  <arg name="model_name"                 default="tsudanuma"/>
+  <arg name="world_name"                 default="tsudanuma"/>
+  <arg name="author_name"                default="Tatsuhiro Ikebe"/>
+  <arg name="email"                      default="beike315@icloud.com"/>
+
+  <!-- Mkdir -->
+  <param name="map2gazebo_model_dir" command="mkdir -p $(find raspicat_navigation)/config/map2gazebo/models/$(arg model_name)/meshes"/>
+
+  <!-- Copy file -->
+  <param name="map2gazebo_copy_config_sdf" 
+    command="cp $(find map2gazebo)/models/map/model.config
+                $(find map2gazebo)/models/map/model.sdf
+                $(find raspicat_navigation)/config/map2gazebo/models/$(arg model_name)/"/>
+  
+  <param name="map2gazebo_copy_world" 
+    command="cp $(find map2gazebo)/worlds/map.sdf
+                $(find raspicat_navigation)/config/map2gazebo/world/$(arg world_name).world"/>
+
+  <!-- Code replace -->
+  <param name="map2gazebo_code_replace_sdf"
+    command="sed -i -e 's/map/tsudanuma/g' $(find raspicat_navigation)/config/map2gazebo/models/$(arg model_name)/model.sdf"/>
+  
+  <param name="map2gazebo_code_replace_config"
+    command="sed -i -e 's/map/$(arg world_name)/g' -e 's/Shiloh Curtis/$(arg author_name)/g' -e 's/shilohc@mit.edu/$(arg email)/g'
+                  $(find raspicat_navigation)/config/map2gazebo/models/$(arg model_name)/model.config"/>
+
+  <param name="map2gazebo_code_replace_world"
+    command="sed -i -e 's/map/tsudanuma/g' $(find raspicat_navigation)/config/map2gazebo//world/$(arg world_name).world"/>
+
+  <!-- Map_server -->
+  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg map_file)"/>
+
+  <!-- Map2gazebo -->
+  <node name="map2gazebo" pkg="map2gazebo" type="map2gazebo.py" output="screen">
+    <param name="export_dir" value="$(arg stl_export_dir)"/>
+    <rosparam command="load" file="$(arg map2gazebo_params_file)"/>
+  </node>
+
+  <!-- Rename file -->
+  <node pkg="raspicat_navigation" name="map2gazebo_rename_stl_file" type="map2gazebo_rename_stl_file.sh"
+    args="$(arg stl_export_dir) $(arg model_name)" output="screen"/>
+</launch>
