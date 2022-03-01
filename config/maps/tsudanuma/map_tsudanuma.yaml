@@ -1,4 +1,4 @@
-image: tsukuba_resolution_05.pgm
+image: map_tsudanuma.pgm
 resolution: 0.050000
 origin: [-100.000000, -100.000000, 0.000000]
 negate: 0
