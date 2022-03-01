@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <sdf version='1.6'>
   <world name='default'>
     <light name='sun' type='directional'>
@@ -143,7 +144,7 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>101 614000000</sim_time>
+      <sim_time>0</sim_time>
       <real_time>102 363304644</real_time>
       <wall_time>1637174161 775518283</wall_time>
       <iterations>101614</iterations>
