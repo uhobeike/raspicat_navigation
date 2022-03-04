@@ -163,15 +163,6 @@ void WaypointNav::Run()
                                       waypoint_index_, robot_pose_, waypoint_area_threshold_,
                                       node_name_, way_sound_))
         way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
-        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
-        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
-        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
-        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
-        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
-        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
-        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
-        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
-        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
     }
     else if (FinalGoalWaypointMode_)
       way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);

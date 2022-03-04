@@ -32,7 +32,8 @@ int main(int argc, char** argv)
   ROS_INFO("%s: Please ' rostopic pub  -1 /goal_command std_msgs/String go ' ",
            ros::this_node::getName().c_str());
 
-  ros::AsyncSpinner spinner(pnh.param("num_callback_threads", 1));
+  // If there is only one thread, the timer callback may not work well.
+  ros::AsyncSpinner spinner(pnh.param("num_callback_threads", 4));
   spinner.start();
   ros::waitForShutdown();
   return 0;
