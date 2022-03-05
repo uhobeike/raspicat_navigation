@@ -32,9 +32,10 @@ class WaypointRviz : public raspicat_navigation::BaseWaypointRviz
     for (auto it_t = waypoint_csv_.begin(); it_t != waypoint_csv_.end(); ++it_t)
     {
       vec_cnt_index = 0;
-      WaypointMarkerArraySet(
-          waypoint_area, waypoint_number_txt, distance(waypoint_csv_.begin(), it_t),
-          waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size(), waypoint_area_threshold_);
+      WaypointMarkerArraySet(waypoint_area, waypoint_number_txt,
+                             distance(waypoint_csv_.begin(), it_t),
+                             waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size(),
+                             waypoint_area_threshold_, waypoint_csv_);
 
       for (auto it = (*it_t).begin(); it != (*it_t).end(); ++it)
       {
@@ -45,6 +46,11 @@ class WaypointRviz : public raspicat_navigation::BaseWaypointRviz
             if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size() == 4)
               waypoint_area.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.x =
                   stod(*it);
+            if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size() > 4)
+              if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)][4] ==
+                  "SlopeObstacleAvoidance")
+                waypoint_area.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.x =
+                    stod(*it);
             waypoint_number_txt.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.x =
                 stod(*it);
             vec_cnt_index++;
@@ -54,6 +60,11 @@ class WaypointRviz : public raspicat_navigation::BaseWaypointRviz
             if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size() == 4)
               waypoint_area.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.y =
                   stod(*it);
+            if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size() > 4)
+              if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)][4] ==
+                  "SlopeObstacleAvoidance")
+                waypoint_area.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.y =
+                    stod(*it);
             waypoint_number_txt.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.y =
                 stod(*it);
             vec_cnt_index++;
@@ -61,10 +72,15 @@ class WaypointRviz : public raspicat_navigation::BaseWaypointRviz
 
             pose.position.z = 0.2;
             if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size() == 4)
-              waypoint_area.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.z = 0.1;
+              waypoint_area.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.z =
+                  stod(*it);
+            if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)].size() > 4)
+              if (waypoint_csv_[distance(waypoint_csv_.begin(), it_t)][4] ==
+                  "SlopeObstacleAvoidance")
+                waypoint_area.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.z =
+                    stod(*it);
             waypoint_number_txt.markers[distance(waypoint_csv_.begin(), it_t)].pose.position.z =
                 0.1;
-
           case 2:
             pose.orientation.z = stod(*it);
             vec_cnt_index++;
@@ -72,6 +88,9 @@ class WaypointRviz : public raspicat_navigation::BaseWaypointRviz
           case 3:
             pose.orientation.w = stod(*it);
             vec_cnt_index++;
+            break;
+
+          default:
             break;
         }
       }
@@ -87,7 +106,8 @@ class WaypointRviz : public raspicat_navigation::BaseWaypointRviz
 
   void WaypointMarkerArraySet(visualization_msgs::MarkerArray& waypoint_area,
                               visualization_msgs::MarkerArray& waypoint_number_txt, uint8_t index,
-                              uint8_t size, float& waypoint_area_threshold_)
+                              uint8_t size, float& waypoint_area_threshold_,
+                              vector<vector<string>>& waypoint_csv_)
   {
     /*waypoint area_________________________________________________________*/
     waypoint_area.markers[index].header.frame_id = "map";
@@ -103,7 +123,12 @@ class WaypointRviz : public raspicat_navigation::BaseWaypointRviz
     if (size == 4)
       waypoint_area.markers[index].color.a = 0.1f;
     else
-      waypoint_area.markers[index].color.a = 0.000001f;
+    {
+      if (waypoint_csv_[index][4] == "SlopeObstacleAvoidance")
+        waypoint_area.markers[index].color.a = 0.1f;
+      else
+        waypoint_area.markers[index].color.a = 0.000001f;
+    }
     waypoint_area.markers[index].color.b = 1.0f;
     waypoint_area.markers[index].color.g = 0.0f;
     waypoint_area.markers[index].color.r = 0.0f;

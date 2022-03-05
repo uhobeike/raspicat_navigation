@@ -24,6 +24,7 @@
 #include <move_base_msgs/MoveBaseAction.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
+#include <std_srvs/Empty.h>
 #include <visualization_msgs/MarkerArray.h>
 
 #include <pluginlib/class_loader.hpp>
@@ -48,6 +49,7 @@ class WaypointNav
   void initTimerCb();
   void initPubSub();
   void initActionClient();
+  void initServiceClient();
   void initClassLoader();
 
   void Run();
@@ -65,6 +67,8 @@ class WaypointNav
   ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_, waypoint_start_,
       waypoint_restart_;
   ros::Publisher ini_pose_, way_pose_array_, way_area_array_, way_number_txt_array_, way_sound_;
+
+  std::map<std::string, ros::ServiceClient> slope_obstacle_avoidanc_client_;
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac_move_base_;
 
   pluginlib::ClassLoader<raspicat_navigation::BaseWaypointServer> waypoint_server_loader_;
@@ -91,11 +95,13 @@ class WaypointNav
   bool FinalGoalWaypointMode_;
   bool ReStartWaypointMode_;
   bool GoalReachedMode_;
+  bool SlopeObstacleAvoidanceMode_;
 
-  bool FinalGoalFlag_;
-  bool ReStartFlag_;
   bool MsgReceiveFlag_;
+  bool ReStartFlag_;
+  bool FinalGoalFlag_;
   bool GoalReachedFlag_;
+  bool SlopeObstacleAvoidanceFlag_;
 
   bool start_;
   bool restart_;

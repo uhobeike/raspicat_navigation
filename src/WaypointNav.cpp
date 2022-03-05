@@ -17,6 +17,7 @@
 #include <ros/ros.h>
 
 #include <geometry_msgs/PoseArray.h>
+#include <std_srvs/Trigger.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
@@ -55,6 +56,8 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
       ReStartWaypointMode_(false),
       GoalReachedMode_(false),
       GoalReachedFlag_(false),
+      SlopeObstacleAvoidanceMode_(false),
+      SlopeObstacleAvoidanceFlag_(false),
       FinalGoalFlag_(false),
       ReStartFlag_(false),
       MsgReceiveFlag_(false)
@@ -64,6 +67,7 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
   initPubSub();
   initActionClient();
   initClassLoader();
+  initServiceClient();
 }
 
 WaypointNav::~WaypointNav() {}
@@ -101,12 +105,42 @@ void WaypointNav::initPubSub()
 
 void WaypointNav::initActionClient()
 {
+  ROS_INFO("Waiting for move_base Action Server to active.");
   while (!ac_move_base_.waitForServer(ros::Duration(100.0)))
   {
-    ROS_ERROR("Waiting for the move_base action server to come up");
+    ROS_ERROR("move_base Action Server is not active.");
     exit(0);
   }
-  ROS_INFO("MoveBase server comes up");
+  ROS_INFO("move_base Action Server is active.");
+}
+
+void WaypointNav::initServiceClient()
+{
+  slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_on"] =
+      nh_.serviceClient<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
+          "slope_obstacle_avoidance_on");
+
+  ROS_INFO("Waiting for SlopeObstacleAvoidance Server to active.");
+  if (!slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_on"].waitForExistence(
+          ros::Duration(100.0)))
+  {
+    ROS_ERROR("SlopeObstacleAvoidance Server is not active.");
+    exit(0);
+  }
+  ROS_INFO("SlopeObstacleAvoidance Server is active.");
+
+  slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_off"] =
+      nh_.serviceClient<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
+          "slope_obstacle_avoidance_off");
+
+  ROS_INFO("Waiting for SlopeObstacleAvoidance Server to active.");
+  if (!slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_off"].waitForExistence(
+          ros::Duration(100.0)))
+  {
+    ROS_ERROR("SlopeObstacleAvoidance Server is not active.");
+    exit(0);
+  }
+  ROS_INFO("SlopeObstacleAvoidance Server is active.");
 }
 
 void WaypointNav::initClassLoader()
@@ -164,7 +198,6 @@ void WaypointNav::initClassLoader()
 
 void WaypointNav::Run()
 {
-  goal_.target_pose.header.frame_id = "map";
   way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
 
   ros::Rate loop_rate(5);
@@ -172,9 +205,9 @@ void WaypointNav::Run()
   {
     if (NextWaypointMode_)
     {
-      if (way_srv_->checkWaypointArea(NextWaypointMode_, waypoint_area_check_, waypoint_csv_,
-                                      waypoint_index_, robot_pose_, waypoint_area_threshold_,
-                                      node_name_, way_sound_))
+      if (way_srv_->checkWaypointArea(
+              NextWaypointMode_, SlopeObstacleAvoidanceMode_, waypoint_area_check_, waypoint_csv_,
+              waypoint_index_, robot_pose_, waypoint_area_threshold_, node_name_, way_sound_))
         way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
     }
     else if (FinalGoalWaypointMode_)
@@ -185,22 +218,54 @@ void WaypointNav::Run()
     }
     else if (GoalReachedMode_)
     {
-      if (way_srv_->checkWaypointArea(NextWaypointMode_, waypoint_area_check_, waypoint_csv_,
-                                      waypoint_index_, robot_pose_, waypoint_area_threshold_,
-                                      node_name_, way_sound_) &&
+      if (way_srv_->checkWaypointArea(
+              NextWaypointMode_, SlopeObstacleAvoidanceMode_, waypoint_area_check_, waypoint_csv_,
+              waypoint_index_, robot_pose_, waypoint_area_threshold_, node_name_, way_sound_) &&
           way_srv_->checkGoalReach(GoalReachedFlag_, node_name_, waypoint_index_))
         way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
     }
-    // debugModeFlag();
-    way_srv_->managementWaypointInfo(waypoint_csv_, waypoint_csv_index_, waypoint_index_,
-                                     node_name_, NextWaypointMode_, FinalGoalWaypointMode_,
-                                     ReStartWaypointMode_, GoalReachedMode_, ReStartFlag_,
-                                     GoalReachedFlag_, FinalGoalFlag_, waypoint_area_check_,
-                                     robot_pose_, waypoint_area_threshold_, way_sound_);
+    else if (SlopeObstacleAvoidanceMode_)
+    {
+      if (!SlopeObstacleAvoidanceFlag_)
+      {
+        std_srvs::TriggerRequest req;
+        std_srvs::TriggerResponse resp;
+        if (!slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_on"].call(req, resp))
+        {
+          ROS_ERROR("Failed to invoke slope_obstacle_avoidance_on services.");
+          exit(0);
+        }
+        SlopeObstacleAvoidanceFlag_ = true;
+      }
+      if (way_srv_->checkWaypointArea(
+              NextWaypointMode_, SlopeObstacleAvoidanceMode_, waypoint_area_check_, waypoint_csv_,
+              waypoint_index_, robot_pose_, waypoint_area_threshold_, node_name_, way_sound_))
+      {
+        way_srv_->setWaypoint(goal_, waypoint_csv_, waypoint_index_, ac_move_base_);
+        std_srvs::TriggerRequest req;
+        std_srvs::TriggerResponse resp;
+        if (!slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_off"].call(req, resp))
+        {
+          ROS_ERROR("Failed to invoke slope_obstacle_avoidance_off services.");
+          exit(0);
+        }
+        SlopeObstacleAvoidanceFlag_ = false;
+      }
+    }
+    // way_srv_->debug(NextWaypointMode_, FinalGoalWaypointMode_, ReStartWaypointMode_,
+    //                 GoalReachedMode_, GoalReachedFlag_, SlopeObstacleAvoidanceMode_,
+    //                 SlopeObstacleAvoidanceFlag_, waypoint_index_, waypoint_area_check_,
+    //                 waypoint_area_threshold_);
+
+    way_srv_->managementWaypointInfo(
+        waypoint_csv_, waypoint_csv_index_, waypoint_index_, node_name_, NextWaypointMode_,
+        FinalGoalWaypointMode_, ReStartWaypointMode_, GoalReachedMode_, GoalReachedFlag_,
+        SlopeObstacleAvoidanceMode_, ReStartFlag_, FinalGoalFlag_, waypoint_area_check_,
+        robot_pose_, waypoint_area_threshold_, way_sound_);
     ros::spinOnce();
     loop_rate.sleep();
   }
-}
+}  // namespace waypoint_nav
 
 void WaypointNav::GoalReachedCb(const actionlib_msgs::GoalStatusArray &status)
 {
