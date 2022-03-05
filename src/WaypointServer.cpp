@@ -52,6 +52,7 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
                    int &waypoint_index_,
                    actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base_)
   {
+    goal.target_pose.header.frame_id = "map";
     goal.target_pose.pose.position.x = stod(waypoint_csv_[waypoint_index_][0]);
     goal.target_pose.pose.position.y = stod(waypoint_csv_[waypoint_index_][1]);
     goal.target_pose.pose.orientation.z = stod(waypoint_csv_[waypoint_index_][2]);
@@ -61,34 +62,35 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
     ac_move_base_.sendGoal(goal);
   }
 
-  bool checkWaypointArea(bool &NextWaypointMode_, float &waypoint_area_check_,
-                         vector<vector<string>> &waypoint_csv_, int &waypoint_index_,
-                         vector<double> &robot_pose_, float &waypoint_area_threshold_,
-                         string &node_name_, ros::Publisher &way_sound_)
+  bool checkWaypointArea(bool &NextWaypointMode, bool &SlopeObstacleAvoidanceMode,
+                         float &waypoint_area_check, vector<vector<string>> &waypoint_csv,
+                         int &waypoint_index, vector<double> &robot_pose,
+                         float &waypoint_area_threshold, string &node_name,
+                         ros::Publisher &way_sound)
   {
-    if (NextWaypointMode_)
+    if (NextWaypointMode || SlopeObstacleAvoidanceMode)
     {
-      waypoint_area_check_ = sqrt(pow(stod(waypoint_csv_[waypoint_index_][0]) - robot_pose_[0], 2) +
-                                  pow(stod(waypoint_csv_[waypoint_index_][1]) - robot_pose_[1], 2));
+      waypoint_area_check = sqrt(pow(stod(waypoint_csv[waypoint_index][0]) - robot_pose[0], 2) +
+                                 pow(stod(waypoint_csv[waypoint_index][1]) - robot_pose[1], 2));
 
-      if (waypoint_area_check_ <= waypoint_area_threshold_)
+      if (waypoint_area_check <= waypoint_area_threshold)
       {
-        ROS_INFO("%s: WayPoint Passing", node_name_.c_str());
-        ROS_INFO("%s: Next Move Plan", node_name_.c_str());
-        waypoint_index_++;
+        ROS_INFO("%s: WayPoint Passing", node_name.c_str());
+        ROS_INFO("%s: Next Move Plan", node_name.c_str());
+        waypoint_index++;
         std_msgs::Bool data;
-        way_sound_.publish(data);
+        way_sound.publish(data);
         return true;
       }
     }
-    else if (!NextWaypointMode_)
+    else if (!NextWaypointMode)
     {
-      waypoint_area_check_ = sqrt(pow(stod(waypoint_csv_[waypoint_index_][0]) - robot_pose_[0], 2) +
-                                  pow(stod(waypoint_csv_[waypoint_index_][1]) - robot_pose_[1], 2));
+      waypoint_area_check = sqrt(pow(stod(waypoint_csv[waypoint_index][0]) - robot_pose[0], 2) +
+                                 pow(stod(waypoint_csv[waypoint_index][1]) - robot_pose[1], 2));
 
-      if (waypoint_area_check_ <= waypoint_area_threshold_)
+      if (waypoint_area_check <= waypoint_area_threshold)
       {
-        ROS_INFO("%s: Invade WayPoint Area ", node_name_.c_str());
+        ROS_INFO("%s: Invade WayPoint Area ", node_name.c_str());
         return true;
       }
     }
@@ -140,77 +142,91 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
     return false;
   }
 
-  void ModeFlagOff(bool &NextWaypointMode_, bool &FinalGoalWaypointMode_,
-                   bool &ReStartWaypointMode_, bool &GoalReachedMode_, bool &ReStartFlag_,
-                   bool &GoalReachedFlag_)
+  void ModeFlagOff(bool &NextWaypointMode, bool &FinalGoalWaypointMode, bool &ReStartWaypointMode,
+                   bool &GoalReachedMode, bool &SlopeObstacleAvoidanceMode, bool &ReStartFlag,
+                   bool &GoalReachedFlag)
   {
-    NextWaypointMode_ = false;
-    FinalGoalWaypointMode_ = false;
-    ReStartWaypointMode_ = false;
-    GoalReachedMode_ = false;
+    NextWaypointMode = false;
+    FinalGoalWaypointMode = false;
+    ReStartWaypointMode = false;
+    GoalReachedMode = false;
+    SlopeObstacleAvoidanceMode = false;
 
-    GoalReachedFlag_ = false;
-    ReStartFlag_ = false;
+    GoalReachedFlag = false;
+    ReStartFlag = false;
   }
 
-  void managementWaypointInfo(vector<vector<string>> &waypoint_csv_, int &waypoint_csv_index_,
-                              int &waypoint_index_, string &node_name_, bool &NextWaypointMode_,
-                              bool &FinalGoalWaypointMode_, bool &ReStartWaypointMode_,
-                              bool &GoalReachedMode_, bool &ReStartFlag_, bool &GoalReachedFlag_,
-                              bool &FinalGoalFlag_, float &waypoint_area_check_,
-                              vector<double> &robot_pose_, float &waypoint_area_threshold_,
-                              ros::Publisher &way_sound_)
+  void managementWaypointInfo(vector<vector<string>> &waypoint_csv, int &waypoint_csv_index,
+                              int &waypoint_index, string &node_name, bool &NextWaypointMode,
+                              bool &FinalGoalWaypointMode, bool &ReStartWaypointMode,
+                              bool &GoalReachedMode, bool &GoalReachedFlag,
+                              bool &SlopeObstacleAvoidanceMode, bool &ReStartFlag,
+                              bool &FinalGoalFlag, float &waypoint_area_check,
+                              vector<double> &robot_pose, float &waypoint_area_threshold,
+                              ros::Publisher &way_sound)
   {
-    if (waypoint_csv_[waypoint_index_].size() >= 0 && waypoint_csv_[waypoint_index_].size() <= 4)
+    if (waypoint_csv[waypoint_index].size() >= 0 && waypoint_csv[waypoint_index].size() <= 4)
     {
-      ModeFlagOff(NextWaypointMode_, FinalGoalWaypointMode_, ReStartWaypointMode_, GoalReachedMode_,
-                  ReStartFlag_, GoalReachedFlag_);
-      NextWaypointMode_ = true;
+      ModeFlagOff(NextWaypointMode, FinalGoalWaypointMode, ReStartWaypointMode, GoalReachedMode,
+                  SlopeObstacleAvoidanceMode, ReStartFlag, GoalReachedFlag);
+      NextWaypointMode = true;
     }
-    else if (waypoint_csv_[waypoint_index_][4] == "Goal")
+    else if (waypoint_csv[waypoint_index][4] == "Goal")
     {
-      FinalGoalWaypointMode_ = true;
-      if (waypoint_index_ == waypoint_csv_index_ && GoalReachedFlag_ &&
-          checkWaypointArea(NextWaypointMode_, waypoint_area_check_, waypoint_csv_, waypoint_index_,
-                            robot_pose_, waypoint_area_threshold_, node_name_, way_sound_))
-        FinalGoalFlag_ = true;
-      if (waypoint_index_ == waypoint_csv_index_)
-        ModeFlagOff(NextWaypointMode_, FinalGoalWaypointMode_, ReStartWaypointMode_,
-                    GoalReachedMode_, ReStartFlag_, GoalReachedFlag_);
-      if (FinalGoalFlag_)
+      FinalGoalWaypointMode = true;
+      if (waypoint_index == waypoint_csv_index && GoalReachedFlag &&
+          checkWaypointArea(NextWaypointMode, SlopeObstacleAvoidanceMode, waypoint_area_check,
+                            waypoint_csv, waypoint_index, robot_pose, waypoint_area_threshold,
+                            node_name, way_sound))
+        FinalGoalFlag = true;
+      if (waypoint_index == waypoint_csv_index)
+        ModeFlagOff(NextWaypointMode, FinalGoalWaypointMode, ReStartWaypointMode, GoalReachedMode,
+                    SlopeObstacleAvoidanceMode, ReStartFlag, GoalReachedFlag);
+      if (FinalGoalFlag)
       {
-        ROS_INFO("%s: Final Goal Reached", node_name_.c_str());
-        ROS_INFO("%s: Please ' Ctl + c ' ", node_name_.c_str());
+        ROS_INFO("%s: Final Goal Reached", node_name.c_str());
+        ROS_INFO("%s: Please ' Ctl + c ' ", node_name.c_str());
       }
     }
-    else if (waypoint_csv_[waypoint_index_][4] == "GoalReStart")
+    else if (waypoint_csv[waypoint_index][4] == "GoalReStart")
     {
-      ModeFlagOff(NextWaypointMode_, FinalGoalWaypointMode_, ReStartWaypointMode_, GoalReachedMode_,
-                  ReStartFlag_, GoalReachedFlag_);
-      ReStartWaypointMode_ = true;
+      ModeFlagOff(NextWaypointMode, FinalGoalWaypointMode, ReStartWaypointMode, GoalReachedMode,
+                  SlopeObstacleAvoidanceMode, ReStartFlag, GoalReachedFlag);
+      ReStartWaypointMode = true;
     }
-    else if (waypoint_csv_[waypoint_index_][4] == "GoalReach")
+    else if (waypoint_csv[waypoint_index][4] == "GoalReach")
     {
-      ModeFlagOff(NextWaypointMode_, FinalGoalWaypointMode_, ReStartWaypointMode_, GoalReachedMode_,
-                  ReStartFlag_, GoalReachedFlag_);
-      GoalReachedMode_ = true;
+      ModeFlagOff(NextWaypointMode, FinalGoalWaypointMode, ReStartWaypointMode, GoalReachedMode,
+                  SlopeObstacleAvoidanceMode, ReStartFlag, GoalReachedFlag);
+      GoalReachedMode = true;
+    }
+    else if (waypoint_csv[waypoint_index][4] == "SlopeObstacleAvoidance")
+    {
+      ModeFlagOff(NextWaypointMode, FinalGoalWaypointMode, ReStartWaypointMode, GoalReachedMode,
+                  SlopeObstacleAvoidanceMode, ReStartFlag, GoalReachedFlag);
+      SlopeObstacleAvoidanceMode = true;
     }
   }
 
-  void debugModeFlag(bool &NextWaypointMode_, bool &FinalGoalWaypointMode_,
-                     bool &ReStartWaypointMode_, bool &GoalReachedMode_, bool &GoalReachedFlag_,
-                     int &waypoint_index_)
+  void debug(bool &NextWaypointMode, bool &FinalGoalWaypointMode, bool &ReStartWaypointMode,
+             bool &GoalReachedMode, bool &GoalReachedFlag, bool &SlopeObstacleAvoidanceMode,
+             bool &SlopeObstacleAvoidanceFlag, int &waypoint_index, float &waypoint_area_check,
+             float &waypoint_area_threshold)
   {
-    cout << "___________________\n"
-         << "NextWaypointMode : " << NextWaypointMode_ << "\n"
-         << "FinalGoalWaypointMode : " << FinalGoalWaypointMode_ << "\n"
-         << "ReStartWaypointMode : " << ReStartWaypointMode_ << "\n"
-         << "GoalReachedMode : " << GoalReachedMode_ << "\n"
-         << "GoalReachedFlag : " << GoalReachedFlag_ << "\n"
-
-         << "~~~~~~~~~~~~~~~~~~~\n"
-         << "WaypointIndex   : " << waypoint_index_ << "\n"
-         << "___________________\n";
+    cout << "_______________________________________\n"
+         << "|NextWaypointMode            : " << NextWaypointMode << "      |\n"
+         << "|FinalGoalWaypointMode       : " << FinalGoalWaypointMode << "      |\n"
+         << "|ReStartWaypointMode         : " << ReStartWaypointMode << "      |\n"
+         << "|GoalReachedMode             : " << GoalReachedMode << "      |\n"
+         << "|GoalReachedFlag             : " << GoalReachedFlag << "      |\n"
+         << "|SlopeObstacleAvoidanceMode  : " << SlopeObstacleAvoidanceMode << "      |\n"
+         << "|SlopeObstacleAvoidanceFlag  : " << SlopeObstacleAvoidanceFlag << "      |\n"
+         << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+         << "|WaypointIndex               : " << waypoint_index << "      |\n"
+         << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+         << "|WaypointDistance            : " << waypoint_area_check << "|\n"
+         << "|WaypointThreshold           : " << waypoint_area_threshold << "      |\n"
+         << "_______________________________________\n";
   }
 };
 }  // namespace raspicat_navigation

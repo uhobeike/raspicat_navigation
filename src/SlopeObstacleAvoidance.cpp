@@ -32,7 +32,7 @@ void SlopeObstacleAvoidance::readParameters()
   }
 
   pnh_.param("scan_recive_tolerance", scan_receive_tolerance_, 1.0);
-  pnh_.param("obstacle_range_limit", scan_range_limit_, obstacle_range);
+  pnh_.param("obstacle_range_limit", scan_range_limit_, static_cast<float>(1.0));  // obstacle_range
 
   double checkRate;
   pnh_.param("check_scan_param_rate", checkRate, 10.0);
@@ -88,8 +88,8 @@ void SlopeObstacleAvoidance::initTimerCb()
     if (in_scan_ and
         ros::Time::now().toSec() - latest_scan_time_.toSec() >= scan_receive_tolerance_)
     {
-      ROS_ERROR("Not receiving a scan within %f seconds. It actually takes %f seconds.",
-                scan_receive_tolerance_, (ros::Time::now().toSec() - latest_scan_time_.toSec()));
+      ROS_WARN("Not receiving a scan within %f seconds. It actually takes %f seconds.",
+               scan_receive_tolerance_, (ros::Time::now().toSec() - latest_scan_time_.toSec()));
     }
 
     pnh_.getParam("obstacle_range_limit", scan_range_limit_);
