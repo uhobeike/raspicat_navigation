@@ -5,8 +5,8 @@ obstacles_layer:
   combination_method: 1
   footprint_clearing_enabled: true
   track_unknown_space: false
-  obstacle_range: 3
-  raytrace_range: 3.5
+  obstacle_range: 5
+  raytrace_range: 10
   observation_sources: scan
   scan:
     data_type: LaserScan
