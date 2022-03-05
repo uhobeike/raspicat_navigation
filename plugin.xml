@@ -4,7 +4,7 @@
     type="raspicat_navigation::WaypointServer"
     base_class_type="raspicat_navigation::BaseWaypointServer">
     <description>
-      Plugins for managing waypoints
+      Plugins for managing waypoints.
     </description>
   </class>
 
@@ -13,7 +13,7 @@
     type="raspicat_navigation::WaypointRviz"
     base_class_type="raspicat_navigation::BaseWaypointRviz">
     <description>
-      Plugins for drawing in rviz with respect to waypoint
+      Plugins for drawing in rviz with respect to waypoint.
     </description>
   </class>
 
@@ -22,7 +22,7 @@
     type="raspicat_navigation::WaypointParamChange"
     base_class_type="raspicat_navigation::BaseWaypointParamChange">
     <description>
-      Plugin to change dynamic parameters related to waypoint
+      Plugin to change dynamic parameters related to waypoint.
     </description>
   </class>
 
@@ -31,7 +31,7 @@
     type="raspicat_navigation::CmdVelSmoother"
     base_class_type="raspicat_navigation::WaypointNavHelperPlugin">
     <description>
-      Plugin to prevent sudden stops during navigation and ensure smooth running
+      Plugin to prevent sudden stops during navigation and ensure smooth running.
     </description>
   </class>
 
@@ -40,7 +40,16 @@
     type="raspicat_navigation::MclKidnappingMeasures"
     base_class_type="raspicat_navigation::WaypointNavHelperPlugin">
     <description>
-      Plugin to deal with self-positioning kidnapping in mcl when it happens
+      Plugin to deal with self-positioning kidnapping in mcl when it happens.
+    </description>
+  </class>
+
+  <class
+    name="raspicat_navigation/SlopeObstacleAvoidance"
+    type="raspicat_navigation::SlopeObstacleAvoidance"
+    base_class_type="raspicat_navigation::WaypointNavHelperPlugin">
+    <description>
+      Plugin to stable navigation on slopes.
     </description>
   </class>
 </library>

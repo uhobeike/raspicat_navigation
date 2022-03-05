@@ -139,7 +139,8 @@ void WaypointNav::initClassLoader()
 
   // try
   // {
-  //   way_helper_ = waypoint_nav_helper_loader_.createInstance("raspicat_navigation/CmdVelSmoother");
+  //   way_helper_ =
+  //   waypoint_nav_helper_loader_.createInstance("raspicat_navigation/CmdVelSmoother");
   //   way_helper_->initialize(waypoint_nav_helper_);
   //   way_helper_->run();
   // }
@@ -147,6 +148,18 @@ void WaypointNav::initClassLoader()
   // {
   //   ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
   // }
+
+  try
+  {
+    way_helper_ =
+        waypoint_nav_helper_loader_.createInstance("raspicat_navigation/SlopeObstacleAvoidance");
+    way_helper_->initialize(waypoint_nav_helper_);
+    way_helper_->run();
+  }
+  catch (pluginlib::PluginlibException &ex)
+  {
+    ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
+  }
 }
 
 void WaypointNav::Run()
