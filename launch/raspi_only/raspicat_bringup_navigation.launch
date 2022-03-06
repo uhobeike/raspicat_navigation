@@ -1,0 +1,63 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="urg_usb"         default="false"/>
+  <arg name="urg_ether"       default="true"/>
+  <arg name="imu_serial_port" default="/dev/ttyACM1"/>
+  <arg name="urg_serial_port" default="/dev/ttyACM0"/>
+  <arg name="urg_ip_address"  default="172.16.0.10"/>
+
+  <arg name="waypoint_navigation" default="true"/>
+  <arg name="mcl_map_file"        default="$(find raspicat_navigation)/config/maps/tsudanuma/map_tsudanuma.yaml"/>
+  <arg name="move_base_map_file"  default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>　
+  <arg name="csv_file"            default="$(find raspicat_navigation)/config/csv/waypoint_tsudanuma.csv"/>
+  
+  <arg name="move_forward_only" default="false"/>
+  
+  
+ <!-- Raspicat nodes -->
+  <include file="$(find raspicat)/launch/raspicat.launch"/>
+  
+  <node pkg="urg_node" name="urg_node" type="urg_node" required="true">
+    <param name="frame_id" value="urg_lrf_link"/>
+    <param if="$(arg urg_ether)" name="ip_address" value="$(arg urg_ip_address)"/>
+    <param if="$(arg urg_usb)"   name="serial_port" value="$(arg urg_serial_port)"/>
+  </node>
+
+  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
+
+  <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
+    <remap from="map"        to="/move_base_map"/>
+    <remap from="static_map" to="/move_base_static_map"/>
+  </node>
+
+  <!-- Robot model import -->
+  <arg name="multi_robot_name" default=""/>
+
+  <include file="$(find raspicat_navigation)/launch/include/description.launch.xml"/>
+ 
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0" />
+    <param name="tf_prefix" value="$(arg multi_robot_name)"/>
+  </node>
+  
+  <!-- Amcl -->
+  <include file="$(find raspicat_navigation)/launch/amcl.launch">
+    <arg name="initial_pose_x" value="-70.475"/>
+    <arg name="initial_pose_y" value="-4.619"/>
+    <arg name="initial_pose_a" value="-0.038"/>
+  </include>
+
+  
+  <!-- Move_base -->
+  <include file="$(find raspicat_navigation)/launch/move_base.launch">
+    <arg name="move_forward_only" value="$(arg move_forward_only)"/>
+    <arg name="waypoint_nav" default="$(arg waypoint_navigation)"/>
+  </include>
+
+  <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" args="$(arg csv_file)" output="screen"/>
+
+  <!-- motor ON -->
+  <node pkg="raspicat_navigation" name="motor_start"
+    type="motor_start.py" required="true" output="screen">
+  </node>
+</launch>
