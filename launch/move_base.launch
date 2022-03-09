@@ -1,15 +1,13 @@
 <launch>
   <!-- Arguments -->
-  <arg name="model" default="raspicat"/>
-  <arg name="cmd_vel_topic" default="/cmd_vel"/>
-  <arg name="odom_topic" default="odom"/>
+  <arg name="model"             default="raspicat"/>
+  <arg name="cmd_vel_topic"     default="/cmd_vel"/>
+  <arg name="odom_topic"        default="/odom"/>
+  <arg name="robot_base_frame"  default="base_link"/>
+
+  <arg name="raspicat_sim"      default="false"/>
+  <arg name="waypoint_nav"      default="false"/>
   <arg name="move_forward_only" default="false"/>
-
-  <arg name="raspicat_sim" default="false"/>
-  <arg name="robot_base_frame" default="base_link"/>
-  <arg name="obstacles_layer/scan/sensor_frame" default="urg_lrf_link"/>
-
-  <arg name="waypoint_nav" default="false"/>
 
   <!-- Move_base -->
   <node pkg="move_base" type="move_base" name="move_base" clear_params="true" respawn="true" output="screen">
@@ -21,15 +19,13 @@
     <rosparam command="load" file="$(find raspicat_navigation)/config/param/move_base_params.yaml"/>
     <rosparam command="load" file="$(find raspicat_navigation)/config/param/dwa_local_planner_params_$(arg model).yaml"/>
     <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
-    <remap from="odom" to="$(arg odom_topic)"/>
-    <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)"/>
+    <remap from="odom"    to="$(arg odom_topic)"/>
+    <param if="$(arg move_forward_only)" name="DWAPlannerROS/min_vel_x" value="0.0"/>
     
-    <param if="$(arg raspicat_sim)" name="global_costmap/robot_base_frame"                  value="$(arg robot_base_frame)"/>
-    <param if="$(arg raspicat_sim)" name="local_costmap/robot_base_frame"                   value="$(arg robot_base_frame)"/>
-    <param if="$(arg raspicat_sim)" name="global_costmap/obstacles_layer/scan/sensor_frame" value="$(arg obstacles_layer/scan/sensor_frame)"/>
-    <param if="$(arg raspicat_sim)" name="local_costmap/obstacles_layer/scan/sensor_frame"  value="$(arg obstacles_layer/scan/sensor_frame)"/>
-    <param if="$(arg waypoint_nav)" name="global_costmap/static_layer/map_topic"            value="/move_base_map"/>
-    <param if="$(arg waypoint_nav)" name="local_costmap/static_layer/map_topic"             value="/move_base_map"/>
+    <param if="$(arg raspicat_sim)" name="global_costmap/robot_base_frame"           value="$(arg robot_base_frame)"/>
+    <param if="$(arg raspicat_sim)" name="local_costmap/robot_base_frame"            value="$(arg robot_base_frame)"/>
+    <param if="$(arg waypoint_nav)" name="global_costmap/static_layer/map_topic"     value="/move_base_map"/>
+    <param if="$(arg waypoint_nav)" name="local_costmap/static_layer/map_topic"      value="/move_base_map"/>
     <param if="$(arg waypoint_nav)" name="global_costmap/obstacles_layer/scan/topic" value="/filter_scan"/>
     <param if="$(arg waypoint_nav)" name="local_costmap/obstacles_layer/scan/topic"  value="/filter_scan"/>
   </node>

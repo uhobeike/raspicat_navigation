@@ -35,9 +35,9 @@
   
   <!-- Amcl -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch">
-    <arg name="initial_pose_x" value="213.6"/>
-    <arg name="initial_pose_y" value="102.6"/>
-    <arg name="initial_pose_a" value="0"/>
+    <arg name="initial_pose_x" value="-70.475"/>
+    <arg name="initial_pose_y" value="-4.619"/>
+    <arg name="initial_pose_a" value="-0.038"/>
   </include>
 
   <!-- Move_base -->

@@ -7,15 +7,60 @@ obstacles_layer:
   track_unknown_space: false
   obstacle_range: 3
   raytrace_range: 3.5
-  observation_sources: scan
+
+  observation_sources: scan left_side_usensor left_front_usensor right_front_usensor right_side_usensor
   scan:
     data_type: LaserScan
-    sensor_frame: urg_lrf_link
+    sensor_frame: lidar_link
     topic: /scan
     marking: true
     clearing: true
     inf_is_valid: false
     observation_persistence: 0.0
+    expected_update_rate: 0.0
+    max_obstacle_height: 2.0
+    min_obstacle_height: 0.0
+  left_side_usensor:
+    data_type: LaserScan
+    sensor_frame: left_side_usensor_link
+    topic: /ls_scan
+    marking: true
+    clearing: true
+    inf_is_valid: false
+    observation_persistence: 1.0
+    expected_update_rate: 0.0
+    max_obstacle_height: 2.0
+    min_obstacle_height: 0.0
+  left_front_usensor:
+    data_type: LaserScan
+    sensor_frame: left_front_usensor_link
+    topic: /lf_scan
+    marking: true
+    clearing: true
+    inf_is_valid: false
+    observation_persistence: 1.0
+    expected_update_rate: 0.0
+    max_obstacle_height: 2.0
+    min_obstacle_height: 0.0
+  right_front_usensor:
+    data_type: LaserScan
+    sensor_frame: right_front_usensor_link
+    topic: /rf_scan
+    marking: true
+    clearing: true
+    inf_is_valid: false
+    observation_persistence: 1.0
+    expected_update_rate: 0.0
+    max_obstacle_height: 2.0
+    min_obstacle_height: 0.0
+  right_side_usensor:
+    data_type: LaserScan
+    sensor_frame: right_side_usensor_link
+    topic: /rs_scan
+    marking: true
+    clearing: true
+    inf_is_valid: false
+    observation_persistence: 1.0
     expected_update_rate: 0.0
     max_obstacle_height: 2.0
     min_obstacle_height: 0.0
@@ -33,19 +78,3 @@ static_layer:
 
 inflation_layer:
   enabled: true
-
-# map_type: costmap
-# observation_sources: ls_scan
-# scan: {sensor_frame: left_side_usensor_link, data_type: LaserScan, topic: /left_side_ultrasonic_sensor, marking: true, clearing: true}
-
-# map_type: costmap
-# observation_sources: scan3
-# scan: {sensor_frame: left_front_usensor_link, data_type: LaserScan, topic: lf_scan, marking: true, clearing: true}
-
-# map_type: costmap
-# observation_sources: scan4
-# scan: {sensor_frame: right_front_usensor_link, data_type: LaserScan, topic: rf_scan, marking: true, clearing: true}
-
-# map_type: costmap
-# observation_sources: scan5
-# scan: {sensor_frame: right_side_usensor_link, data_type: LaserScan, topic: rs_scan, marking: true, clearing: true}
