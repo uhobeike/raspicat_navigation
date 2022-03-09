@@ -63,10 +63,10 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
       MsgReceiveFlag_(false)
 {
   readParam();
-  initTimerCb();
-  initPubSub();
   initActionClient();
+  initPubSub();
   initClassLoader();
+  initTimerCb();
   initServiceClient();
 }
 
@@ -85,6 +85,8 @@ void WaypointNav::readParam()
 
 void WaypointNav::initTimerCb()
 {
+  ros::Duration duration(1.0);
+  duration.sleep();
   timer_ = nh_.createTimer(ros::Duration(0.1),
                            [&](auto &) { way_srv_->getRobotPose(tf_, robot_pose_); });
 }
@@ -252,10 +254,10 @@ void WaypointNav::Run()
         SlopeObstacleAvoidanceFlag_ = false;
       }
     }
-    // way_srv_->debug(NextWaypointMode_, FinalGoalWaypointMode_, ReStartWaypointMode_,
-    //                 GoalReachedMode_, GoalReachedFlag_, SlopeObstacleAvoidanceMode_,
-    //                 SlopeObstacleAvoidanceFlag_, waypoint_index_, waypoint_area_check_,
-    //                 waypoint_area_threshold_);
+    way_srv_->debug(NextWaypointMode_, FinalGoalWaypointMode_, ReStartWaypointMode_,
+                    GoalReachedMode_, GoalReachedFlag_, SlopeObstacleAvoidanceMode_,
+                    SlopeObstacleAvoidanceFlag_, waypoint_index_, waypoint_area_check_,
+                    waypoint_area_threshold_);
 
     way_srv_->managementWaypointInfo(
         waypoint_csv_, waypoint_csv_index_, waypoint_index_, node_name_, NextWaypointMode_,
