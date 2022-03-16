@@ -50,15 +50,13 @@ class BaseWaypointServer
                            bool &SlopeObstacleAvoidanceMode, bool &ReStartFlag,
                            bool &GoalReachedFlag) = 0;
 
-  virtual void managementWaypointInfo(vector<vector<string>> &waypoint_csv_,
-                                      int &waypoint_csv_index_, int &waypoint_index_,
-                                      string &node_name_, bool &NextWaypointMode_,
-                                      bool &FinalGoalWaypointMode_, bool &ReStartWaypointMode_,
-                                      bool &GoalReachedMode_, bool &GoalReachedFlag_,
-                                      bool &SlopeObstacleAvoidanceMode, bool &ReStartFlag_,
-                                      bool &FinalGoalFlag_, float &waypoint_area_check_,
-                                      vector<double> &robot_pose_, float &waypoint_area_threshold_,
-                                      ros::Publisher &way_sound_) = 0;
+  virtual void managementWaypointInfo(
+      vector<vector<string>> &waypoint_csv_, int &waypoint_csv_index_, int &waypoint_index_,
+      string &node_name_, bool &NextWaypointMode_, bool &FinalGoalWaypointMode_,
+      bool &ReStartWaypointMode_, bool &GoalReachedMode_, bool &GoalReachedFlag_,
+      bool &SlopeObstacleAvoidanceMode, bool &ReStartFlag_, bool &FinalGoalFlag_,
+      float &waypoint_area_check_, vector<double> &robot_pose_, float &waypoint_area_threshold_,
+      ros::Publisher &way_sound_, ros::Publisher &way_finish, ros::Publisher &way_mode_slope) = 0;
 
   virtual void debug(bool &NextWaypointMode, bool &FinalGoalWaypointMode, bool &ReStartWaypointMode,
                      bool &GoalReachedMode, bool &GoalReachedFlag, bool &SlopeObstacleAvoidanceMode,

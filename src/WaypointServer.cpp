@@ -163,7 +163,8 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
                               bool &SlopeObstacleAvoidanceMode, bool &ReStartFlag,
                               bool &FinalGoalFlag, float &waypoint_area_check,
                               vector<double> &robot_pose, float &waypoint_area_threshold,
-                              ros::Publisher &way_sound)
+                              ros::Publisher &way_sound, ros::Publisher &way_finish,
+                              ros::Publisher &way_mode_slope)
   {
     if (waypoint_csv[waypoint_index].size() >= 0 && waypoint_csv[waypoint_index].size() <= 4)
     {
@@ -186,6 +187,9 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
       {
         ROS_INFO("%s: Final Goal Reached", node_name.c_str());
         ROS_INFO("%s: Please ' Ctl + c ' ", node_name.c_str());
+        std_msgs::Bool data;
+        way_finish.publish(data);
+        exit(0);
       }
     }
     else if (waypoint_csv[waypoint_index][4] == "GoalReStart")
@@ -202,6 +206,13 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
     }
     else if (waypoint_csv[waypoint_index][4] == "SlopeObstacleAvoidance")
     {
+      if (NextWaypointMode)
+      {
+        ros::Duration duration(3.0);
+        duration.sleep();
+        std_msgs::Bool data;
+        way_mode_slope.publish(data);
+      }
       ModeFlagOff(NextWaypointMode, FinalGoalWaypointMode, ReStartWaypointMode, GoalReachedMode,
                   SlopeObstacleAvoidanceMode, ReStartFlag, GoalReachedFlag);
       SlopeObstacleAvoidanceMode = true;

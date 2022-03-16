@@ -29,7 +29,7 @@ int main(int argc, char** argv)
   tf2_ros::TransformListener tf(buffer);
 
   waypoint_nav::WaypointNav wv(nh, pnh, ros::this_node::getName(), argv[1], buffer);
-  ROS_INFO("%s: Please ' rostopic pub  -1 /goal_command std_msgs/String go ' ",
+  ROS_INFO("%s: Please ' rostopic pub  -1 /waypoint_start std_msgs/String go ' ",
            ros::this_node::getName().c_str());
 
   // If there is only one thread, the timer callback may not work well.
