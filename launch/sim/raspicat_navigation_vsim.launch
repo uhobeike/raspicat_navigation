@@ -22,9 +22,9 @@
 
   <!-- Amcl -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch">
-    <arg name="initial_pose_x" value="-70.475"/>
-    <arg name="initial_pose_y" value="-4.619"/>
-    <arg name="initial_pose_a" value="-0.038"/>
+    <arg name="initial_pose_x" value="-9.377"/>
+    <arg name="initial_pose_y" value="-74.995"/>
+    <arg name="initial_pose_a" value="1.456"/>
     <arg name="base_frame_id" default="base_footprint"/>
   </include>
 
@@ -34,16 +34,13 @@
     <arg name="raspicat_sim" value="true"/>
     <arg name="waypoint_nav" default="$(arg waypoint_navigation)"/>
     <arg name="robot_base_frame" value="base_footprint"/>
-    <arg name="obstacles_layer/scan/sensor_frame" value="lidar_link"/>
   </include>
 
-  <!-- Sound play -->
-  <node pkg="sound_play" name="sound_play"
-    type="soundplay_node.py" required="true" output="screen">
-  </node>
-  
-  <node pkg="raspicat_navigation" name="waypoint_passed_play_sound"
-    type="waypoint_passed_play_sound.py" required="true" output="screen">
+  <!-- Raspicat speak -->
+  <node pkg="raspicat_speak" type="raspicat_speak_node" name="raspicat_speak_node" 
+        clear_params="true" respawn="true" output="screen">
+    <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/speak_list.yaml"/>
+    <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/voice_config.yaml"/>
   </node>
 
   <!-- Waypoint_nav -->

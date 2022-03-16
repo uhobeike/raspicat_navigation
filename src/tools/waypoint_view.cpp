@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 
     pub_pose_way = nh.advertise<geometry_msgs::PoseArray>("waypoint", 1, true);
 
-    ifstream f_r("/home/raspi-cat/waypoint.csv",std::ios::in);
+    ifstream f_r("/home/ikebe/active/raspicat_navigation_ws/src/raspicat_navigation/config/csv/waypoint_tsudanuma.csv",std::ios::in);
 
     vector<vector<string>> waypoint_read;
     string line,field;

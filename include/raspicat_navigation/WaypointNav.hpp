@@ -55,7 +55,6 @@ class WaypointNav
   void Run();
 
   void GoalReachedCb(const actionlib_msgs::GoalStatusArray& status);
-  void GoalCommandCb(const std_msgs::String& msg);
   void WaypointStartCb(const std_msgs::String& msg);
   void WaypointRestartCb(const std_msgs::String& msg);
 
@@ -64,9 +63,9 @@ class WaypointNav
   tf2_ros::Buffer& tf_;
   ros::Timer timer_;
 
-  ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_, waypoint_start_,
-      waypoint_restart_;
-  ros::Publisher ini_pose_, way_pose_array_, way_area_array_, way_number_txt_array_, way_sound_;
+  ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_, way_start_, way_restart_;
+  ros::Publisher ini_pose_, way_pose_array_, way_area_array_, way_number_txt_array_, way_sound_,
+      way_mode_slope_, way_finish_;
 
   std::map<std::string, ros::ServiceClient> slope_obstacle_avoidanc_client_;
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac_move_base_;

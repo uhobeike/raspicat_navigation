@@ -1,0 +1,22 @@
+topics:
+  - topic: "/waypoint"
+    sentence: "ナビゲーションが立ち上がりました　にあん"
+    priority: 1
+  - topic: "/waypoint_start"
+    sentence: "ナビゲーションをスタートします　にあん"
+    priority: 1
+  - topic: "/waypoint_passed"
+    sentence: "ウェイポイントを通過しました　にあん"
+    priority: 1
+  - topic: "/waypoint_finish"
+    sentence: "ゴールしました　ナビゲーションを終了します　にあん"
+    priority: 1
+  - topic: "/waypoint_mode_slope"
+    sentence: "坂道モードに切り替わりました　にあん"
+    priority: 1
+  - topic: "/rosbag_record_start"
+    sentence: "ろすばぐの記録を開始します　にあん"
+    priority: 1
+  - topic: "/rosbag_record_finish"
+    sentence: "ろすばぐの記録をしました　にあん"
+    priority: 1

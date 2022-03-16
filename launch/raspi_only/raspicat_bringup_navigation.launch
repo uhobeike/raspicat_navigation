@@ -52,9 +52,9 @@
   
   <!-- Amcl -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch">
-    <arg name="initial_pose_x" value="-70.475"/>
-    <arg name="initial_pose_y" value="-4.619"/>
-    <arg name="initial_pose_a" value="-0.038"/>
+    <arg name="initial_pose_x" value="-9.377"/>
+    <arg name="initial_pose_y" value="-74.995"/>
+    <arg name="initial_pose_a" value="1.456"/>
   </include>
 
   <!-- Move_base -->
@@ -62,6 +62,13 @@
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
     <arg name="waypoint_nav" default="$(arg waypoint_navigation)"/>
   </include>
+
+  <!-- Raspicat speak -->
+  <node pkg="raspicat_speak" type="raspicat_speak_node" name="raspicat_speak_node" 
+        clear_params="true" respawn="true" output="screen">
+    <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/speak_list.yaml"/>
+    <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/voice_config.yaml"/>
+  </node>
 
   <!-- Waypoint Nav -->
   <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" args="$(arg csv_file)" output="screen"/>

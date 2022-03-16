@@ -93,16 +93,18 @@ void WaypointNav::initTimerCb()
 
 void WaypointNav::initPubSub()
 {
-  sub_movebase_goal_ = nh_.subscribe("move_base/status", 1, &WaypointNav::GoalReachedCb, this);
-  sub_goal_command_ = nh_.subscribe("goal_command", 1, &WaypointNav::GoalCommandCb, this);
-  waypoint_start_ = nh_.subscribe("waypoint_start", 1, &WaypointNav::WaypointStartCb, this);
-  waypoint_restart_ = nh_.subscribe("waypoint_restart", 1, &WaypointNav::WaypointRestartCb, this);
+  sub_movebase_goal_ = nh_.subscribe("/move_base/status", 1, &WaypointNav::GoalReachedCb, this);
+  way_start_ = nh_.subscribe("/waypoint_start", 1, &WaypointNav::WaypointStartCb, this);
+  way_restart_ = nh_.subscribe("/waypoint_restart", 1, &WaypointNav::WaypointRestartCb, this);
 
-  way_pose_array_ = nh_.advertise<geometry_msgs::PoseArray>("waypoint", 1, true);
-  way_area_array_ = nh_.advertise<visualization_msgs::MarkerArray>("waypoint_area", 1, true);
-  way_sound_ = nh_.advertise<std_msgs::Bool>("waypoint_passed", 1, true);
+  way_pose_array_ = nh_.advertise<geometry_msgs::PoseArray>("/waypoint", 1, true);
+  way_area_array_ = nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_area", 1, true);
+  way_sound_ = nh_.advertise<std_msgs::Bool>("/waypoint_passed", 1, true);
   way_number_txt_array_ =
-      nh_.advertise<visualization_msgs::MarkerArray>("waypoint_number_txt", 1, true);
+      nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_number_txt", 1, true);
+
+  way_mode_slope_ = nh_.advertise<std_msgs::Bool>("/waypoint_mode_slope", 1, true);
+  way_finish_ = nh_.advertise<std_msgs::Bool>("/waypoint_finish", 1, true);
 }
 
 void WaypointNav::initActionClient()
@@ -263,7 +265,7 @@ void WaypointNav::Run()
         waypoint_csv_, waypoint_csv_index_, waypoint_index_, node_name_, NextWaypointMode_,
         FinalGoalWaypointMode_, ReStartWaypointMode_, GoalReachedMode_, GoalReachedFlag_,
         SlopeObstacleAvoidanceMode_, ReStartFlag_, FinalGoalFlag_, waypoint_area_check_,
-        robot_pose_, waypoint_area_threshold_, way_sound_);
+        robot_pose_, waypoint_area_threshold_, way_sound_, way_finish_, way_mode_slope_);
     ros::spinOnce();
     loop_rate.sleep();
   }
@@ -276,25 +278,6 @@ void WaypointNav::GoalReachedCb(const actionlib_msgs::GoalStatusArray &status)
     actionlib_msgs::GoalStatus goalStatus = status.status_list[0];
 
     if (goalStatus.status == 3 && GoalReachedFlag_ == false) GoalReachedFlag_ = true;
-  }
-}
-
-void WaypointNav::GoalCommandCb(const std_msgs::String &msg)
-{
-  if (msg.data == "go" && !MsgReceiveFlag_)
-  {
-    MsgReceiveFlag_ = true;
-    Run();
-  }
-  else if (msg.data == "go" && MsgReceiveFlag_)
-  {
-    ReStartFlag_ = true;
-    waypoint_index_++;
-  }
-  else if (msg.data == "q" && MsgReceiveFlag_)
-  {
-    ROS_INFO("%s: Shutdown now ('o')/ bye bye~~~", node_name_.c_str());
-    ros::shutdown();
   }
 }
 
