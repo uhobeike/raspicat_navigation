@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Arguments -->
-  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/map_tudanuma.yaml"/>
+  <arg name="map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>
   <arg name="open_rviz" default="true"/>
 
-  <!-- Map_server -->
+  <!-- Map server -->
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
 
   <!-- Waypoint_view node -->
