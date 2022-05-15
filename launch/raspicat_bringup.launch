@@ -10,7 +10,7 @@
 
   <arg name="waypoint_navigation"   default="true"/>
   <arg if="$(arg waypoint_navigation)"      name="model"  default="$(find raspicatv2_description)/urdf/raspicatv2.urdf"/>
-  <arg unless="$(arg waypoint_navigation)"  name="model"  default="$(find raspicat_navigation)/config/urdf/raspicatv.urdf.xacro"/>
+  <arg unless="$(arg waypoint_navigation)"  name="model"  default="$(find raspicat_navigation)/config/urdf/raspicat.urdf.xacro"/>
 
   <!-- Prameters -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
