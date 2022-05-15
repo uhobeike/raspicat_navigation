@@ -1,48 +1,35 @@
 <launch>
   <!-- Arguments -->
-  <arg name="urg_usb" default="false"/>
-  <arg name="urg_ether" default="true"/>
-  <arg name="imu_serial_port" default="/dev/ttyACM0"/>
-  <arg name="urg_serial_port" default="/dev/ttyACM1"/>
-  <arg name="urg_ip_address" default="172.16.0.10"/>
+  <arg name="urg_usb"           default="false"/>
+  <arg name="urg_ether"         default="true"/>
+  <arg name="imu_serial_port"   default="/dev/ttyACM0"/>
+  <arg name="urg_serial_port"   default="/dev/ttyACM1"/>
+  <arg name="urg_ip_address"    default="172.16.0.10"/>
+  <arg name="urg_angle_min"     default="-1.78094870101"/>
+  <arg name="urg_angle_max"     default="1.78094870101"/>
+
+  <arg name="waypoint_navigation"   default="true"/>
+  <arg if="$(arg waypoint_navigation)"      name="model"  default="$(find raspicatv2_description)/urdf/raspicatv2.urdf"/>
+  <arg unless="$(arg waypoint_navigation)"  name="model"  default="$(find raspicat_navigation)/config/urdf/raspicatv.urdf.xacro"/>
+
+  <!-- Prameters -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
+
+  <!-- Robot model import -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0"/>
+  </node>
 
   <!-- Raspicat node -->
   <include file="$(find raspicat)/launch/raspicat.launch"/>
 
-  <!-- static_tf_pub node -->
-  <node pkg="tf" type="static_transform_publisher" name="raspicat_camera_tf_broadcaster" args="-0.144 0.0 0.4 0 0 0 /base_link /camera_link 100"/>  
-  <node pkg="tf" type="static_transform_publisher" name="raspicat_lrf_tf_broadcaster" args="0.144 0.0 0.04 0 0 0 /base_link /urg_lrf_link 100"/>
-
   <!-- Urg_node -->
   <node pkg="urg_node" name="urg_node" type="urg_node" required="true">
-    <param name="angle_min" value="-1.78094870101"/>
-    <param name="angle_max" value="1.78094870101"/>
-    <param name="frame_id" value="urg_lrf_link"/>
-    <param if="$(arg urg_ether)" name="ip_address" value="$(arg urg_ip_address)"/>
-    <param if="$(arg urg_usb)" name="serial_port" value="$(arg urg_serial_port)"/>
+    <param name="angle_min" value="$(arg urg_angle_min)"/>
+    <param name="angle_max" value="$(arg urg_angle_max)"/>
+    <param if="$(arg waypoint_navigation)"      name="frame_id" value="lidar_link"/>
+    <param unless="$(arg waypoint_navigation)"  name="frame_id" value="urg_lrf_link"/>
+    <param if="$(arg urg_ether)"  name="ip_address" value="$(arg urg_ip_address)"/>
+    <param if="$(arg urg_usb)"    name="serial_port" value="$(arg urg_serial_port)"/>
   </node>
-
-  <!-- rt_usb_9axisimu_driver -->
-  <!-- <node pkg="tf" type="static_transform_publisher" name="raspicat_imu_tf_broadcaster" args="0.0 0.0 0.05 0 3.14 0 /odom /imu_link 100"/> -->
-  <!-- <include file="$(find rt_usb_9axisimu_driver)/launch/rt_usb_9axisimu_driver.launch">
-    <arg name="port" value="$(arg imu_serial_port)"/>
-  </include> -->
-
-  <!-- robot_localization -->
-  <!-- <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter_node" clear_params="true" output="screen">
-    <remap from="imu/data_raw" to="imu/data_raw"/>
-    <remap from="imu/mag"  to="imu/mag"/>
-    <param name="use_mag" value="false"/>
-    <param name="world_frame" value="enu"/>
-    <param name="orientation_stddev" value="0.8"/>
-    <param name="publish_tf"   value="true"/>
-  </node> -->
-  
-  <!-- robot_localization -->
-  <!-- <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true" output="screen">
-    <rosparam command="load" file="$(find raspicat_navigation)/config/ekf_localization/ekf_localization.yaml"/>
-    <remap from="/odometry/filtered" to="fusion/odom"/>
-    <remap from="odom0" to="odom"/>
-    <remap from="imu0"  to="imu/data_raw"/>
-  </node> -->
 </launch>

@@ -1,69 +1,53 @@
 <launch>
   <!-- Arguments -->
-  <arg name="open_rviz" default="true"/>
-  <arg name="move_forward_only" default="false"/>
-  <arg name="waypoint_navigation" default="true"/>
-  <arg name="mcl_map_file" default="$(find raspicat_navigation)/config/maps/tsukuba/map_tsukuba_singou.yaml"/>
-  <arg name="move_base_map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsukuba_singou.yaml"/>
-  <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint_tsukuba.csv"/>
+  <arg name="open_rviz"             default="true"/>
+  <arg name="move_forward_only"     default="false"/>
+  <arg name="waypoint_navigation"   default="true"/>
+  <arg name="mcl_map_file"          default="$(find raspicat_navigation)/config/maps/tsudanuma/map_tsudanuma.yaml"/>
+  <arg if="$(arg waypoint_navigation)"      name="move_base_map_file"    default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>　
+  <arg unless="$(arg waypoint_navigation)"  name="move_base_map_file"    default="$(arg mcl_map_file)"/>　
+  <arg if="$(arg waypoint_navigation)"      name="model"                 default="$(find raspicatv2_description)/urdf/raspicatv2.urdf"/>
+  <arg unless="$(arg waypoint_navigation)"  name="model"                 default="$(find raspicat_navigation)/config/urdf/raspicatv.urdf.xacro"/>
 
-  <!-- Robot_model import -->
-  <arg name="multi_robot_name" default=""/>
-  <include file="$(find raspicat_navigation)/launch/include/description.launch.xml"/>
+  <arg name="mcl_init_pose_x" default="0.0"/>
+  <arg name="mcl_init_pose_y" default="0.0"/>
+  <arg name="mcl_init_pose_a" default="0.0"/>
+
+  <!-- Prameters -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
+
+  <!-- Robot model import -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-    <param name="publish_frequency" type="double" value="50.0" />
-    <param name="tf_prefix" value="$(arg multi_robot_name)"/>
+    <param name="publish_frequency" type="double" value="50.0"/>
   </node>
+
+  <!-- Motor on -->
+  <node pkg="raspicat_navigation" name="motor_start" type="motor_start.py" required="true" output="screen"/>
 
   <!-- Map server -->
-   <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
+  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
 
   <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
-    <remap from="map" to="/move_base_map"/>
-    <remap from="static_map" to="/move_base_static_map"/>
+    <remap from="map"         to="/move_base_map"/>
+    <remap from="static_map"  to="/move_base_static_map"/>
   </node>
 
-  <!-- Robot localization 
-  <include file="$(find robot_localization)/launch/ekf_template.launch"/>
-
-  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true" output="screen">
-    <rosparam command="load" file="$(find raspicat_navigation)/config/ekf_localization.yaml" />
-    <remap from="/odometry/filtered" to="fusion/odom" />
-    <remap from="odom0" to="odom" />
-    <remap from="imu0"  to="imu/data_raw" />
-  </node>-->
-  
   <!-- Amcl -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch">
-    <arg name="initial_pose_x" value="-70.475"/>
-    <arg name="initial_pose_y" value="-4.619"/>
-    <arg name="initial_pose_a" value="-0.038"/>
+    <arg name="initial_pose_x" value="$(arg mcl_init_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg mcl_init_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg mcl_init_pose_a)"/>
   </include>
 
   <!-- Move_base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
-    <arg name="waypoint_nav" default="$(arg waypoint_navigation)"/>
+    <arg name="waypoint_nav"      value="$(arg waypoint_navigation)"/>
   </include>
 
-  <!-- Motor on -->
-  <node pkg="raspicat_navigation" name="motor_start"
-    type="motor_start.py" required="true" output="screen">
-  </node>
-
-  <node pkg="sound_play" name="sound_play"
-    type="soundplay_node.py" required="true" output="screen">
-  </node>
-  
-  <node pkg="raspicat_navigation" name="waypoint_passed_play_sound"
-    type="waypoint_passed_play_sound.py" required="true" output="screen">
-  </node>
-  
-  <!-- Waypoint_nav -->
   <group if="$(arg waypoint_navigation)"> 
-    <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" 
-      args="$(arg csv_file)" output="screen">
-    </node>
+    <!-- Waypoint_nav -->
+    <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" args="$(arg csv_file)" output="screen"/>
   </group>
 
   <!-- Rviz -->
