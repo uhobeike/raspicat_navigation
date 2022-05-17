@@ -15,12 +15,10 @@ How to
 Moving around:
       
     s  f  g  j  
-      c
-s   : waypoint_rviz node RUN
-j   : waypoint add remove
-g   : goal set
-c   : corner set
-f   : finish and file write waypoint and kill_node
+s   : Run waypoint_rviz_set Node 
+j   : Remove waypoint 
+g   : Set goal
+f   : Finish
 """
 
 def getKey():
@@ -78,7 +76,7 @@ if __name__=="__main__":
 
         if key == 's' :
           global proc
-          find_node('waypoint_rviz')
+          find_node('waypoint_rviz_set')
           if(flag == 0):
             args = sys.argv
             proc = Popen(["rosrun", "raspicat_navigation", "waypoint_set", args[1]])
@@ -95,11 +93,6 @@ if __name__=="__main__":
           str = "goal"
           pub_way.publish(str)
           rospy.loginfo("goal_set......")
-
-        elif key == 'c' :
-          str = "corner"
-          pub_way.publish(str)
-          rospy.loginfo("corner_set...........")
 
         elif key == 'f' :
           str = "finish"

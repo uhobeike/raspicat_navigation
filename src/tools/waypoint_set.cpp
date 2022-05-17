@@ -16,7 +16,7 @@
 
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/PoseArray.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
 #include <std_msgs/ColorRGBA.h>
@@ -64,7 +64,7 @@ class waypoint_rviz
 
   string csv_path_;
 
-  void waypoint_Callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& pose);
+  void waypoint_Callback(const geometry_msgs::PoseStamped::ConstPtr& pose);
   void control_Callback(const std_msgs::StringConstPtr& command);
 
   void waypoint_csv_(vector<string>& posi_set, vector<vector<string>>& csv_array,
@@ -73,7 +73,6 @@ class waypoint_rviz
                          geometry_msgs::PoseArray& pose_array, visualization_msgs::Marker& marker,
                          uint16_t& waypoint_number);
   void way_point_goal_set_(vector<vector<string>>& waypoint_goal, uint16_t& waypoint_number);
-  void way_point_corner_set_(vector<vector<string>>& waypoint_corner, uint16_t& waypoint_number);
   void finish_and_file_write_waypoint_(vector<vector<string>>& waypoint_file_write,
                                        uint16_t& waypoint_number);
   void waypoint_marker_(visualization_msgs::Marker& marker, geometry_msgs::Point& point,
@@ -109,25 +108,25 @@ waypoint_rviz::waypoint_rviz(std::string file_name) : nh_("")
 }
 
 void waypoint_rviz::waypoint_Callback(
-    const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& pose)
+    const geometry_msgs::PoseStamped::ConstPtr& pose)
 {
   pose_array_.header.stamp = ros::Time::now();
   pose_array_.header.frame_id = "map";
 
-  pose_rviz_.position.x = pose->pose.pose.position.x;
-  pose_rviz_.position.y = pose->pose.pose.position.y;
+  pose_rviz_.position.x = pose->pose.position.x;
+  pose_rviz_.position.y = pose->pose.position.y;
   pose_rviz_.position.z = 0.2;
-  pose_rviz_.orientation.z = pose->pose.pose.orientation.z;
-  pose_rviz_.orientation.w = pose->pose.pose.orientation.w;
+  pose_rviz_.orientation.z = pose->pose.orientation.z;
+  pose_rviz_.orientation.w = pose->pose.orientation.w;
 
   pose_array_.poses.push_back(pose_rviz_);
 
   way_pub_.publish(pose_array_);
 
-  posi_set_.at(0) = to_string(pose->pose.pose.position.x);
-  posi_set_.at(1) = to_string(pose->pose.pose.position.y);
-  posi_set_.at(2) = to_string(pose->pose.pose.orientation.z);
-  posi_set_.at(3) = to_string(pose->pose.pose.orientation.w);
+  posi_set_.at(0) = to_string(pose->pose.position.x);
+  posi_set_.at(1) = to_string(pose->pose.position.y);
+  posi_set_.at(2) = to_string(pose->pose.orientation.z);
+  posi_set_.at(3) = to_string(pose->pose.orientation.w);
 
   waypoint_csv_(posi_set_, csv_array_, waypoint_number_);
 }
@@ -142,11 +141,6 @@ void waypoint_rviz::control_Callback(const std_msgs::StringConstPtr& command)
   else if (command->data == "goal")
   {
     way_point_goal_set_(csv_array_, waypoint_number_);
-  }
-
-  else if (command->data == "corner")
-  {
-    way_point_corner_set_(csv_array_, waypoint_number_);
   }
 
   else if (command->data == "finish")
@@ -197,24 +191,13 @@ void waypoint_rviz::way_point_goal_set_(vector<vector<string>>& waypoint_goal,
                    waypoint_number);
 }
 
-void waypoint_rviz::way_point_corner_set_(vector<vector<string>>& waypoint_corner,
-                                          uint16_t& waypoint_number)
-{
-  uint16_t array_number = waypoint_number - 1;
-  waypoint_corner[array_number].push_back("corner");
-
-  marker_mode_ = 1;
-  waypoint_marker_(marker_, point_, point_color_, waypoint_corner, marker_mode_, marker_flag_,
-                   waypoint_number);
-}
-
 void waypoint_rviz::finish_and_file_write_waypoint_(vector<vector<string>>& waypoint_file_write,
                                                     uint16_t& waypoint_number)
 {
   ROS_INFO("finish_and_file_write_waypoint q(^_^)p");
   ROS_INFO("%s", csv_path_.c_str());
 
-  ofstream f_w(csv_path_ + "/waypoint.csv", std::ios::app);
+  ofstream f_w(csv_path_, std::ios::trunc);
 
   for (auto it_t = waypoint_file_write.begin(); it_t != waypoint_file_write.end(); ++it_t)
   {
