@@ -9,11 +9,20 @@ find_package(catkin REQUIRED COMPONENTS
   move_base_msgs
   tf
   pluginlib
+  rviz
 )
+
+set(CMAKE_AUTOMOC ON)
+find_package(Qt5 ${rviz_QT_VERSION} EXACT REQUIRED
+  Core
+  Widgets
+)
+set(QT_LIBRARIES Qt5::Widgets)
+add_definitions(-DQT_NO_KEYWORDS)
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
+  LIBRARIES ${PROJECT_NAME} rviz
   CATKIN_DEPENDS roscpp std_msgs
 )
 
@@ -35,21 +44,32 @@ target_link_libraries(
   ${catkin_LIBRARIES}
 )
 
-# waypoint_set
-add_executable(waypoint_set src/tools/waypoint_set.cpp)
-target_link_libraries(waypoint_set ${catkin_LIBRARIES})
+# waypoint_rviz_set
+add_executable(waypoint_rviz_set src/tools/waypoint_set.cpp)
+target_link_libraries(waypoint_rviz_set ${catkin_LIBRARIES})
 
-# waypoint_view
-add_executable(waypoint_view src/tools/waypoint_view.cpp)
-target_link_libraries(waypoint_view ${catkin_LIBRARIES})
+# waypoint_rviz_view
+add_executable(waypoint_rviz_view src/tools/waypoint_view.cpp)
+target_link_libraries(waypoint_rviz_view ${catkin_LIBRARIES})
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME}_navigation
   src/WaypointServer.cpp
   src/WaypointRviz.cpp
   src/WaypointParamChange.cpp
   src/CmdVelSmoother.cpp
   src/MclKidnappingMeasures.cpp
   src/SlopeObstacleAvoidance.cpp
+)
+
+add_library(
+  ${PROJECT_NAME}_rviz
+  src/rviz/waypoint_pose_tool.cpp
+)
+
+target_link_libraries(
+  ${PROJECT_NAME}_rviz
+  ${catkin_LIBRARIES}
+  ${QT_LIBRARIES}
 )
 
 install(DIRECTORY launch src config scripts
