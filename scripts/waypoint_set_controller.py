@@ -54,7 +54,7 @@ def find_node(nodename):
   p=Popen(['rosnode','list'],stdout=PIPE) 
   p.wait() 
   nodelist=p.communicate() 
-  nd=nodelist[0] 
+  nd=nodelist[0].decode("utf-8")
   nd=nd.split("\n") 
   for i in range(len(nd)): 
     tmp=nd[i] 
@@ -79,7 +79,7 @@ if __name__=="__main__":
           find_node('waypoint_rviz_set')
           if(flag == 0):
             args = sys.argv
-            proc = Popen(["rosrun", "raspicat_navigation", "waypoint_set", args[1]])
+            proc = Popen(["rosrun", "raspicat_navigation", "waypoint_rviz_set", args[1]])
             rospy.loginfo("waypoint_set node RUN")
           elif(flag == 1):
             rospy.loginfo("already waypoint_rviz_set node RUN\n")
