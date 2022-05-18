@@ -7,6 +7,8 @@
   <arg name="urg_ip_address"        default="172.16.0.10"/>
 
   <arg name="waypoint_navigation"   default="true"/>
+  <arg name="usens_conv"            default="true"/>
+  <arg name="speak"                 default="true"/>
   <arg name="move_forward_only"     default="false"/>
   <arg name="mcl_map_file"          default="$(find raspicat_navigation)/config/maps/tsudanuma/map_tsudanuma.yaml"/>
   <arg if="$(arg waypoint_navigation)"      name="move_base_map_file"    default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>　
@@ -37,7 +39,7 @@
 
   <!-- Urg node -->
   <node pkg="urg_node" name="urg_node" type="urg_node" required="true">
-    <param if="$(arg waypoint_navigation)"      name="frame_id" value="lidar_link"/>
+    <!-- <param if="$(arg waypoint_navigation)"      name="frame_id" value="lidar_link"/> -->
     <param unless="$(arg waypoint_navigation)"  name="frame_id" value="urg_lrf_link"/>
     <param if="$(arg urg_ether)" name="ip_address" value="$(arg urg_ip_address)"/>
     <param if="$(arg urg_usb)"   name="serial_port" value="$(arg urg_serial_port)"/>
@@ -68,14 +70,14 @@
     <!-- Waypoint Nav -->
     <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" args="$(arg csv_file)" output="screen"/>
 
-    <include file="$(find analog_distance_sensor_to_laserscan)/launch/analog_distance_sensor_to_laserscan.launch">
+    <include if="$(arg usens_conv)" file="$(find analog_distance_sensor_to_laserscan)/launch/analog_distance_sensor_to_laserscan.launch">
       <arg name="nodelet"                 value="true"/>
       <arg name="usensor_max_threshold"   value="200"/>
       <arg name="usensor_min_threshold"   value="30"/>
     </include>
 
     <!-- Raspicat speak -->
-    <node pkg="raspicat_speak" type="raspicat_speak_node" name="raspicat_speak_node" 
+    <node if="$(arg speak)" pkg="raspicat_speak" type="raspicat_speak_node" name="raspicat_speak_node" 
           clear_params="true" respawn="true" output="screen">
       <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/speak_list.yaml"/>
       <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/voice_config.yaml"/>
