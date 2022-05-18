@@ -11,10 +11,9 @@
   <arg name="speak"                 default="true"/>
   <arg name="move_forward_only"     default="false"/>
   <arg name="mcl_map_file"          default="$(find raspicat_navigation)/config/maps/tsudanuma/map_tsudanuma.yaml"/>
-  <arg if="$(arg waypoint_navigation)"      name="move_base_map_file"    default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>　
-  <arg unless="$(arg waypoint_navigation)"  name="move_base_map_file"    default="$(arg mcl_map_file)"/>　
-  <arg if="$(arg waypoint_navigation)"      name="model"                 default="$(find raspicatv2_description)/urdf/raspicatv2.urdf"/>
-  <arg unless="$(arg waypoint_navigation)"  name="model"                 default="$(find raspicat_navigation)/config/urdf/raspicat.urdf.xacro"/>
+  <arg if="$(arg waypoint_navigation)"      name="move_base_map_file"    default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>
+  <arg unless="$(arg waypoint_navigation)"  name="move_base_map_file"    default="$(arg mcl_map_file)"/>
+  <arg name="model"                 default="$(find raspicat_navigation)/config/urdf/raspicat.urdf.xacro"/>
   <arg if="$(arg waypoint_navigation)"      name="csv_file"              default="$(find raspicat_navigation)/config/csv/waypoint_tsudanuma.csv"/>
 
   <arg name="mcl_init_pose_x" default="0.0"/>
@@ -39,8 +38,7 @@
 
   <!-- Urg node -->
   <node pkg="urg_node" name="urg_node" type="urg_node" required="true">
-    <!-- <param if="$(arg waypoint_navigation)"      name="frame_id" value="lidar_link"/> -->
-    <param unless="$(arg waypoint_navigation)"  name="frame_id" value="urg_lrf_link"/>
+    <param name="frame_id" value="urg_lrf_link"/>
     <param if="$(arg urg_ether)" name="ip_address" value="$(arg urg_ip_address)"/>
     <param if="$(arg urg_usb)"   name="serial_port" value="$(arg urg_serial_port)"/>
   </node>
