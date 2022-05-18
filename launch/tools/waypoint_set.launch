@@ -2,7 +2,7 @@
   <!-- Arguments -->
   <arg name="open_rviz" default="true"/>
   <arg name="map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>
-  <arg name="csv_file_path" default="$(find raspicat_navigation)/config/csv/waypoint.csv"/>
+  <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint.csv"/>
 
   <!-- Run the map server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
