@@ -2,18 +2,17 @@
   <!-- Arguments -->
   <arg name="open_rviz" default="true"/>
   <arg name="map_file" default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>
-  <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/waypoint.csv"/>
+  <arg name="csv_file" default="$(find raspicat_navigation)/config/csv/"/>
 
   <!-- Run the map server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
   
   <!-- Node Run -->
-  <node pkg="raspicat_navigation" name="waypoint_set_controller" type="waypoint_set_controller.py" args="$(arg csv_file_path)" required="true" output="screen"/>
+  <node pkg="raspicat_navigation" name="waypoint_set_controller" type="waypoint_set_controller.py" args="$(arg csv_file)" required="true" output="screen"/>
 
   <!-- Rviz -->
   <group if="$(arg open_rviz)">
     <node pkg="rviz" type="rviz" name="rviz" required="true"
-      args="-d $(find raspicat_navigation)/config/rviz/waypoint.rviz">
-    </node>
+      args="-d $(find raspicat_navigation)/config/rviz/waypoint.rviz"/>
   </group>
 </launch>
