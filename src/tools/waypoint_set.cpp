@@ -197,7 +197,7 @@ void waypoint_rviz::finish_and_file_write_waypoint_(vector<vector<string>>& wayp
   ROS_INFO("finish_and_file_write_waypoint q(^_^)p");
   ROS_INFO("%s", csv_path_.c_str());
 
-  ofstream f_w(csv_path_, std::ios::trunc);
+  ofstream f_w(csv_path_ + "waypoint.csv", std::ios::out);
 
   for (auto it_t = waypoint_file_write.begin(); it_t != waypoint_file_write.end(); ++it_t)
   {

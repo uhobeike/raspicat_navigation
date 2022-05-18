@@ -67,7 +67,9 @@ int main(int argc, char** argv)
 
     pub_pose_way = nh.advertise<geometry_msgs::PoseArray>("waypoint", 1, true);
 
-    ifstream f_r(argv[1],std::ios::in);
+    string csv_file = argv[1];
+
+    ifstream f_r(csv_file + "waypoint.csv",std::ios::in);
 
     vector<vector<string>> waypoint_read;
     string line,field;
