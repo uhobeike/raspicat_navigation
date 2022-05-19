@@ -223,7 +223,7 @@ void waypoint_rviz::waypoint_marker_(visualization_msgs::Marker& marker,
 {
   uint16_t array_number = waypoint_number - 1;
 
-  marker.header.frame_id = "/map";
+  marker.header.frame_id = "map";
   marker.header.stamp = ros::Time::now();
 
   marker.id = 0;
