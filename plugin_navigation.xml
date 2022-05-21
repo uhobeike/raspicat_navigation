@@ -27,24 +27,6 @@
   </class>
 
   <class
-    name="raspicat_navigation/CmdVelSmoother"
-    type="raspicat_navigation::CmdVelSmoother"
-    base_class_type="raspicat_navigation::WaypointNavHelperPlugin">
-    <description>
-      Plugin to prevent sudden stops during navigation and ensure smooth running.
-    </description>
-  </class>
-
-  <class
-    name="raspicat_navigation/MclKidnappingMeasures"
-    type="raspicat_navigation::MclKidnappingMeasures"
-    base_class_type="raspicat_navigation::WaypointNavHelperPlugin">
-    <description>
-      Plugin to deal with self-positioning kidnapping in mcl when it happens.
-    </description>
-  </class>
-
-  <class
     name="raspicat_navigation/SlopeObstacleAvoidance"
     type="raspicat_navigation::SlopeObstacleAvoidance"
     base_class_type="raspicat_navigation::WaypointNavHelperPlugin">

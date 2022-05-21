@@ -56,8 +56,6 @@ add_library(${PROJECT_NAME}_navigation
   src/WaypointServer.cpp
   src/WaypointRviz.cpp
   src/WaypointParamChange.cpp
-  src/CmdVelSmoother.cpp
-  src/MclKidnappingMeasures.cpp
   src/SlopeObstacleAvoidance.cpp
 )
 
