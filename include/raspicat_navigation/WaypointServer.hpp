@@ -19,11 +19,62 @@
 
 #include <ros/ros.h>
 
-namespace waypoint_nav
-{
-class WaypointServer
-{
-};
+#include <actionlib/client/simple_action_client.h>
+#include <move_base_msgs/MoveBaseAction.h>
+#include <pluginlib/class_list_macros.h>
+#include <std_msgs/Bool.h>
+#include <tf/transform_datatypes.h>
+#include <tf/transform_listener.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-}  // namespace waypoint_nav
+#include <fstream>
+#include <sstream>
+
+#include "raspicat_navigation/BaseWaypointServer.hpp"
+
+namespace raspicat_navigation
+{
+class WaypointServer : public raspicat_navigation::BaseWaypointServer
+{
+ public:
+  void initialize(std::string name);
+  void run();
+  void WaypointCsvRead(string &csv_fname_, vector<vector<string>> &waypoint_csv_,
+                       int &waypoint_csv_index_);
+
+  void setWaypoint(move_base_msgs::MoveBaseGoal &goal, vector<vector<string>> &waypoint_csv_,
+                   int &waypoint_index_,
+                   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base_);
+
+  bool checkWaypointArea(bool &NextWaypointMode, bool &SlopeObstacleAvoidanceMode,
+                         float &waypoint_area_check, vector<vector<string>> &waypoint_csv,
+                         int &waypoint_index, vector<double> &robot_pose,
+                         float &waypoint_area_threshold, string &node_name,
+                         ros::Publisher &way_sound);
+
+  void getRobotPose(tf2_ros::Buffer &tf_, vector<double> &robot_pose_);
+
+  bool checkGoalReach(bool &GoalReachedFlag_, string &node_name_, int &waypoint_index_);
+  void ModeFlagOff(bool &NextWaypointMode, bool &FinalGoalWaypointMode, bool &ReStartWaypointMode,
+                   bool &GoalReachedMode, bool &SlopeObstacleAvoidanceMode, bool &ReStartFlag,
+                   bool &GoalReachedFlag);
+
+  void managementWaypointInfo(vector<vector<string>> &waypoint_csv, int &waypoint_csv_index,
+                              int &waypoint_index, string &node_name, bool &NextWaypointMode,
+                              bool &FinalGoalWaypointMode, bool &ReStartWaypointMode,
+                              bool &GoalReachedMode, bool &GoalReachedFlag,
+                              bool &SlopeObstacleAvoidanceMode, bool &ReStartFlag,
+                              bool &FinalGoalFlag, float &waypoint_area_check,
+                              vector<double> &robot_pose, float &waypoint_area_threshold,
+                              ros::Publisher &way_sound, ros::Publisher &way_finish,
+                              ros::Publisher &way_mode_slope);
+
+  void debug(bool &NextWaypointMode, bool &FinalGoalWaypointMode, bool &ReStartWaypointMode,
+             bool &GoalReachedMode, bool &GoalReachedFlag, bool &SlopeObstacleAvoidanceMode,
+             bool &SlopeObstacleAvoidanceFlag, int &waypoint_index, float &waypoint_area_check,
+             float &waypoint_area_threshold);
+
+  virtual ~WaypointServer() {}
+};
+}  // namespace raspicat_navigation
 #endif  // WAYPOINT_SERVER_HPP_

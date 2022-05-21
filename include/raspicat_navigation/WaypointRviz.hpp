@@ -19,11 +19,29 @@
 
 #include <ros/ros.h>
 
-namespace waypoint_nav
+#include <pluginlib/class_list_macros.h>
+
+#include "raspicat_navigation/BaseWaypointRviz.hpp"
+
+namespace raspicat_navigation
 {
-class WaypointRviz
+class WaypointRviz : public raspicat_navigation::BaseWaypointRviz
 {
+ public:
+  void initialize(std::string name);
+  void run();
+  void WaypointRvizVisualization(vector<vector<string>> &waypoint_csv_, int &waypoint_csv_index_,
+                                 ros::Publisher &way_pose_array_, ros::Publisher &way_area_array_,
+                                 ros::Publisher &way_number_txt_array_,
+                                 float &waypoint_area_threshold_);
+
+  void WaypointMarkerArraySet(visualization_msgs::MarkerArray &waypoint_area,
+                              visualization_msgs::MarkerArray &waypoint_number_txt, uint8_t index,
+                              uint8_t size, float &waypoint_area_threshold_,
+                              vector<vector<string>> &waypoint_csv_);
+
+  virtual ~WaypointRviz() {}
 };
 
-}  // namespace waypoint_nav
+}  // namespace raspicat_navigation
 #endif  // WAYPOINT_RVIZ_HPP_

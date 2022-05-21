@@ -17,8 +17,6 @@
 #ifndef BASE_WAYPOINT_HELPER_PLUGIN_HPP_
 #define BASE_WAYPOINT_HELPER_PLUGIN_HPP_
 
-#include <ros/ros.h>
-
 using namespace ::std;
 
 namespace raspicat_navigation
