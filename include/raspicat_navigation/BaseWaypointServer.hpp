@@ -28,6 +28,9 @@ class BaseWaypointServer
   virtual void run() = 0;
   virtual void WaypointCsvRead(string &csv_fname_, vector<vector<string>> &waypoint_csv_,
                                int &waypoint_csv_index_) = 0;
+
+  virtual void checkWaypointYmal(ros::NodeHandle &pnh) = 0;
+
   virtual void setWaypoint(
       move_base_msgs::MoveBaseGoal &goal, vector<vector<string>> &waypoint_csv_,
       int &waypoint_index_,

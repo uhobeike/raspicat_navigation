@@ -155,6 +155,7 @@ void WaypointNav::initClassLoader()
     way_srv_->initialize(waypoint_server_);
     way_srv_->run();
     way_srv_->WaypointCsvRead(csv_fname_, waypoint_csv_, waypoint_csv_index_);
+    way_srv_->checkWaypointYmal(pnh_);
   }
   catch (pluginlib::PluginlibException &ex)
   {

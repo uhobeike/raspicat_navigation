@@ -40,7 +40,9 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
   void initialize(std::string name);
   void run();
   void WaypointCsvRead(string &csv_fname_, vector<vector<string>> &waypoint_csv_,
-                       int &waypoint_csv_index_);
+                       int &waypoint_csv_index);
+
+  void checkWaypointYmal(ros::NodeHandle &pnh_);
 
   void setWaypoint(move_base_msgs::MoveBaseGoal &goal, vector<vector<string>> &waypoint_csv_,
                    int &waypoint_index_,
