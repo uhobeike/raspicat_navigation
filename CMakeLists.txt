@@ -52,7 +52,7 @@ target_link_libraries(waypoint_rviz_set ${catkin_LIBRARIES})
 add_executable(waypoint_rviz_view src/tools/waypoint_view.cpp)
 target_link_libraries(waypoint_rviz_view ${catkin_LIBRARIES})
 
-add_library(${PROJECT_NAME}_navigation
+add_library(${PROJECT_NAME}
   src/WaypointServer.cpp
   src/WaypointRviz.cpp
   src/WaypointParamChange.cpp
