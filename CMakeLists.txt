@@ -3,6 +3,7 @@ project(raspicat_navigation)
 
 add_compile_options(-std=c++14)
 
+link_libraries(yaml-cpp)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
@@ -10,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   pluginlib
   rviz
+  roslib
 )
 
 set(CMAKE_AUTOMOC ON)
