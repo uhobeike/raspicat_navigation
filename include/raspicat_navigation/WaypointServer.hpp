@@ -44,6 +44,8 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
 
   void checkWaypointYmal(ros::NodeHandle &pnh_);
 
+  void loadWaypointYmal(ros::NodeHandle &pnh, XmlRpc::XmlRpcValue &waypoint_yaml);
+
   void setWaypoint(move_base_msgs::MoveBaseGoal &goal, vector<vector<string>> &waypoint_csv_,
                    int &waypoint_index_,
                    actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base_);

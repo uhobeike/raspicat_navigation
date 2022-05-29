@@ -80,6 +80,7 @@ class WaypointNav
 
   string waypoint_server_, waypoint_rviz_, waypoint_nav_helper_, node_name_;
 
+  XmlRpc::XmlRpcValue waypoint_yaml_;
   string csv_fname_;
   int waypoint_csv_index_;
   int waypoint_index_;

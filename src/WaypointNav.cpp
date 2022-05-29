@@ -146,7 +146,8 @@ void WaypointNav::initClassLoader()
     way_srv_->initialize(waypoint_server_);
     way_srv_->run();
     way_srv_->WaypointCsvRead(csv_fname_, waypoint_csv_, waypoint_csv_index_);
-    way_srv_->checkWaypointYmal(pnh_);
+    // way_srv_->checkWaypointYmal(pnh_);
+    way_srv_->loadWaypointYmal(pnh_, waypoint_yaml_);
   }
   catch (pluginlib::PluginlibException &ex)
   {
@@ -158,9 +159,8 @@ void WaypointNav::initClassLoader()
     way_rviz_ = waypoint_rviz_loader_.createInstance("raspicat_navigation/WaypointRviz");
     way_rviz_->initialize(waypoint_rviz_);
     way_rviz_->run();
-    way_rviz_->WaypointRvizVisualization(waypoint_csv_, waypoint_csv_index_, way_pose_array_,
-                                         way_area_array_, way_number_txt_array_,
-                                         waypoint_area_threshold_);
+    way_rviz_->WaypointRvizVisualization(waypoint_yaml_, way_pose_array_, way_area_array_,
+                                         way_number_txt_array_, waypoint_area_threshold_);
   }
   catch (pluginlib::PluginlibException &ex)
   {

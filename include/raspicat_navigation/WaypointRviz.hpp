@@ -30,15 +30,16 @@ class WaypointRviz : public raspicat_navigation::BaseWaypointRviz
  public:
   void initialize(std::string name);
   void run();
-  void WaypointRvizVisualization(vector<vector<string>> &waypoint_csv_, int &waypoint_csv_index_,
+  void WaypointRvizVisualization(XmlRpc::XmlRpcValue &waypoint_yaml,
                                  ros::Publisher &way_pose_array_, ros::Publisher &way_area_array_,
                                  ros::Publisher &way_number_txt_array_,
                                  float &waypoint_area_threshold_);
 
-  void WaypointMarkerArraySet(visualization_msgs::MarkerArray &waypoint_area,
-                              visualization_msgs::MarkerArray &waypoint_number_txt, uint8_t index,
-                              uint8_t size, float &waypoint_area_threshold_,
-                              vector<vector<string>> &waypoint_csv_);
+  void WaypointMarkerArraySet(XmlRpc::XmlRpcValue &waypoint_yaml,
+                              geometry_msgs::Pose &waypoint_pose,
+                              visualization_msgs::MarkerArray &waypoint_area,
+                              visualization_msgs::MarkerArray &waypoint_number_txt,
+                              uint8_t waypoint_id, float &waypoint_area_threshold);
 
   virtual ~WaypointRviz() {}
 };

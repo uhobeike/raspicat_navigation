@@ -32,6 +32,7 @@ class BaseWaypointServer
                                int &waypoint_csv_index_) = 0;
 
   virtual void checkWaypointYmal(ros::NodeHandle &pnh) = 0;
+  virtual void loadWaypointYmal(ros::NodeHandle &pnh, XmlRpc::XmlRpcValue &waypoint_yaml) = 0;
 
   virtual void setWaypoint(
       move_base_msgs::MoveBaseGoal &goal, vector<vector<string>> &waypoint_csv_,
