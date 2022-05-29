@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   move_base_msgs
+  raspicat_navigation_msgs
   tf
   pluginlib
   rviz
@@ -25,7 +26,7 @@ add_definitions(-DQT_NO_KEYWORDS)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME} rviz
-  CATKIN_DEPENDS roscpp std_msgs
+  CATKIN_DEPENDS roscpp std_msgs raspicat_navigation_msgs
 )
 
 include_directories(
