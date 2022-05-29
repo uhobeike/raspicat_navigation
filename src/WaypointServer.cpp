@@ -35,45 +35,50 @@ void WaypointServer::WaypointCsvRead(string &csv_fname_, vector<vector<string>> 
 
 void WaypointServer::checkWaypointYmal(ros::NodeHandle &pnh)
 {
-  XmlRpc::XmlRpcValue waypoint_yaml_;
-  pnh.getParam("waypoints", waypoint_yaml_);
-  for (auto i = 0; i < waypoint_yaml_.size(); ++i)
+  XmlRpc::XmlRpcValue waypoint_yaml;
+  pnh.getParam("waypoints", waypoint_yaml);
+  for (auto i = 0; i < waypoint_yaml.size(); ++i)
   {
-    cout << waypoint_yaml_[i]["position"]["x"] << "\n";
-    cout << waypoint_yaml_[i]["position"]["y"] << "\n";
-    cout << waypoint_yaml_[i]["euler_angle"]["z"] << "\n";
+    cout << waypoint_yaml[i]["position"]["x"] << "\n";
+    cout << waypoint_yaml[i]["position"]["y"] << "\n";
+    cout << waypoint_yaml[i]["euler_angle"]["z"] << "\n";
 
-    for (auto j = 0; j < waypoint_yaml_[i]["properties"].size(); ++j)
+    for (auto j = 0; j < waypoint_yaml[i]["properties"].size(); ++j)
     {
-      cout << (waypoint_yaml_[i]["properties"][j]["function"]) << "\n";
+      cout << (waypoint_yaml[i]["properties"][j]["function"]) << "\n";
 
-      if (waypoint_yaml_[i]["properties"][j]["function"] == "attention_speak")
+      if (waypoint_yaml[i]["properties"][j]["function"] == "attention_speak")
       {
-        cout << waypoint_yaml_[i]["properties"][j]["speak_interval"] << "\n";
+        cout << waypoint_yaml[i]["properties"][j]["speak_interval"] << "\n";
       }
 
-      else if (waypoint_yaml_[i]["properties"][j]["function"] == "slop")
+      else if (waypoint_yaml[i]["properties"][j]["function"] == "slop")
       {
-        cout << waypoint_yaml_[i]["properties"][j]["scan_range_limit"] << "\n";
+        cout << waypoint_yaml[i]["properties"][j]["scan_range_limit"] << "\n";
       }
 
-      else if (waypoint_yaml_[i]["properties"][j]["function"] == "step")
+      else if (waypoint_yaml[i]["properties"][j]["function"] == "step")
       {
-        cout << waypoint_yaml_[i]["properties"][j]["approach_run"] << "\n";
-        cout << waypoint_yaml_[i]["properties"][j]["power"] << "\n";
+        cout << waypoint_yaml[i]["properties"][j]["approach_run"] << "\n";
+        cout << waypoint_yaml[i]["properties"][j]["power"] << "\n";
       }
 
-      else if (waypoint_yaml_[i]["properties"][j]["function"] == "variable_speed")
+      else if (waypoint_yaml[i]["properties"][j]["function"] == "variable_speed")
       {
-        cout << waypoint_yaml_[i]["properties"][j]["linear"] << "\n";
+        cout << waypoint_yaml[i]["properties"][j]["linear"] << "\n";
       }
 
-      else if (waypoint_yaml_[i]["properties"][j]["function"] == "variable_waypoint_radius")
+      else if (waypoint_yaml[i]["properties"][j]["function"] == "variable_waypoint_radius")
       {
-        cout << waypoint_yaml_[i]["properties"][j]["radius"] << "\n";
+        cout << waypoint_yaml[i]["properties"][j]["radius"] << "\n";
       }
     }
   }
+}
+
+void WaypointServer::loadWaypointYmal(ros::NodeHandle &pnh, XmlRpc::XmlRpcValue &waypoint_yaml)
+{
+  pnh.getParam("waypoints", waypoint_yaml);
 }
 
 void WaypointServer::setWaypoint(
