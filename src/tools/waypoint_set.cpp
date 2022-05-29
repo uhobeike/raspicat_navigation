@@ -163,7 +163,11 @@ void waypoint_rviz::control_Callback(const std_msgs::StringConstPtr& command)
     function_str = function->data;
     if (!(*find(csv_array_[waypoint_number_ - 1].begin(), csv_array_[waypoint_number_ - 1].end(),
                 command->data) == command->data))
+    {
       waypoint_function_set(csv_array_, waypoint_number_, function_str);
+      std::sort(csv_array_[waypoint_number_ - 1].begin() + 4,
+                csv_array_[waypoint_number_ - 1].end());
+    }
   }
 
   else if (command->data == "finish")
