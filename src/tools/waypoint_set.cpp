@@ -14,11 +14,13 @@
  *limitations under the License.
  */
 
+#include <ros/package.h>
+#include <ros/ros.h>
+
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/PoseArray.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Odometry.h>
-#include <ros/ros.h>
 #include <std_msgs/ColorRGBA.h>
 #include <std_msgs/String.h>
 #include <tf2/utils.h>
@@ -251,8 +253,9 @@ void waypoint_rviz::finish_and_file_write_waypoint(vector<vector<string>>& waypo
       }
     }
   }
-
-  std::ofstream fout("/root/config.yaml");
+  std::string yaml_path =
+      ros::package::getPath("raspicat_navigation") + "/config/waypoint/waypoint.yaml";
+  std::ofstream fout(yaml_path);
   fout << waypoints << std::endl;
   fout.close();
 
