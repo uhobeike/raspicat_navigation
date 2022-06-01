@@ -11,7 +11,11 @@
   <arg name="waypoint_yaml_file"  default="$(find raspicat_navigation)/config/waypoint/waypoint.yaml"/>
 
   <!-- Gazebo -->
-  <include file="$(find raspicat_navigation)/launch/sim/raspicat_$(arg world_name)_world.launch"/>
+  <include file="$(find raspicat_navigation)/launch/sim/raspicat_$(arg world_name)_world.launch">
+    <arg name="x_init_pos"    default="58.1535747159"/>
+    <arg name="y_init_pos"    default="-64.2634867703"/>
+    <arg name="yaw_init_pos"  default="1.5"/>
+  </include>
 
   <!-- Map_server -->
   <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
@@ -23,10 +27,10 @@
 
   <!-- Amcl -->
   <include file="$(find raspicat_navigation)/launch/amcl.launch">
-    <arg name="initial_pose_x" value="-9.377"/>
-    <arg name="initial_pose_y" value="-74.995"/>
-    <arg name="initial_pose_a" value="1.456"/>
-    <arg name="base_frame_id" default="base_footprint"/>
+    <arg name="initial_pose_x"  value="-10.352"/>
+    <arg name="initial_pose_y"  value="-69.350"/>
+    <arg name="initial_pose_a"  value="1.626"/>
+    <arg name="base_frame_id"   default="base_footprint"/>
   </include>
 
   <!-- Move_base -->
@@ -45,16 +49,12 @@
   </node>
 
   <!-- Waypoint_nav -->
-  <group if="$(arg waypoint_navigation)"> 
-    <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
-      <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
-    </node>
-  </group>
+  <node if="$(arg waypoint_navigation)" pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
+    <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
+  </node>
   
   <!-- Rviz -->
-  <group if="$(arg open_rviz)"> 
-    <node pkg="rviz" type="rviz" name="rviz" required="true"
-      args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation.rviz">
-    </node>      
-  </group>
+  <node if="$(arg open_rviz)" pkg="rviz" type="rviz" name="rviz" required="true"
+    args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation.rviz">
+  </node>      
 </launch>
