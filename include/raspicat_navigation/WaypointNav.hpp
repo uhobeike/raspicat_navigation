@@ -1,5 +1,5 @@
 /*
- *Copyright 2021, Tatsuhiro Ikebe.
+ *Copyright 2022, Tatsuhiro Ikebe.
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@
 #include "raspicat_navigation/BaseWaypointRviz.hpp"
 #include "raspicat_navigation/BaseWaypointServer.hpp"
 #include "raspicat_navigation/WaypointNavHelperPlugin.hpp"
-#include "raspicat_navigation_msgs/WaypointNavStatus.h"
 
 #include <vector>
 

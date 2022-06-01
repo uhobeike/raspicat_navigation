@@ -1,13 +1,39 @@
 waypoints:
   - id: 1
     position:
-      x: -8.578931
-      y: -62.335064
+      x: 7.749710
+      y: -0.362790
     euler_angle:
-      z: 0.0428552981028533
+      z: -0.0638248225954985
   - id: 2
     position:
-      x: 4.170880
-      y: -63.358543
+      x: 19.975597
+      y: -0.901446
     euler_angle:
-      z: -0.144415485538151
+      z: 1.502107171059494
+  - id: 3
+    position:
+      x: 20.716635
+      y: 8.790593
+    euler_angle:
+      z: 3.114575838346497
+  - id: 4
+    position:
+      x: -13.854096
+      y: 9.386736
+    euler_angle:
+      z: -1.603556631084992
+  - id: 5
+    position:
+      x: -14.292275
+      y: 0.630507
+    euler_angle:
+      z: -0.05675763783324143
+  - id: 6
+    position:
+      x: 0.051527
+      y: 0.022442
+    euler_angle:
+      z: -0.07325240125722614
+    properties:
+      - function: goal
