@@ -73,16 +73,22 @@ void WaypointRviz::WaypointMarkerArraySet(XmlRpc::XmlRpcValue& waypoint_yaml,
   cylinder.z = 0.03;
   waypoint_area.markers[waypoint_id].scale = cylinder;
 
-  for (auto i = 0; i < waypoint_yaml[waypoint_id]["properties"].size(); i++)
+  if (waypoint_yaml[waypoint_id].hasMember("properties"))
   {
-    if (!(waypoint_yaml[waypoint_id]["properties"][i]["function"] == "goal"))
-      waypoint_area.markers[waypoint_id].color.a = 0.1f;
-    else
+    for (auto i = 0; i < waypoint_yaml[waypoint_id]["properties"].size(); i++)
     {
-      waypoint_area.markers[waypoint_id].color.a = 0.000001f;
-      break;
+      if (!(waypoint_yaml[waypoint_id]["properties"][i]["function"] == "goal"))
+        waypoint_area.markers[waypoint_id].color.a = 0.1f;
+      else
+      {
+        waypoint_area.markers[waypoint_id].color.a = 0.000001f;
+        break;
+      }
     }
   }
+  else
+    waypoint_area.markers[waypoint_id].color.a = 0.1f;
+
   waypoint_area.markers[waypoint_id].color.b = 1.0f;
   waypoint_area.markers[waypoint_id].color.g = 0.0f;
   waypoint_area.markers[waypoint_id].color.r = 0.0f;
@@ -107,6 +113,6 @@ void WaypointRviz::WaypointMarkerArraySet(XmlRpc::XmlRpcValue& waypoint_yaml,
   waypoint_number_txt.markers[waypoint_id].color.g = 1.0f;
   waypoint_number_txt.markers[waypoint_id].color.r = 1.0f;
   /*___________________________________________________________________________________*/
-}  // namespace raspicat_navigation
+}
 }  // namespace raspicat_navigation
 PLUGINLIB_EXPORT_CLASS(raspicat_navigation::WaypointRviz, raspicat_navigation::BaseWaypointRviz)
