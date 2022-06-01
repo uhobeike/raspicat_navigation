@@ -7,31 +7,6 @@ void WaypointServer::initialize(std::string name)
   ROS_INFO("raspicat_navigation::WaypointServer initialize");
 }
 void WaypointServer::run() { ROS_INFO("raspicat_navigation::WaypointServer run"); }
-void WaypointServer::WaypointCsvRead(string &csv_fname_, vector<vector<string>> &waypoint_csv_,
-                                     int &waypoint_csv_index_)
-{
-  ifstream f_r(csv_fname_.c_str(), std::ios::in);
-  if (f_r.fail())
-  {
-    ROS_ERROR("std::ifstream could not open %s.", csv_fname_.c_str());
-    exit(-1);
-  }
-
-  string line, word;
-  while (getline(f_r, line))
-  {
-    istringstream stream(line);
-    while (getline(stream, word, ','))
-    {
-      waypoint_csv_[waypoint_csv_index_ - 1].push_back(word);
-    }
-    waypoint_csv_.resize(++waypoint_csv_index_);
-  }
-  /*Index adjustment__________________________*/
-  waypoint_csv_.resize(--waypoint_csv_index_);
-  --waypoint_csv_index_;
-  /*__________________________________________*/
-}
 
 void WaypointServer::checkWaypointYmal(ros::NodeHandle &pnh)
 {
@@ -82,50 +57,62 @@ void WaypointServer::loadWaypointYmal(ros::NodeHandle &pnh, XmlRpc::XmlRpcValue 
 }
 
 void WaypointServer::setWaypoint(
-    move_base_msgs::MoveBaseGoal &goal, vector<vector<string>> &waypoint_csv_, int &waypoint_index_,
-    actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base_)
+    actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base,
+    move_base_msgs::MoveBaseGoal &goal, XmlRpc::XmlRpcValue &waypoint_yaml,
+    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
   goal.target_pose.header.frame_id = "map";
-  goal.target_pose.pose.position.x = stod(waypoint_csv_[waypoint_index_][0]);
-  goal.target_pose.pose.position.y = stod(waypoint_csv_[waypoint_index_][1]);
-  goal.target_pose.pose.orientation.z = stod(waypoint_csv_[waypoint_index_][2]);
-  goal.target_pose.pose.orientation.w = stod(waypoint_csv_[waypoint_index_][3]);
   goal.target_pose.header.stamp = ros::Time::now();
+  goal.target_pose.pose.position.x =
+      static_cast<double>(waypoint_yaml[WaypointNavStatus.waypoint_current_id]["position"]["x"]);
+  goal.target_pose.pose.position.y =
+      static_cast<double>(waypoint_yaml[WaypointNavStatus.waypoint_current_id]["position"]["y"]);
 
-  ac_move_base_.sendGoal(goal);
+  tf2::Quaternion q;
+
+  q.setRPY(0, 0,
+           static_cast<double>(
+               waypoint_yaml[WaypointNavStatus.waypoint_current_id]["euler_angle"]["z"]));
+
+  goal.target_pose.pose.orientation.z = q.getZ();
+  goal.target_pose.pose.orientation.w = q.getW();
+
+  ac_move_base.sendGoal(goal);
 }
 
 bool WaypointServer::checkWaypointArea(
-    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
-    vector<vector<string>> &waypoint_csv, int &waypoint_index, ros::Publisher &way_passed)
+    XmlRpc::XmlRpcValue &waypoint_yaml,
+    raspicat_navigation_msgs::WaypointNavStatus &WaypoaintNavStatus, ros::Publisher &way_passed,
+    bool increment_waypoint_current_id)
 {
-  if (WaypointNavStatus.next_waypoint_mode || WaypointNavStatus.slope_obstacle_avoidance_mode)
-  {
-    WaypointNavStatus.waypoint_current_distance = sqrt(
-        pow(stod(waypoint_csv[waypoint_index][0]) - WaypointNavStatus.robot_pose.position.x, 2) +
-        pow(stod(waypoint_csv[waypoint_index][1]) - WaypointNavStatus.robot_pose.position.y, 2));
+  WaypoaintNavStatus.waypoint_current_distance =
+      sqrt(pow(static_cast<double>(
+                   waypoint_yaml[WaypoaintNavStatus.waypoint_current_id]["position"]["x"]) -
+                   WaypoaintNavStatus.robot_pose.position.x,
+               2) +
+           pow(static_cast<double>(
+                   waypoint_yaml[WaypoaintNavStatus.waypoint_current_id]["position"]["y"]) -
+                   WaypoaintNavStatus.robot_pose.position.y,
+               2));
 
-    if (WaypointNavStatus.waypoint_current_distance <= WaypointNavStatus.waypoint_radius_threshold)
+  if (WaypoaintNavStatus.waypoint_current_distance <= WaypoaintNavStatus.waypoint_radius_threshold)
+  {
+    if (increment_waypoint_current_id)
     {
       ROS_INFO("WayPoint Passing");
-      ROS_INFO("Next Move Plan");
-      waypoint_index++;
-      std_msgs::Bool data;
+      ROS_INFO("Increment Waypoint Current ID");
+      WaypoaintNavStatus.waypoint_current_id++;
+      std_msgs::Empty data;
       way_passed.publish(data);
-      return true;
     }
-  }
-  else if (!WaypointNavStatus.next_waypoint_mode)
-  {
-    WaypointNavStatus.waypoint_current_distance = sqrt(
-        pow(stod(waypoint_csv[waypoint_index][0]) - WaypointNavStatus.robot_pose.position.x, 2) +
-        pow(stod(waypoint_csv[waypoint_index][1]) - WaypointNavStatus.robot_pose.position.y, 2));
-
-    if (WaypointNavStatus.waypoint_current_distance <= WaypointNavStatus.waypoint_radius_threshold)
+    else
     {
-      ROS_INFO("Invade WayPoint Area ");
-      return true;
+      ROS_INFO("WayPoint Passing");
+      ROS_INFO("No Increment Waypoint Current ID");
+      std_msgs::Empty data;
+      way_passed.publish(data);
     }
+    return true;
   }
   return false;
 }
@@ -163,103 +150,104 @@ void WaypointServer::getRobotPose(tf2_ros::Buffer &tf_,
   }
 }
 
-bool WaypointServer::checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
-                                    int &waypoint_index_)
+bool WaypointServer::checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
-  if (WaypointNavStatus.goal_reached_flag)
-  {
-    ROS_INFO("Goal Reached");
-    ROS_INFO("Restart");
-    waypoint_index_++;
-    return true;
-  }
-  return false;
+  // if (WaypointNavStatus.goal_reached_flag)
+  // {
+  //   ROS_INFO("Goal Reached");
+  //   ROS_INFO("Restart");
+  //   WaypointNavStatus.waypoint_current_id++;
+  //   return true;
+  // }
+  // return false;
 }
 
-void WaypointServer::ModeFlagOff(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
+void WaypointServer::setFalseWaypointFunction(
+    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
-  WaypointNavStatus.next_waypoint_mode = false;
-  WaypointNavStatus.final_goal_waypoint_mode = false;
-  WaypointNavStatus.restart_waypoint_mode = false;
-  WaypointNavStatus.goal_reached_mode = false;
-  WaypointNavStatus.slope_obstacle_avoidance_mode = false;
-
-  WaypointNavStatus.goal_reached_flag = false;
-  WaypointNavStatus.restart_flag = false;
+  raspicat_navigation_msgs::WaypointNavStatus setFalse;
+  WaypointNavStatus.functions = setFalse.functions;
 }
 
-void WaypointServer::managementWaypointInfo(
-    vector<vector<string>> &waypoint_csv, int &waypoint_csv_index, int &waypoint_index,
-    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus, ros::Publisher &way_passed,
-    ros::Publisher &way_finish, ros::Publisher &way_mode_slope)
+void WaypointServer::setWaypointFunction(
+    XmlRpc::XmlRpcValue &waypoint_yaml,
+    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
-  if (waypoint_csv[waypoint_index].size() >= 0 && waypoint_csv[waypoint_index].size() <= 4)
+  if (waypoint_yaml[WaypointNavStatus.waypoint_current_id].hasMember("properties"))
   {
-    ModeFlagOff(WaypointNavStatus);
-    WaypointNavStatus.next_waypoint_mode = true;
-  }
-  else if (waypoint_csv[waypoint_index][4] == "Goal")
-  {
-    WaypointNavStatus.final_goal_waypoint_mode = true;
-    if (waypoint_index == waypoint_csv_index && WaypointNavStatus.goal_reached_flag &&
-        checkWaypointArea(WaypointNavStatus, waypoint_csv, waypoint_index, way_passed))
-      WaypointNavStatus.final_goal_flag = true;
-
-    if (waypoint_index == waypoint_csv_index) ModeFlagOff(WaypointNavStatus);
-
-    if (WaypointNavStatus.final_goal_flag)
+    for (auto i = 0; i < waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"].size();
+         ++i)
     {
-      ROS_INFO("Final Goal Reached");
-      ROS_INFO("Please ' Ctl + c ' ");
-      std_msgs::Bool data;
-      way_finish.publish(data);
-      exit(0);
+      if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
+          "attention_speak")
+      {
+        WaypointNavStatus.functions.attention_speak.function = true;
+      }
+
+      else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
+               "goal")
+      {
+        WaypointNavStatus.functions.goal.function = true;
+      }
+
+      else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
+               "loop")
+      {
+        WaypointNavStatus.functions.loop.function = true;
+      }
+
+      else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
+               "slop")
+      {
+        WaypointNavStatus.functions.slop.function = true;
+      }
+
+      else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
+               "step")
+      {
+        WaypointNavStatus.functions.step.function = true;
+      }
+
+      else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
+               "stop")
+      {
+        WaypointNavStatus.functions.stop.function = true;
+      }
+
+      else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
+               "variable_speed")
+      {
+        WaypointNavStatus.functions.variable_speed.function = true;
+      }
+
+      else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
+               "variable_waypoint_radius")
+      {
+        WaypointNavStatus.functions.variable_waypoint_radius.function = true;
+      }
+
+      else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
+               "waiting_line")
+      {
+        WaypointNavStatus.functions.waiting_line.function = true;
+      }
     }
   }
-  else if (waypoint_csv[waypoint_index][4] == "GoalReStart")
+  if (not(WaypointNavStatus.functions.goal.function | WaypointNavStatus.functions.loop.function |
+          WaypointNavStatus.functions.waiting_line.function |
+          WaypointNavStatus.functions.stop.function))
   {
-    ModeFlagOff(WaypointNavStatus);
-    WaypointNavStatus.restart_waypoint_mode = true;
-  }
-  else if (waypoint_csv[waypoint_index][4] == "GoalReach")
-  {
-    ModeFlagOff(WaypointNavStatus);
-    WaypointNavStatus.goal_reached_mode = true;
-  }
-  else if (waypoint_csv[waypoint_index][4] == "SlopeObstacleAvoidance")
-  {
-    if (WaypointNavStatus.next_waypoint_mode)
-    {
-      ros::Duration duration(3.0);
-      duration.sleep();
-      std_msgs::Bool data;
-      way_mode_slope.publish(data);
-    }
-    ModeFlagOff(WaypointNavStatus);
-    WaypointNavStatus.slope_obstacle_avoidance_mode = true;
+    WaypointNavStatus.functions.next_waypoint.function = true;
   }
 }
 
-void WaypointServer::debug(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
-                           int &waypoint_index)
+void WaypointServer::debug(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
   cout << "______________________________________\n"
        << "|NextWaypointMode            : "
-       << static_cast<bool>(WaypointNavStatus.next_waypoint_mode) << "      |\n"
-       << "|FinalGoalWaypointMode       : " << static_cast<bool>(WaypointNavStatus.final_goal_flag)
-       << "      |\n"
-       << "|ReStartWaypointMode         : "
-       << static_cast<bool>(WaypointNavStatus.restart_waypoint_mode) << "      |\n"
-       << "|GoalReachedMode             : "
-       << static_cast<bool>(WaypointNavStatus.goal_reached_mode) << "      |\n"
-       << "|GoalReachedFlag             : "
-       << static_cast<bool>(WaypointNavStatus.goal_reached_flag) << "      |\n"
-       << "|SlopeObstacleAvoidanceMode  : "
-       << static_cast<bool>(WaypointNavStatus.slope_obstacle_avoidance_mode) << "      |\n"
-       << "|SlopeObstacleAvoidanceFlag  : "
-       << static_cast<bool>(WaypointNavStatus.slope_obstacle_avoidance_flag) << "      |\n"
+       << static_cast<bool>(WaypointNavStatus.functions.next_waypoint.function) << "      |\n"
        << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-       << "|WaypointID                 : " << static_cast<bool>(waypoint_index) << "       |\n"
+       << "|WaypointID                 : " << WaypointNavStatus.waypoint_current_id << " |\n"
        << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
        << "|WaypointDistance            : " << WaypointNavStatus.waypoint_current_distance
        << "      |\n"

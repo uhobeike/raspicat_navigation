@@ -28,36 +28,33 @@ class BaseWaypointServer
  public:
   virtual void initialize(std::string name) = 0;
   virtual void run() = 0;
-  virtual void WaypointCsvRead(string &csv_fname_, vector<vector<string>> &waypoint_csv_,
-                               int &waypoint_csv_index_) = 0;
 
   virtual void checkWaypointYmal(ros::NodeHandle &pnh) = 0;
   virtual void loadWaypointYmal(ros::NodeHandle &pnh, XmlRpc::XmlRpcValue &waypoint_yaml) = 0;
 
   virtual void setWaypoint(
-      move_base_msgs::MoveBaseGoal &goal, vector<vector<string>> &waypoint_csv_,
-      int &waypoint_index_,
-      actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base_) = 0;
-
-  virtual bool checkWaypointArea(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
-                                 vector<vector<string>> &waypoint_csv_, int &waypoint_index_,
-                                 ros::Publisher &way_passed_) = 0;
-
-  virtual bool checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
-                              int &waypoint_index_) = 0;
+      actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base_,
+      move_base_msgs::MoveBaseGoal &goal, XmlRpc::XmlRpcValue &waypoint_yaml,
+      raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
   virtual void getRobotPose(tf2_ros::Buffer &tf_,
                             raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
-  virtual void ModeFlagOff(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
+  virtual bool checkWaypointArea(XmlRpc::XmlRpcValue &waypoint_yaml,
+                                 raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
+                                 ros::Publisher &way_passed,
+                                 bool increment_waypoint_current_id = true) = 0;
 
-  virtual void managementWaypointInfo(
-      vector<vector<string>> &waypoint_csv_, int &waypoint_csv_index_, int &waypoint_index_,
-      raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus, ros::Publisher &way_passed_,
-      ros::Publisher &way_finish, ros::Publisher &way_mode_slope) = 0;
+  virtual bool checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
-  virtual void debug(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
-                     int &waypoint_index) = 0;
+  virtual void setFalseWaypointFunction(
+      raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
+
+  virtual void setWaypointFunction(
+      XmlRpc::XmlRpcValue &waypoint_yaml,
+      raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
+
+  virtual void debug(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
   virtual ~BaseWaypointServer() {}
 

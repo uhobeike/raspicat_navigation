@@ -42,8 +42,8 @@ namespace waypoint_nav
 class WaypointNav
 {
  public:
-  WaypointNav(ros::NodeHandle& nodeHandle, ros::NodeHandle& private_nodeHandle, std::string name,
-              std::string file_name, tf2_ros::Buffer& tf);
+  WaypointNav(ros::NodeHandle& nodeHandle, ros::NodeHandle& private_nodeHandle,
+              tf2_ros::Buffer& tf);
   virtual ~WaypointNav();
 
   void readParam();
@@ -78,17 +78,9 @@ class WaypointNav
   boost::shared_ptr<raspicat_navigation::BaseWaypointRviz> way_rviz_;
   boost::shared_ptr<raspicat_navigation::WaypointNavHelperPlugin> way_helper_;
 
-  string waypoint_server_, waypoint_rviz_, waypoint_nav_helper_, node_name_;
+  string waypoint_server_, waypoint_rviz_, waypoint_nav_helper_;
 
   XmlRpc::XmlRpcValue waypoint_yaml_;
-  string csv_fname_;
-  int waypoint_csv_index_;
-  int waypoint_index_;
-  vector<vector<string>> waypoint_csv_;
-  vector<double> robot_pose_;
-
-  float waypoint_area_threshold_;
-  float waypoint_area_check_;
 
   move_base_msgs::MoveBaseGoal goal_;
 
