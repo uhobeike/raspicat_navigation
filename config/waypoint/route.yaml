@@ -1,0 +1,11 @@
+route:
+  skip_waypoint: |-
+    2
+    3
+  id: |-
+    1
+    2
+    3
+    4
+    5
+    6

@@ -1,0 +1,13 @@
+waypoints:
+  - id: 1
+    position:
+      x: -8.578931
+      y: -62.335064
+    euler_angle:
+      z: 0.0428552981028533
+  - id: 2
+    position:
+      x: 4.170880
+      y: -63.358543
+    euler_angle:
+      z: -0.144415485538151
