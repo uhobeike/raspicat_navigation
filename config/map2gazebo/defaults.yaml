@@ -1,0 +1,4 @@
+map_topic: "map"
+mesh_type: "stl"
+occupied_thresh: 1
+box_height: 1.0
