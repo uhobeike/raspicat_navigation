@@ -15,11 +15,12 @@
   <arg if="$(arg waypoint_navigation)"      name="move_base_map_file"    default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>
   <arg unless="$(arg waypoint_navigation)"  name="move_base_map_file"    default="$(arg mcl_map_file)"/>
   <arg name="model"                 default="$(find raspicat_navigation)/config/urdf/raspicat.urdf.xacro"/>
-  <arg if="$(arg waypoint_navigation)"      name="csv_file"              default="$(find raspicat_navigation)/config/csv/waypoint_tsudanuma.csv"/>
+  <arg name="waypoint_yaml_file"    default="$(find raspicat_navigation)/config/waypoint/waypoint.yaml"/>
 
-  <arg name="mcl_init_pose_x" default="0.0"/>
-  <arg name="mcl_init_pose_y" default="0.0"/>
-  <arg name="mcl_init_pose_a" default="0.0"/>
+  <arg name="mcl"                   default="amcl" doc="model type [amcl, emcl2, mcl_ros]"/>
+  <arg name="mcl_init_pose_x"       default="0.0"/>
+  <arg name="mcl_init_pose_y"       default="0.0"/>
+  <arg name="mcl_init_pose_a"       default="0.0"/>
 
   <!-- Prameters -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
@@ -34,12 +35,12 @@
   <!-- Raspicat nodes -->
   <include file="$(find raspicat)/launch/raspicat.launch"/>
 
-  <!-- Motor on -->
+  <!-- Motor on off -->
   <node pkg="raspicat_navigation" name="motor_start" type="motor_start.py" required="true" output="screen"/>
 
   <!-- Urg node -->
   <node pkg="urg_node" name="urg_node" type="urg_node" required="true">
-    <param name="frame_id" value="urg_lrf_link"/>
+    <param name="frame_id" value="lidar_link"/>
     <param if="$(arg urg_ether)" name="ip_address" value="$(arg urg_ip_address)"/>
     <param if="$(arg urg_usb)"   name="serial_port" value="$(arg urg_serial_port)"/>
   </node>
@@ -53,7 +54,7 @@
   </node>
   
   <!-- Amcl -->
-  <include file="$(find raspicat_navigation)/launch/amcl.launch">
+  <include if="$(eval mcl=='amcl')" file="$(find raspicat_navigation)/launch/amcl.launch">
     <arg name="initial_pose_x" value="$(arg mcl_init_pose_x)"/>
     <arg name="initial_pose_y" value="$(arg mcl_init_pose_y)"/>
     <arg name="initial_pose_a" value="$(arg mcl_init_pose_a)"/>
@@ -65,21 +66,21 @@
     <arg name="waypoint_nav"      value="$(arg waypoint_navigation)"/>
   </include>
 
-  <group if="$(arg waypoint_navigation)"> 
-    <!-- Waypoint Nav -->
-    <node pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" args="$(arg csv_file)" output="screen"/>
+  <include if="$(arg usens_conv)" file="$(find analog_distance_sensor_to_laserscan)/launch/analog_distance_sensor_to_laserscan.launch">
+    <arg name="nodelet"                 value="true"/>
+    <arg name="usensor_max_threshold"   value="200"/>
+    <arg name="usensor_min_threshold"   value="30"/>
+  </include>
 
-    <include if="$(arg usens_conv)" file="$(find analog_distance_sensor_to_laserscan)/launch/analog_distance_sensor_to_laserscan.launch">
-      <arg name="nodelet"                 value="true"/>
-      <arg name="usensor_max_threshold"   value="200"/>
-      <arg name="usensor_min_threshold"   value="30"/>
-    </include>
+  <!-- Raspicat speak -->
+  <node if="$(arg speak)" pkg="raspicat_speak" type="raspicat_speak_node" name="raspicat_speak_node" 
+        clear_params="true" respawn="true" output="screen">
+    <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/speak_list.yaml"/>
+    <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/voice_config.yaml"/>
+  </node>
 
-    <!-- Raspicat speak -->
-    <node if="$(arg speak)" pkg="raspicat_speak" type="raspicat_speak_node" name="raspicat_speak_node" 
-          clear_params="true" respawn="true" output="screen">
-      <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/speak_list.yaml"/>
-      <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/voice_config.yaml"/>
-    </node>
-  </group>
+  <!-- Waypoint Nav -->
+  <node if="$(arg waypoint_navigation)" pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
+      <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
+  </node>
 </launch>

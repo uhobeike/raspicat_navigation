@@ -1,30 +1,160 @@
-<?xml version="1.0" ?>
-<robot name="raspicat" xmlns:xacro="http://ros.org/wiki/xacro">
+<?xml version="1.0"?>
+<robot name="raspicat">
+
   <link name="base_link"/>
- 
+
+  <!-- Base_body -->
   <joint name="base_joint" type="fixed">
+    <origin xyz="0 0 0.0762" rpy="0 0 0"/>
+    <axis xyz="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint>
+
+  <link name="base_link2"/>
+
+  <!-- Wheel -->
+  <joint name="right_wheel_joint" type="continuous">
+    <origin xyz="0 -0.13959 0" rpy="-1.57 0 0"/>
+    <axis xyz="0 0 1"/>
     <parent link="base_link"/>
-    <child link="base_link_2"/>
-    <origin xyz="0.0 0.0 0.0762" rpy="0 0 0"/>
-  </joint> 
- 
-  <link name="base_link_2"/>
+    <child link="right_wheel_link"/>
+  </joint>
+  
+  <link name="right_wheel_link"/>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <origin xyz="0 0.13959 0" rpy="1.57 0 0"/>
+    <axis xyz="0 0 -1"/>
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+  </joint>
+  
+  <link name="left_wheel_link"/>
+
+  <!-- Caster -->
+  <joint name="caster_joint" type="continuous">
+    <origin xyz="-0.2425 0 0.0567" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <parent link="base_link"/>
+    <child link="caster_link"/>
+  </joint>
+  
+  <link name="caster_link"/>
+
+  <joint name="caster_wheel_joint" type="continuous">
+    <origin xyz="-0.035 0 -0.0829" rpy="-1.57 0 0"/>
+    <axis xyz="0 0 1"/>
+    <parent link="caster_link"/>
+    <child link="caster_wheel_link"/>
+  </joint>
+  
+  <link name="caster_wheel_link"/>
+
+  <!-- LiDAR sensor -->
+  <joint name="lidar_joint" type="fixed">
+    <origin xyz="0.144 0 -0.0262" rpy="0 0 0"/>
+    <axis xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="urg_mount_link"/>
+  </joint>
+
+  <link name="urg_mount_link"/>
+
+  <joint name="lidar_frame_joint" type="fixed">
+    <origin xyz="0 0 0.055" rpy="0 0 0"/>
+    <axis xyz="0 0 0"/>
+    <parent link="urg_mount_link"/>
+    <child link="lidar_link"/>
+  </joint>
+
+  <link name="lidar_link"/>
+
+  <!-- Ultrasonic sensor -->
+  <joint name="right_side_usensor_joint" type="fixed">
+    <origin xyz="0.1055 -0.1165 -0.00795" rpy="0 0 -0.837758"/>
+    <axis xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="right_side_usensor_link"/>
+  </joint>
+  
+  <link name="right_side_usensor_link"/>
+
+  <joint name="right_front_usensor_joint" type="fixed">
+    <origin xyz="0.1435 -0.064 -0.00795" rpy="0 0 -0.418879"/>
+    <axis xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="right_front_usensor_link"/>
+  </joint>
+  
+  <link name="right_front_usensor_link"/>
+
+  <joint name="left_front_usensor_joint" type="fixed">
+    <origin xyz="0.1435 0.064 -0.00795" rpy="0 0 0.418879"/>
+    <axis xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="left_front_usensor_link"/>
+  </joint>
+  
+  <link name="left_front_usensor_link"/>
+
+  <joint name="left_side_usensor_joint" type="fixed">
+    <origin xyz="0.1055 0.1165 -0.00795" rpy="0 0 0.837758"/>
+    <axis xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="left_side_usensor_link"/>
+  </joint>
+  
+  <link name="left_side_usensor_link"/>
+
+  <!-- Camera link -->
+  <joint name="camera_joint" type="fixed">
+    <origin xyz="0.0732 0 0.1188" rpy="1.57 0 1.57"/>
+    <axis xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+  </joint>
+
+  <link name="camera_link"/>
+
+  <joint name="camera_color_joint" type="fixed">
+    <origin xyz="0.032 0 0" rpy="0 -1.57 -1.57"/>
+    <parent link="camera_link"/>
+    <child link="camera_color_frame"/>
+  </joint>
+
+  <link name="camera_color_frame"/>
+
+  <joint name="camera_color_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="camera_color_frame"/>
+    <child link="camera_color_optical_frame"/>
+  </joint>
+  
+  <link name="camera_color_optical_frame"/>
+
+  <joint name="camera_depth_joint" type="fixed">
+    <origin xyz="-0.012 0 0" rpy="0 -1.57 -1.57"/>
+    <parent link="camera_link"/>
+    <child link="camera_depth_frame"/>
+  </joint>
+
+  <link name="camera_depth_frame"/>
+
+  <joint name="camera_depth_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="-1.57 0 -1.57"/>
+    <parent link="camera_depth_frame"/>
+    <child link="camera_depth_optical_frame"/>
+  </joint>
+  
+  <link name="camera_depth_optical_frame"/>
+
+  <!-- Imu link -->
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="0 0 0.14" rpy="3.14 0 0"/>
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+  </joint>
 
   <link name="imu_link"/>
-
-  <joint name="imu_joint" type="fixed">
-    <parent link="base_link_2"/>
-    <child link="imu_link"/>
-    <origin xyz="0 0 0.16" rpy="0 0 0"/>
-  </joint>
-
-
-  <joint name="urg_joint" type="fixed">
-    <parent link="base_link_2"/>
-    <child link="urg_lrf_link"/>
-    <origin xyz="0.144 0.0 0.04" rpy="0 0 0"/>
-  </joint>
-
-  <link name="urg_lrf_link"/>
-
 </robot>

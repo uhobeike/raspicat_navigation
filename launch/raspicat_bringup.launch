@@ -10,8 +10,7 @@
   <arg name="urg_angle_max"     default="1.78094870101"/>
 
   <arg name="waypoint_navigation"   default="true"/>
-  <arg if="$(arg waypoint_navigation)"      name="model"  default="$(find raspicatv2_description)/urdf/raspicatv2.urdf"/>
-  <arg unless="$(arg waypoint_navigation)"  name="model"  default="$(find raspicat_navigation)/config/urdf/raspicat.urdf.xacro"/>
+  <arg name="model"  default="$(find raspicat_navigation)/config/urdf/raspicat.urdf.xacro"/>
 
   <!-- Prameters -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
@@ -28,8 +27,7 @@
   <node pkg="urg_node" name="urg_node" type="urg_node" required="true">
     <param name="angle_min" value="$(arg urg_angle_min)"/>
     <param name="angle_max" value="$(arg urg_angle_max)"/>
-    <param if="$(arg waypoint_navigation)"      name="frame_id" value="lidar_link"/>
-    <param unless="$(arg waypoint_navigation)"  name="frame_id" value="urg_lrf_link"/>
+    <param name="frame_id"  value="lidar_link"/>
     <param if="$(arg urg_ether)"  name="ip_address" value="$(arg urg_ip_address)"/>
     <param if="$(arg urg_usb)"    name="serial_port" value="$(arg urg_serial_port)"/>
   </node>
