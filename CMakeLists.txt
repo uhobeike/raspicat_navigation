@@ -3,13 +3,16 @@ project(raspicat_navigation)
 
 add_compile_options(-std=c++14)
 
+link_libraries(yaml-cpp)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   move_base_msgs
+  raspicat_navigation_msgs
   tf
   pluginlib
   rviz
+  roslib
 )
 
 set(CMAKE_AUTOMOC ON)
@@ -23,7 +26,7 @@ add_definitions(-DQT_NO_KEYWORDS)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME} rviz
-  CATKIN_DEPENDS roscpp std_msgs
+  CATKIN_DEPENDS roscpp std_msgs raspicat_navigation_msgs
 )
 
 include_directories(
@@ -52,12 +55,10 @@ target_link_libraries(waypoint_rviz_set ${catkin_LIBRARIES})
 add_executable(waypoint_rviz_view src/tools/waypoint_view.cpp)
 target_link_libraries(waypoint_rviz_view ${catkin_LIBRARIES})
 
-add_library(${PROJECT_NAME}_navigation
+add_library(${PROJECT_NAME}
   src/WaypointServer.cpp
   src/WaypointRviz.cpp
   src/WaypointParamChange.cpp
-  src/CmdVelSmoother.cpp
-  src/MclKidnappingMeasures.cpp
   src/SlopeObstacleAvoidance.cpp
 )
 

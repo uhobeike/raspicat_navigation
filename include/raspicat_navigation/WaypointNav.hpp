@@ -31,6 +31,7 @@
 #include "raspicat_navigation/BaseWaypointRviz.hpp"
 #include "raspicat_navigation/BaseWaypointServer.hpp"
 #include "raspicat_navigation/WaypointNavHelperPlugin.hpp"
+#include "raspicat_navigation_msgs/WaypointNavStatus.h"
 
 #include <vector>
 
@@ -41,8 +42,8 @@ namespace waypoint_nav
 class WaypointNav
 {
  public:
-  WaypointNav(ros::NodeHandle& nodeHandle, ros::NodeHandle& private_nodeHandle, std::string name,
-              std::string file_name, tf2_ros::Buffer& tf);
+  WaypointNav(ros::NodeHandle& nodeHandle, ros::NodeHandle& private_nodeHandle,
+              tf2_ros::Buffer& tf);
   virtual ~WaypointNav();
 
   void readParam();
@@ -64,7 +65,7 @@ class WaypointNav
   ros::Timer timer_;
 
   ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_, way_start_, way_restart_;
-  ros::Publisher ini_pose_, way_pose_array_, way_area_array_, way_number_txt_array_, way_sound_,
+  ros::Publisher ini_pose_, way_pose_array_, way_area_array_, way_number_txt_array_, way_passed_,
       way_mode_slope_, way_finish_;
 
   std::map<std::string, ros::ServiceClient> slope_obstacle_avoidanc_client_;
@@ -77,33 +78,15 @@ class WaypointNav
   boost::shared_ptr<raspicat_navigation::BaseWaypointRviz> way_rviz_;
   boost::shared_ptr<raspicat_navigation::WaypointNavHelperPlugin> way_helper_;
 
-  string waypoint_server_, waypoint_rviz_, waypoint_nav_helper_, node_name_;
+  string waypoint_server_, waypoint_rviz_, waypoint_nav_helper_;
 
-  string csv_fname_;
-  int waypoint_csv_index_;
-  int waypoint_index_;
-  vector<vector<string>> waypoint_csv_;
-  vector<double> robot_pose_;
-
-  float waypoint_area_threshold_;
-  float waypoint_area_check_;
+  XmlRpc::XmlRpcValue waypoint_yaml_;
 
   move_base_msgs::MoveBaseGoal goal_;
 
-  bool NextWaypointMode_;
-  bool FinalGoalWaypointMode_;
-  bool ReStartWaypointMode_;
-  bool GoalReachedMode_;
-  bool SlopeObstacleAvoidanceMode_;
+  raspicat_navigation_msgs::WaypointNavStatus WaypointNavStatus_;
 
   bool MsgReceiveFlag_;
-  bool ReStartFlag_;
-  bool FinalGoalFlag_;
-  bool GoalReachedFlag_;
-  bool SlopeObstacleAvoidanceFlag_;
-
-  bool start_;
-  bool restart_;
 };
 
 }  // namespace waypoint_nav
