@@ -96,38 +96,51 @@ void WaypointServer::setWaypoint(
   ac_move_base.sendGoal(goal);
 }
 
+void WaypointServer::setNextWaypoint(
+    actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base,
+    move_base_msgs::MoveBaseGoal &goal, XmlRpc::XmlRpcValue &waypoint_yaml,
+    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
+{
+  ROS_INFO("Increment Waypoint Current ID");
+  WaypointNavStatus.waypoint_current_id++;
+
+  goal.target_pose.header.frame_id = "map";
+  goal.target_pose.header.stamp = ros::Time::now();
+  goal.target_pose.pose.position.x =
+      static_cast<double>(waypoint_yaml[WaypointNavStatus.waypoint_current_id]["position"]["x"]);
+  goal.target_pose.pose.position.y =
+      static_cast<double>(waypoint_yaml[WaypointNavStatus.waypoint_current_id]["position"]["y"]);
+
+  tf2::Quaternion q;
+  q.setRPY(0, 0,
+           static_cast<double>(
+               waypoint_yaml[WaypointNavStatus.waypoint_current_id]["euler_angle"]["z"]));
+
+  goal.target_pose.pose.orientation.z = q.getZ();
+  goal.target_pose.pose.orientation.w = q.getW();
+
+  ac_move_base.sendGoal(goal);
+}
+
 bool WaypointServer::checkWaypointArea(
     XmlRpc::XmlRpcValue &waypoint_yaml,
-    raspicat_navigation_msgs::WaypointNavStatus &WaypoaintNavStatus, ros::Publisher &way_passed,
-    bool increment_waypoint_current_id)
+    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus, ros::Publisher &way_passed)
 {
-  WaypoaintNavStatus.waypoint_current_distance =
+  WaypointNavStatus.waypoint_current_distance =
       sqrt(pow(static_cast<double>(
-                   waypoint_yaml[WaypoaintNavStatus.waypoint_current_id]["position"]["x"]) -
-                   WaypoaintNavStatus.robot_pose.position.x,
+                   waypoint_yaml[WaypointNavStatus.waypoint_current_id]["position"]["x"]) -
+                   WaypointNavStatus.robot_pose.position.x,
                2) +
            pow(static_cast<double>(
-                   waypoint_yaml[WaypoaintNavStatus.waypoint_current_id]["position"]["y"]) -
-                   WaypoaintNavStatus.robot_pose.position.y,
+                   waypoint_yaml[WaypointNavStatus.waypoint_current_id]["position"]["y"]) -
+                   WaypointNavStatus.robot_pose.position.y,
                2));
 
-  if (WaypoaintNavStatus.waypoint_current_distance <= WaypoaintNavStatus.waypoint_radius_threshold)
+  if (WaypointNavStatus.waypoint_current_distance <= WaypointNavStatus.waypoint_radius_threshold)
   {
-    if (increment_waypoint_current_id)
-    {
-      ROS_INFO("WayPoint Passing");
-      ROS_INFO("Increment Waypoint Current ID");
-      WaypoaintNavStatus.waypoint_current_id++;
-      std_msgs::Empty data;
-      way_passed.publish(data);
-    }
-    else
-    {
-      ROS_INFO("WayPoint Passing");
-      ROS_INFO("No Increment Waypoint Current ID");
-      std_msgs::Empty data;
-      way_passed.publish(data);
-    }
+    std_msgs::Empty data;
+    way_passed.publish(data);
+    ROS_INFO("WayPoint Passing");
     return true;
   }
   return false;
@@ -184,10 +197,16 @@ void WaypointServer::setFalseWaypointFunction(
 }
 
 void WaypointServer::setFalseWaypointFlag(
-    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
+    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus, bool allFalse)
 {
   if (not WaypointNavStatus.functions.goal.function) WaypointNavStatus.flags.goal_reach = false;
   if (not WaypointNavStatus.functions.stop.function) WaypointNavStatus.flags.restart = false;
+
+  if (allFalse)
+  {
+    raspicat_navigation_msgs::WaypointNavStatus setFalse;
+    WaypointNavStatus.flags = setFalse.flags;
+  }
 }
 
 void WaypointServer::setWaypointFunction(
@@ -269,6 +288,8 @@ void WaypointServer::debug(raspicat_navigation_msgs::WaypointNavStatus &Waypoint
        << static_cast<bool>(WaypointNavStatus.functions.next_waypoint.function) << "      |\n"
        << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
        << "|GoalReachFlag            : " << static_cast<bool>(WaypointNavStatus.flags.goal_reach)
+       << "      |\n"
+       << "|ReStartFlag            : " << static_cast<bool>(WaypointNavStatus.flags.restart)
        << "      |\n"
        << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
        << "|WaypointID                 : " << WaypointNavStatus.waypoint_current_id + 1 << " |\n"

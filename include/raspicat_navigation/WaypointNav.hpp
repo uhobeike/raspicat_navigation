@@ -62,10 +62,12 @@ class WaypointNav
   ros::NodeHandle &nh_, &pnh_;
   tf2_ros::Buffer& tf_;
   ros::Timer timer_;
+  std::map<std::string, ros::Timer> timer_for_function_;
 
-  ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_, way_start_, way_restart_;
-  ros::Publisher ini_pose_, way_pose_array_, way_area_array_, way_number_txt_array_, way_passed_,
-      way_mode_slope_, way_finish_;
+  ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_, sub_way_start_,
+      sub_way_restart_;
+  ros::Publisher way_pose_array_, way_area_array_, way_number_txt_array_, way_passed_, way_stop_,
+      way_slope_, way_finish_;
 
   std::map<std::string, ros::ServiceClient> slope_obstacle_avoidanc_client_;
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac_move_base_;

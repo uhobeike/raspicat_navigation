@@ -46,18 +46,22 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
   void setWaypoint(actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base_,
                    move_base_msgs::MoveBaseGoal &goal, XmlRpc::XmlRpcValue &waypoint_yaml,
                    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
+  void setNextWaypoint(actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base,
+                       move_base_msgs::MoveBaseGoal &goal, XmlRpc::XmlRpcValue &waypoint_yaml,
+                       raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
 
   void getRobotPose(tf2_ros::Buffer &tf_,
                     raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
 
   bool checkWaypointArea(XmlRpc::XmlRpcValue &waypoint_yaml,
                          raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
-                         ros::Publisher &way_passed, bool increment_waypoint_current_id = true);
+                         ros::Publisher &way_passed);
 
   bool checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
 
   void setFalseWaypointFunction(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
-  void setFalseWaypointFlag(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
+  void setFalseWaypointFlag(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
+                            bool allFalse = false);
 
   void setWaypointFunction(XmlRpc::XmlRpcValue &waypoint_yaml,
                            raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);

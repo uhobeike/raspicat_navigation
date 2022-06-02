@@ -5,6 +5,8 @@ waypoints:
       y: -0.362790
     euler_angle:
       z: -0.0638248225954985
+    properties:
+      - function: stop
   - id: 2
     position:
       x: 19.975597
