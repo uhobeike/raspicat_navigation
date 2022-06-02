@@ -67,17 +67,18 @@ void WaypointNav::initTimerCb()
 void WaypointNav::initPubSub()
 {
   sub_movebase_goal_ = nh_.subscribe("/move_base/status", 1, &WaypointNav::GoalReachedCb, this);
-  way_start_ = nh_.subscribe("/waypoint_start", 1, &WaypointNav::WaypointNavStartCb, this);
-  way_restart_ = nh_.subscribe("/waypoint_restart", 1, &WaypointNav::WaypointNavRestartCb, this);
+  sub_way_start_ = nh_.subscribe("/way_nav_start", 1, &WaypointNav::WaypointNavStartCb, this);
+  sub_way_restart_ = nh_.subscribe("/way_nav_restart", 1, &WaypointNav::WaypointNavRestartCb, this);
 
   way_pose_array_ = nh_.advertise<geometry_msgs::PoseArray>("/waypoint", 1, true);
   way_area_array_ = nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_area", 1, true);
-  way_passed_ = nh_.advertise<std_msgs::Empty>("/waypoint_passed", 1, true);
   way_number_txt_array_ =
       nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_number_txt", 1, true);
 
-  way_mode_slope_ = nh_.advertise<std_msgs::Empty>("/waypoint_mode_slope", 1, true);
-  way_finish_ = nh_.advertise<std_msgs::Empty>("/waypoint_finish", 1, true);
+  way_passed_ = nh_.advertise<std_msgs::Empty>("/waypoint_passed", 1, true);
+  way_stop_ = nh_.advertise<std_msgs::Empty>("/waypoint_stop_function", 1, true);
+  way_slope_ = nh_.advertise<std_msgs::Empty>("/waypoint_slope_function", 1, true);
+  way_finish_ = nh_.advertise<std_msgs::Empty>("/waypoint_goal_function", 1, true);
 }
 
 void WaypointNav::initActionClient()
@@ -172,18 +173,19 @@ void WaypointNav::Run()
 
   while (ros::ok())
   {
+    // set function
     way_srv_->setWaypointFunction(waypoint_yaml_, WaypointNavStatus_);
 
     // next_waypoint.function
     if (WaypointNavStatus_.functions.next_waypoint.function)
     {
       if (way_srv_->checkWaypointArea(waypoint_yaml_, WaypointNavStatus_, way_passed_))
-        way_srv_->setWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
+        way_srv_->setNextWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
     }
 
     // goal.function
     if (WaypointNavStatus_.functions.goal.function)
-      if (WaypointNavStatus_.flags.goal_reach)
+      if (way_srv_->checkGoalReach(WaypointNavStatus_))
       {
         std_msgs::Empty msg;
         way_finish_.publish(msg);
@@ -192,10 +194,32 @@ void WaypointNav::Run()
         break;
       }
 
+    // stop.function
     if (WaypointNavStatus_.functions.stop.function)
     {
-      if (WaypointNavStatus_.flags.restart)
-        way_srv_->setWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
+      static bool once_flag = true;
+      if (way_srv_->checkGoalReach(WaypointNavStatus_))
+        if (WaypointNavStatus_.flags.restart)
+        {
+          once_flag = true;
+          timer_for_function_["speak_stop"].stop();
+          timer_for_function_.erase("speak_stop");
+          way_srv_->setNextWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
+          way_srv_->setFalseWaypointFlag(WaypointNavStatus_, true);
+        }
+        else
+        {
+          if (once_flag)
+          {
+            ros::Timer speak_stop;
+            speak_stop = nh_.createTimer(ros::Duration(5.0), [&](auto &) {
+              std_msgs::Empty msg;
+              way_stop_.publish(msg);
+            });
+            timer_for_function_["speak_stop"] = speak_stop;
+            once_flag = false;
+          }
+        }
     }
     // if (WaypointNavStatus_.functions.slop.function)
     // {
@@ -232,6 +256,16 @@ void WaypointNav::Run()
   }
 }
 
+void WaypointNav::WaypointNavStartCb(const std_msgs::EmptyConstPtr &msg)
+{
+  static bool call_once = true;
+  if (call_once)
+  {
+    call_once = false;
+    Run();
+  }
+}
+
 void WaypointNav::GoalReachedCb(const actionlib_msgs::GoalStatusArrayConstPtr &status)
 {
   if (!status->status_list.empty())
@@ -243,18 +277,9 @@ void WaypointNav::GoalReachedCb(const actionlib_msgs::GoalStatusArrayConstPtr &s
   }
 }
 
-void WaypointNav::WaypointNavStartCb(const std_msgs::EmptyConstPtr &msg)
-{
-  static bool call_once = true;
-  if (call_once)
-  {
-    call_once = false;
-    Run();
-  }
-}
-
 void WaypointNav::WaypointNavRestartCb(const std_msgs::EmptyConstPtr &msg)
 {
+  ROS_INFO("debug");
   WaypointNavStatus_.flags.restart = true;
 }
 
