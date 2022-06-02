@@ -168,14 +168,12 @@ void WaypointServer::getRobotPose(tf2_ros::Buffer &tf_,
 
 bool WaypointServer::checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
-  // if (WaypointNavStatus.goal_reached_flag)
-  // {
-  //   ROS_INFO("Goal Reached");
-  //   ROS_INFO("Restart");
-  //   WaypointNavStatus.waypoint_current_id++;
-  //   return true;
-  // }
-  // return false;
+  if (WaypointNavStatus.flags.goal_reach)
+  {
+    ROS_INFO("Goal Reached");
+    return true;
+  }
+  return false;
 }
 
 void WaypointServer::setFalseWaypointFunction(
@@ -183,6 +181,13 @@ void WaypointServer::setFalseWaypointFunction(
 {
   raspicat_navigation_msgs::WaypointNavStatus setFalse;
   WaypointNavStatus.functions = setFalse.functions;
+}
+
+void WaypointServer::setFalseWaypointFlag(
+    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
+{
+  if (not WaypointNavStatus.functions.goal.function) WaypointNavStatus.flags.goal_reach = false;
+  if (not WaypointNavStatus.functions.stop.function) WaypointNavStatus.flags.restart = false;
 }
 
 void WaypointServer::setWaypointFunction(
@@ -260,10 +265,13 @@ void WaypointServer::setWaypointFunction(
 void WaypointServer::debug(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
   cout << "______________________________________\n"
-       << "|NextWaypointMode            : "
+       << "|NextWaypoinFunction            : "
        << static_cast<bool>(WaypointNavStatus.functions.next_waypoint.function) << "      |\n"
        << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-       << "|WaypointID                 : " << WaypointNavStatus.waypoint_current_id << " |\n"
+       << "|GoalReachFlag            : " << static_cast<bool>(WaypointNavStatus.flags.goal_reach)
+       << "      |\n"
+       << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+       << "|WaypointID                 : " << WaypointNavStatus.waypoint_current_id + 1 << " |\n"
        << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
        << "|WaypointDistance            : " << WaypointNavStatus.waypoint_current_distance
        << "      |\n"

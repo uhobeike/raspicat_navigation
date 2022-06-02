@@ -54,9 +54,9 @@ class WaypointNav
 
   void Run();
 
-  void GoalReachedCb(const actionlib_msgs::GoalStatusArray& status);
-  void WaypointStartCb(const std_msgs::String& msg);
-  void WaypointRestartCb(const std_msgs::String& msg);
+  void GoalReachedCb(const actionlib_msgs::GoalStatusArrayConstPtr& status);
+  void WaypointNavStartCb(const std_msgs::EmptyConstPtr& msg);
+  void WaypointNavRestartCb(const std_msgs::EmptyConstPtr& msg);
 
  private:
   ros::NodeHandle &nh_, &pnh_;
@@ -84,8 +84,6 @@ class WaypointNav
   move_base_msgs::MoveBaseGoal goal_;
 
   raspicat_navigation_msgs::WaypointNavStatus WaypointNavStatus_;
-
-  bool MsgReceiveFlag_;
 };
 
 }  // namespace waypoint_nav
