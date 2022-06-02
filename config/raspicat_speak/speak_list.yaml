@@ -2,16 +2,19 @@ topics:
   - topic: "/waypoint"
     sentence: "ナビゲーションが立ち上がりました　にあん"
     priority: 1
-  - topic: "/waypoint_start"
+  - topic: "/way_nav_start"
     sentence: "ナビゲーションをスタートします　にあん"
     priority: 1
   - topic: "/waypoint_passed"
     sentence: "ウェイポイントを通過しました　にあん"
     priority: 1
-  - topic: "/waypoint_finish"
+  - topic: "/waypoint_goal_function"
     sentence: "ゴールしました　ナビゲーションを終了します　にあん"
     priority: 1
-  - topic: "/waypoint_mode_slope"
+  - topic: "/waypoint_stop_function"
+    sentence: "停止モードに移行しました　リスタートオペレーション　お願いします　にあん"
+    priority: 1
+  - topic: "/waypoint_slope_function"
     sentence: "坂道モードに切り替わりました　にあん"
     priority: 1
   - topic: "/rosbag_record_start"
