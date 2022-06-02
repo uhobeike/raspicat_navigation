@@ -55,7 +55,9 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
                          ros::Publisher &way_passed, bool increment_waypoint_current_id = true);
 
   bool checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
+
   void setFalseWaypointFunction(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
+  void setFalseWaypointFlag(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
 
   void setWaypointFunction(XmlRpc::XmlRpcValue &waypoint_yaml,
                            raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);

@@ -42,8 +42,7 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
       waypoint_server_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointServer"),
       waypoint_rviz_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointRviz"),
       waypoint_nav_helper_loader_("raspicat_navigation",
-                                  "raspicat_navigation::WaypointNavHelperPlugin"),
-      MsgReceiveFlag_(false)
+                                  "raspicat_navigation::WaypointNavHelperPlugin")
 {
   readParam();
   initActionClient();
@@ -55,16 +54,7 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
 
 WaypointNav::~WaypointNav() {}
 
-void WaypointNav::readParam()
-{
-  pnh_.param("base_waypoint_server", waypoint_server_,
-             std::string("raspicat_navigation/WaypointServer"));
-
-  pnh_.param("base_waypoint_rviz", waypoint_rviz_, std::string("raspicat_navigation/WaypointRviz"));
-
-  pnh_.param("waypoint_nav_helper", waypoint_nav_helper_,
-             std::string("raspicat_navigation/CmdVelSmoother"));
-}
+void WaypointNav::readParam() {}
 
 void WaypointNav::initTimerCb()
 {
@@ -77,8 +67,8 @@ void WaypointNav::initTimerCb()
 void WaypointNav::initPubSub()
 {
   sub_movebase_goal_ = nh_.subscribe("/move_base/status", 1, &WaypointNav::GoalReachedCb, this);
-  way_start_ = nh_.subscribe("/waypoint_start", 1, &WaypointNav::WaypointStartCb, this);
-  way_restart_ = nh_.subscribe("/waypoint_restart", 1, &WaypointNav::WaypointRestartCb, this);
+  way_start_ = nh_.subscribe("/waypoint_start", 1, &WaypointNav::WaypointNavStartCb, this);
+  way_restart_ = nh_.subscribe("/waypoint_restart", 1, &WaypointNav::WaypointNavRestartCb, this);
 
   way_pose_array_ = nh_.advertise<geometry_msgs::PoseArray>("/waypoint", 1, true);
   way_area_array_ = nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_area", 1, true);
@@ -86,7 +76,7 @@ void WaypointNav::initPubSub()
   way_number_txt_array_ =
       nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_number_txt", 1, true);
 
-  way_mode_slope_ = nh_.advertise<std_msgs::Bool>("/waypoint_mode_slope", 1, true);
+  way_mode_slope_ = nh_.advertise<std_msgs::Empty>("/waypoint_mode_slope", 1, true);
   way_finish_ = nh_.advertise<std_msgs::Empty>("/waypoint_finish", 1, true);
 }
 
@@ -184,19 +174,29 @@ void WaypointNav::Run()
   {
     way_srv_->setWaypointFunction(waypoint_yaml_, WaypointNavStatus_);
 
+    // next_waypoint.function
     if (WaypointNavStatus_.functions.next_waypoint.function)
     {
       if (way_srv_->checkWaypointArea(waypoint_yaml_, WaypointNavStatus_, way_passed_))
         way_srv_->setWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
     }
-    // if (WaypointNavStatus_.functions.goal.function)
-    //   way_srv_->setWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
 
-    // if (WaypointNavStatus_.functions.stop.function)
-    // {
-    // if (WaypointNavStatus_.restart_flag)
-    //   way_srv_->setWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
-    // }
+    // goal.function
+    if (WaypointNavStatus_.functions.goal.function)
+      if (WaypointNavStatus_.flags.goal_reach)
+      {
+        std_msgs::Empty msg;
+        way_finish_.publish(msg);
+        way_srv_->debug(WaypointNavStatus_);
+        ROS_INFO("Waypoint Navigation Finish!");
+        break;
+      }
+
+    if (WaypointNavStatus_.functions.stop.function)
+    {
+      if (WaypointNavStatus_.flags.restart)
+        way_srv_->setWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
+    }
     // if (WaypointNavStatus_.functions.slop.function)
     // {
     // if (!WaypointNavStatus_.slope_obstacle_avoidance_flag)
@@ -223,37 +223,39 @@ void WaypointNav::Run()
     //   }
     //   WaypointNavStatus_.slope_obstacle_avoidance_flag = false;
     // }
+
     way_srv_->debug(WaypointNavStatus_);
     way_srv_->setFalseWaypointFunction(WaypointNavStatus_);
+    way_srv_->setFalseWaypointFlag(WaypointNavStatus_);
     ros::spinOnce();
     loop_rate.sleep();
   }
 }
 
-void WaypointNav::GoalReachedCb(const actionlib_msgs::GoalStatusArray &status)
+void WaypointNav::GoalReachedCb(const actionlib_msgs::GoalStatusArrayConstPtr &status)
 {
-  // if (!status.status_list.empty())
-  // {
-  //   actionlib_msgs::GoalStatus goalStatus = status.status_list[0];
+  if (!status->status_list.empty())
+  {
+    actionlib_msgs::GoalStatus goalStatus = status->status_list[0];
 
-  //   if (goalStatus.status == 3 && WaypointNavStatus_.goal_reached_flag == false)
-  //     WaypointNavStatus_.goal_reached_flag = true;
-  // }
+    if (goalStatus.status == 3 && WaypointNavStatus_.flags.goal_reach == false)
+      WaypointNavStatus_.flags.goal_reach = true;
+  }
 }
 
-void WaypointNav::WaypointStartCb(const std_msgs::String &msg)
+void WaypointNav::WaypointNavStartCb(const std_msgs::EmptyConstPtr &msg)
 {
-  if (!MsgReceiveFlag_)
+  static bool call_once = true;
+  if (call_once)
   {
-    MsgReceiveFlag_ = true;
+    call_once = false;
     Run();
   }
 }
 
-void WaypointNav::WaypointRestartCb(const std_msgs::String &msg)
+void WaypointNav::WaypointNavRestartCb(const std_msgs::EmptyConstPtr &msg)
 {
-  // WaypointNavStatus_.restart_flag = true;
-  WaypointNavStatus_.waypoint_current_id++;
+  WaypointNavStatus_.flags.restart = true;
 }
 
 }  // namespace waypoint_nav

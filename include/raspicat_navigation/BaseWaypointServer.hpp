@@ -49,6 +49,8 @@ class BaseWaypointServer
 
   virtual void setFalseWaypointFunction(
       raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
+  virtual void setFalseWaypointFlag(
+      raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
   virtual void setWaypointFunction(
       XmlRpc::XmlRpcValue &waypoint_yaml,
