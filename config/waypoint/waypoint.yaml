@@ -39,3 +39,4 @@ waypoints:
       z: -0.07325240125722614
     properties:
       - function: goal
+      - function: loop
