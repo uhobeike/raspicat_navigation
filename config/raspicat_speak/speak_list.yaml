@@ -11,6 +11,9 @@ topics:
   - topic: "/waypoint_goal_function"
     sentence: "ゴールしました　ナビゲーションを終了します　にあん"
     priority: 1
+  - topic: "/waypoint_loop_function"
+    sentence: "ループモードが実行されました　にあん"
+    priority: 1
   - topic: "/waypoint_stop_function"
     sentence: "停止モードに移行しました　リスタートオペレーション　お願いします　にあん"
     priority: 1
