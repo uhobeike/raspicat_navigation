@@ -39,6 +39,7 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
       pnh_(private_nodeHandle),
       tf_(tf),
       ac_move_base_("move_base", true),
+      dynamic_reconfigure_client_("/move_base/DWAPlannerROS"),
       waypoint_server_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointServer"),
       waypoint_rviz_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointRviz"),
       waypoint_nav_helper_loader_("raspicat_navigation",
@@ -55,7 +56,10 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
 
 WaypointNav::~WaypointNav() {}
 
-void WaypointNav::readParam() {}
+void WaypointNav::readParam()
+{
+  pnh_.getParam("/move_base/DWAPlannerROS/max_vel_trans", vel_trans_);
+}
 
 void WaypointNav::initTimerCb()
 {
@@ -178,7 +182,7 @@ void WaypointNav::Run()
   while (ros::ok())
   {
     // set function
-    way_srv_->setWaypointFunction(waypoint_yaml_, WaypointNavStatus_);
+    way_srv_->setWaypointFunction(dynamic_reconfigure_client_, waypoint_yaml_, WaypointNavStatus_);
 
     // next_waypoint function
     if (WaypointNavStatus_.functions.next_waypoint.function)
@@ -253,6 +257,16 @@ void WaypointNav::Run()
         timer_for_function_["speak_attention"] = speak_attention;
       }
 
+    // variable speed function
+    if (not WaypointNavStatus_.functions.variable_speed.function)
+    {
+      dwa_local_planner::DWAPlannerConfig config;
+      dynamic_reconfigure_client_.getCurrentConfiguration(config);
+      config.max_vel_trans = vel_trans_;
+      config.max_vel_x = vel_trans_;
+      dynamic_reconfigure_client_.setConfiguration(config);
+    }
+
     // variable waypoint radius function
     if (not WaypointNavStatus_.functions.variable_waypoint_radius.function)
       WaypointNavStatus_.waypoint_radius_threshold = waypoint_radius_;
@@ -289,20 +303,11 @@ void WaypointNav::GoalReachedCb(const actionlib_msgs::GoalStatusArrayConstPtr &s
 
 void WaypointNav::WaypointNavRestartCb(const std_msgs::EmptyConstPtr &msg)
 {
-  ROS_INFO("debug");
   WaypointNavStatus_.flags.restart = true;
 }
 
-void WaypointNav::sleep(double rate)
-{
-  ros::Duration duration(rate);
-  duration.sleep();
-}
+void WaypointNav::sleep(double rate) { ros::Duration(rate).sleep(); }
 
-void WaypointNav::sleep(double &rate)
-{
-  ros::Duration duration(rate);
-  duration.sleep();
-}
+void WaypointNav::sleep(double &rate) { ros::Duration(rate).sleep(); }
 
 }  // namespace waypoint_nav

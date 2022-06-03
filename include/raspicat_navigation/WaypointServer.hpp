@@ -22,13 +22,12 @@
 #include <actionlib/client/simple_action_client.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <pluginlib/class_list_macros.h>
-#include <std_msgs/Bool.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-#include <fstream>
-#include <sstream>
+#include <dwa_local_planner/DWAPlannerConfig.h>
+#include <dynamic_reconfigure/client.h>
 
 #include "raspicat_navigation/BaseWaypointServer.hpp"
 
@@ -65,8 +64,10 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
   void setFalseWaypointFlag(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
                             bool allFalse = false);
 
-  void setWaypointFunction(XmlRpc::XmlRpcValue &waypoint_yaml,
-                           raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
+  void setWaypointFunction(
+      dynamic_reconfigure::Client<dwa_local_planner::DWAPlannerConfig> &dynamic_reconfigure_client,
+      XmlRpc::XmlRpcValue &waypoint_yaml,
+      raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
 
   void debug(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
 

@@ -59,6 +59,7 @@ class BaseWaypointServer
                                     bool allFalse = false) = 0;
 
   virtual void setWaypointFunction(
+      dynamic_reconfigure::Client<dwa_local_planner::DWAPlannerConfig> &dynamic_reconfigure_client,
       XmlRpc::XmlRpcValue &waypoint_yaml,
       raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
