@@ -59,6 +59,8 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
 
   bool checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
 
+  void eraseTimer(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
+                  std::map<std::string, ros::Timer> &timer_for_function);
   void setFalseWaypointFunction(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
   void setFalseWaypointFlag(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
                             bool allFalse = false);

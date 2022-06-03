@@ -189,6 +189,13 @@ bool WaypointServer::checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus 
   return false;
 }
 
+void WaypointServer::eraseTimer(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
+                                std::map<std::string, ros::Timer> &timer_for_function)
+{
+  if (not WaypointNavStatus.functions.attention_speak.function)
+    timer_for_function.erase("speak_attention");
+}
+
 void WaypointServer::setFalseWaypointFunction(
     raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
