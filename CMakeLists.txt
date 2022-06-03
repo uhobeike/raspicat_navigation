@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   move_base_msgs
   raspicat_navigation_msgs
+  dynamic_reconfigure
   tf
   pluginlib
   rviz

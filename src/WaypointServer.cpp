@@ -217,6 +217,7 @@ void WaypointServer::setFalseWaypointFlag(
 }
 
 void WaypointServer::setWaypointFunction(
+    dynamic_reconfigure::Client<dwa_local_planner::DWAPlannerConfig> &dynamic_reconfigure_client,
     XmlRpc::XmlRpcValue &waypoint_yaml,
     raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
@@ -265,6 +266,17 @@ void WaypointServer::setWaypointFunction(
                "variable_speed")
       {
         WaypointNavStatus.functions.variable_speed.function = true;
+        if (not static_cast<double>(waypoint_yaml[WaypointNavStatus.waypoint_current_id]
+                                                 ["properties"][i]["vel_trans"]) == 0)
+        {
+          dwa_local_planner::DWAPlannerConfig config;
+          dynamic_reconfigure_client.getCurrentConfiguration(config);
+          config.max_vel_trans = static_cast<double>(
+              waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["vel_trans"]);
+          config.max_vel_x = static_cast<double>(
+              waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["vel_trans"]);
+          dynamic_reconfigure_client.setConfiguration(config);
+        }
       }
 
       else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
