@@ -5,26 +5,30 @@ waypoints:
       y: -0.362790
     euler_angle:
       z: -0.0638248225954985
-    properties:
-      - function: stop
   - id: 2
     position:
       x: 19.975597
       y: -0.901446
     euler_angle:
       z: 1.502107171059494
+    properties:
+      - function: attention_speak
   - id: 3
     position:
       x: 20.716635
       y: 8.790593
     euler_angle:
       z: 3.114575838346497
+    properties:
+      - function: attention_speak
   - id: 4
     position:
       x: -13.854096
       y: 9.386736
     euler_angle:
       z: -1.603556631084992
+    properties:
+      - function: stop
   - id: 5
     position:
       x: -14.292275

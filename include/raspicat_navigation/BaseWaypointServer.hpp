@@ -50,6 +50,9 @@ class BaseWaypointServer
 
   virtual bool checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
+  virtual void eraseTimer(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
+                          std::map<std::string, ros::Timer> &timer_for_function) = 0;
+
   virtual void setFalseWaypointFunction(
       raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
   virtual void setFalseWaypointFlag(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,

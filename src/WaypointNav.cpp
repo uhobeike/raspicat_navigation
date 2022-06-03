@@ -80,6 +80,8 @@ void WaypointNav::initPubSub()
   way_slope_ = nh_.advertise<std_msgs::Empty>("/waypoint_slope_function", 1, true);
   way_goal_ = nh_.advertise<std_msgs::Empty>("/waypoint_goal_function", 1, true);
   way_loop_ = nh_.advertise<std_msgs::Empty>("/waypoint_loop_function", 1, true);
+  way_attention_speak_ =
+      nh_.advertise<std_msgs::Empty>("/waypoint_attention_speak_function", 1, true);
 }
 
 void WaypointNav::initActionClient()
@@ -188,7 +190,6 @@ void WaypointNav::Run()
       if (way_srv_->checkGoalReach(WaypointNavStatus_))
         if (WaypointNavStatus_.flags.restart)
         {
-          timer_for_function_["speak_stop"].stop();
           timer_for_function_.erase("speak_stop");
           way_srv_->setNextWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
           way_srv_->setFalseWaypointFlag(WaypointNavStatus_, true);
@@ -198,9 +199,10 @@ void WaypointNav::Run()
           if (timer_for_function_.find("speak_stop") == timer_for_function_.end())
           {
             ros::Timer speak_stop;
-            speak_stop = nh_.createTimer(ros::Duration(5.0), [&](auto &) {
+            speak_stop = nh_.createTimer(ros::Duration(0.1), [&](auto &) {
               std_msgs::Empty msg;
               way_stop_.publish(msg);
+              sleep(6.0);
             });
             timer_for_function_["speak_stop"] = speak_stop;
           }
@@ -215,9 +217,10 @@ void WaypointNav::Run()
         if (timer_for_function_.find("speak_goal") == timer_for_function_.end())
         {
           ros::Timer speak_goal;
-          speak_goal = nh_.createTimer(ros::Duration(5.0), [&](auto &) {
+          speak_goal = nh_.createTimer(ros::Duration(0.1), [&](auto &) {
             std_msgs::Empty msg;
             way_goal_.publish(msg);
+            sleep(5.0);
           });
           timer_for_function_["speak_goal"] = speak_goal;
         }
@@ -225,11 +228,9 @@ void WaypointNav::Run()
 
     // loop function
     if (WaypointNavStatus_.functions.loop.function)
-    {
       if (way_srv_->checkGoalReach(WaypointNavStatus_))
       {
-        ros::Duration duration(5.0);
-        duration.sleep();
+        sleep(5.0);
         std_msgs::Empty msg;
         way_loop_.publish(msg);
         ROS_INFO("Waypoint Navigation Loop!");
@@ -237,36 +238,22 @@ void WaypointNav::Run()
         way_srv_->setWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
         timer_for_function_.erase(timer_for_function_.begin(), timer_for_function_.end());
       }
-    }
 
-    // if (WaypointNavStatus_.functions.slop.function)
-    // {
-    // if (!WaypointNavStatus_.slope_obstacle_avoidance_flag)
-    // {
-    //   std_srvs::TriggerRequest req;
-    //   std_srvs::TriggerResponse resp;
-    //   if (!slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_on"].call(req, resp))
-    //   {
-    //     ROS_ERROR("Failed to invoke slope_obstacle_avoidance_on services.");
-    //     exit(0);
-    //   }
-    //   WaypointNavStatus_.slope_obstacle_avoidance_flag = true;
-    // }
-    // if (way_srv_->checkWaypointArea(waypoint_yaml_, WaypointNavStatus_, way_passed_))
-    // {
-    //   way_srv_->setWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
-
-    //   std_srvs::TriggerRequest req;
-    //   std_srvs::TriggerResponse resp;
-    //   if (!slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_off"].call(req, resp))
-    //   {
-    //     ROS_ERROR("Failed to invoke slope_obstacle_avoidance_off services.");
-    //     exit(0);
-    //   }
-    //   WaypointNavStatus_.slope_obstacle_avoidance_flag = false;
-    // }
+    // attention speak function
+    if (WaypointNavStatus_.functions.attention_speak.function)
+      if (timer_for_function_.find("speak_attention") == timer_for_function_.end())
+      {
+        ros::Timer speak_attention;
+        speak_attention = nh_.createTimer(ros::Duration(0.1), [&](auto &) {
+          std_msgs::Empty msg;
+          way_attention_speak_.publish(msg);
+          sleep(5.0);
+        });
+        timer_for_function_["speak_attention"] = speak_attention;
+      }
 
     way_srv_->debug(WaypointNavStatus_);
+    way_srv_->eraseTimer(WaypointNavStatus_, timer_for_function_);
     way_srv_->setFalseWaypointFunction(WaypointNavStatus_);
     way_srv_->setFalseWaypointFlag(WaypointNavStatus_);
     ros::spinOnce();
@@ -299,6 +286,18 @@ void WaypointNav::WaypointNavRestartCb(const std_msgs::EmptyConstPtr &msg)
 {
   ROS_INFO("debug");
   WaypointNavStatus_.flags.restart = true;
+}
+
+void WaypointNav::sleep(double rate)
+{
+  ros::Duration duration(rate);
+  duration.sleep();
+}
+
+void WaypointNav::sleep(double &rate)
+{
+  ros::Duration duration(rate);
+  duration.sleep();
 }
 
 }  // namespace waypoint_nav
