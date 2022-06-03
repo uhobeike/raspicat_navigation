@@ -13,6 +13,8 @@ waypoints:
       z: 1.502107171059494
     properties:
       - function: attention_speak
+      - function: variable_waypoint_radius
+        waypoint_radius: 1.0
   - id: 3
     position:
       x: 20.716635
@@ -21,6 +23,8 @@ waypoints:
       z: 3.114575838346497
     properties:
       - function: attention_speak
+      - function: variable_waypoint_radius
+        waypoint_radius: 2.0
   - id: 4
     position:
       x: -13.854096
