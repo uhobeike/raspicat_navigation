@@ -92,13 +92,27 @@ void WaypointRviz::WaypointMarkerArraySet(XmlRpc::XmlRpcValue& waypoint_yaml,
   {
     for (auto i = 0; i < waypoint_yaml[waypoint_id]["properties"].size(); i++)
     {
-      if (!(waypoint_yaml[waypoint_id]["properties"][i]["function"] == "goal"))
+      if (!(waypoint_yaml[waypoint_id]["properties"][i]["function"] == "goal") &&
+          !(waypoint_yaml[waypoint_id]["properties"][i]["function"] == "stop"))
         waypoint_area.markers[waypoint_id].color.a = 0.1f;
       else
       {
         waypoint_area.markers[waypoint_id].color.a = 0.000001f;
         break;
       }
+
+      if ((waypoint_yaml[waypoint_id]["properties"][i]["function"] == "variable_waypoint_radius"))
+        if (not static_cast<double>(
+                waypoint_yaml[waypoint_id]["properties"][i]["waypoint_radius"]) == 0)
+        {
+          cylinder.x =
+              static_cast<double>(waypoint_yaml[waypoint_id]["properties"][i]["waypoint_radius"]) *
+              2;
+          cylinder.y =
+              static_cast<double>(waypoint_yaml[waypoint_id]["properties"][i]["waypoint_radius"]) *
+              2;
+          waypoint_area.markers[waypoint_id].scale = cylinder;
+        }
     }
   }
   else

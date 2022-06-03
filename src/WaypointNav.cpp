@@ -42,7 +42,8 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
       waypoint_server_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointServer"),
       waypoint_rviz_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointRviz"),
       waypoint_nav_helper_loader_("raspicat_navigation",
-                                  "raspicat_navigation::WaypointNavHelperPlugin")
+                                  "raspicat_navigation::WaypointNavHelperPlugin"),
+      waypoint_radius_(3.0)
 {
   readParam();
   initActionClient();
@@ -144,7 +145,7 @@ void WaypointNav::initClassLoader()
     way_rviz_ = waypoint_rviz_loader_.createInstance("raspicat_navigation/WaypointRviz");
     way_rviz_->initialize(waypoint_rviz_);
     way_rviz_->run();
-    WaypointNavStatus_.waypoint_radius_threshold = 5.0;
+    WaypointNavStatus_.waypoint_radius_threshold = waypoint_radius_;
     way_rviz_->WaypointRvizVisualization(waypoint_yaml_, way_pose_array_, way_area_array_,
                                          way_number_txt_array_,
                                          WaypointNavStatus_.waypoint_radius_threshold);
@@ -251,6 +252,10 @@ void WaypointNav::Run()
         });
         timer_for_function_["speak_attention"] = speak_attention;
       }
+
+    // variable waypoint radius function
+    if (not WaypointNavStatus_.functions.variable_waypoint_radius.function)
+      WaypointNavStatus_.waypoint_radius_threshold = waypoint_radius_;
 
     way_srv_->debug(WaypointNavStatus_);
     way_srv_->eraseTimer(WaypointNavStatus_, timer_for_function_);

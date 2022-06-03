@@ -271,6 +271,11 @@ void WaypointServer::setWaypointFunction(
                "variable_waypoint_radius")
       {
         WaypointNavStatus.functions.variable_waypoint_radius.function = true;
+        if (not static_cast<double>(waypoint_yaml[WaypointNavStatus.waypoint_current_id]
+                                                 ["properties"][i]["waypoint_radius"]) == 0)
+          WaypointNavStatus.waypoint_radius_threshold =
+              static_cast<double>(waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"]
+                                               [i]["waypoint_radius"]);
       }
 
       else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==

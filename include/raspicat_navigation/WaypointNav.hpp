@@ -90,6 +90,8 @@ class WaypointNav
   move_base_msgs::MoveBaseGoal goal_;
 
   raspicat_navigation_msgs::WaypointNavStatus WaypointNavStatus_;
+
+  double waypoint_radius_;
 };
 
 }  // namespace waypoint_nav
