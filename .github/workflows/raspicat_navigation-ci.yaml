@@ -67,6 +67,7 @@ jobs:
   Test:
     runs-on: ubuntu-18.04
 
+    needs: Build
     steps:
       - name: Test
         run: |
