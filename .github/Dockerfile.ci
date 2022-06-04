@@ -23,8 +23,7 @@ RUN cd /home/catkin_ws/src && \
   git clone -b master https://github.com/uhobeike/raspicat_navigation_msgs.git && \
   git clone -b main https://github.com/rt-net/raspicat_sim.git && \
   git clone -b main https://github.com/rt-net/raspicat_description.git && \
-  git clone -b master https://github.com/rt-net/raspimouse.git
-
+  git clone -b master https://github.com/rt-net/raspimouse.git && \
   if "false"; then cd raspicat_navigation;git fetch origin pull/ID/head:pull_request-ci;git checkout pull_request-ci;fi
 
 RUN source /opt/ros/melodic/setup.bash && \
