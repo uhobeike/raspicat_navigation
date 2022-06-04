@@ -11,7 +11,8 @@ sleep 20
 
 # Rviz & Navigation launch
 roslaunch raspicat_navigation ci_test.launch \
-  mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml open_rviz:=false &
+  mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml \
+  map_name:=tsudanuma_2_19 open_rviz:=false &
 sleep 60
 
 # Execute start operation
