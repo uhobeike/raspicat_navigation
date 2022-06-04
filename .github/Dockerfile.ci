@@ -1,10 +1,9 @@
-FROM ubeike/ros-melodic-desktop-full:0.0.0
+FROM osrf/melodic-desktop-full
 
 SHELL ["/bin/bash", "-c"]
 
 ENV ROS_MASTER_URI=http://localhost:11311 \
-  ROS_HOSTNAME=localhost \
-  TURTLEBOT3_MODEL=burger
+  ROS_HOSTNAME=localhost
 
 RUN apt update && apt upgrade -y && \ 
   apt install -y \
@@ -20,11 +19,12 @@ RUN mkdir -p /home/catkin_ws/src \
   && echo "source /home/catkin_ws/devel/setup.bash" >> /home/.bashrc
 
 RUN cd /home/catkin_ws/src && \
-  git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git && \
-  git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git && \
-  git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git && \
   git clone -b master https://github.com/uhobeike/raspicat_navigation.git && \
   git clone -b master https://github.com/uhobeike/raspicat_navigation_msgs.git && \
+  git clone -b main https://github.com/rt-net/raspicat_sim.git && \
+  git clone -b main https://github.com/rt-net/raspicat_description.git && \
+  git clone -b master https://github.com/rt-net/raspimouse.git
+
   if "false"; then cd raspicat_navigation;git fetch origin pull/ID/head:pull_request-ci;git checkout pull_request-ci;fi
 
 RUN source /opt/ros/melodic/setup.bash && \
