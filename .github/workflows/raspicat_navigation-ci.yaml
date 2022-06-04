@@ -60,7 +60,7 @@ jobs:
       - name: Sed clone url
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          sed -i -e "s;false;true;" ./.github/Dockerfile.ci
+          sed -i -e "s;false;true;" ./.github/Dockerfile.build-ci
           sed -i -e "s;pull/ID/head;"$(echo "${GITHUB_REF#refs/heads/}" | sed -e "s;refs/;;")";" ./.github/Dockerfile.build-ci
 
       - name: Build and push docker image
