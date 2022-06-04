@@ -10,16 +10,16 @@ roslaunch raspicat_navigation raspicat_tsudanuma_2_19_world.launch \
 sleep 20
 
 # Rviz & Navigation launch
-roslaunch raspicat_navigation ci_test.launch \
+xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch raspicat_navigation ci_test.launch \
   mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml \
-  map_name:=tsudanuma_2_19 open_rviz:=false &
+  map_name:=tsudanuma_2_19 open_rviz:=true &
 sleep 60
 
 # Execute start operation
 rostopic pub -1 /way_nav_start std_msgs/Empty
 
 # Execute restart operation
-timeout 300 $(rostopic echo -n 1 /waypoint_stop_function;rostopic pub -1 /way_nav_restart std_msgs/Empty)
+timeout 300 rostopic echo -n 1 /waypoint_stop_function;rostopic pub -1 /way_nav_restart std_msgs/Empty
 
 # Check goal
 timeout 300 rostopic echo -n 1 /waypoint_goal_function
