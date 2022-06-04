@@ -19,7 +19,7 @@ sleep 60
 rostopic pub -1 /way_nav_start std_msgs/Empty
 
 # Execute restart operation
-timeout 300 $(rostopic echo -n 1 /waypoint_stop_function; rostopic pub -1 /way_nav_restart std_msgs/Empty)
+timeout 300 $(rostopic echo -n 1 /waypoint_stop_function;rostopic pub -1 /way_nav_restart std_msgs/Empty)
 
 # Check goal
 timeout 300 rostopic echo -n 1 /waypoint_goal_function
