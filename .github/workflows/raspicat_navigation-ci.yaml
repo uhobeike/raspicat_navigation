@@ -54,7 +54,7 @@ jobs:
           context: ${{ env.DOCKER-CONTEXT }}
           file: ${{ env.DOCKER-FILE-ENVIRONMENT }}
           builder: ${{ steps.buildx.outputs.name }}
-          tags: ${{ env.DOCKER-IMAGE }}
+          tags: ${{ env.DOCKER-IMAGE-ENVIRONMENT }}
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
@@ -72,7 +72,7 @@ jobs:
   #         file: ${{ env.DOCKER-FILE-BUILD }}
   #         builder: ${{ steps.buildx.outputs.name }}
   #         push: true
-  #         tags: ${{ env.DOCKER-IMAGE }}
+  #         tags: ${{ env.DOCKER-IMAGE-BUILD }}
 
   # Test:
   #   runs-on: ubuntu-18.04
