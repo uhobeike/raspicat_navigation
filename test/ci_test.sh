@@ -1,5 +1,6 @@
 #!/bin/bash -xve
 
+sudo apt install -y ffmpeg
 # Check ros node process
 top -n 1 -b | head -n 20
 while true; do sleep 10 | top -n 1 -b | head -n 20; done &
