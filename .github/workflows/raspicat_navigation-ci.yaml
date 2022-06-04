@@ -54,7 +54,6 @@ jobs:
           sed -i -e "s;pull/ID/head;"$(echo "${GITHUB_REF#refs/heads/}" | sed -e "s;refs/;;")";" ./.github/Dockerfile.ci
       
       - name: Create environment docker image
-        id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: ${{ env.DOCKER-CONTEXT }}
@@ -65,7 +64,6 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
       
       - name: Build and push docker image
-        id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: ${{ env.DOCKER-CONTEXT }}
