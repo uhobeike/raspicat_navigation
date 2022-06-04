@@ -55,30 +55,29 @@ jobs:
           file: ${{ env.DOCKER-FILE-ENVIRONMENT }}
           builder: ${{ steps.buildx.outputs.name }}
           tags: ${{ env.DOCKER-IMAGE-ENVIRONMENT }}
-          push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
       
-  #     - name: Sed clone url
-  #       if: ${{ github.event_name == 'pull_request' }}
-  #       run: |
-  #         sed -i -e "s;false;true;" ./.github/Dockerfile.build-ci
-  #         sed -i -e "s;pull/ID/head;"$(echo "${GITHUB_REF#refs/heads/}" | sed -e "s;refs/;;")";" ./.github/Dockerfile.build-ci
+      - name: Sed clone url
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          sed -i -e "s;false;true;" ./.github/Dockerfile.build-ci
+          sed -i -e "s;pull/ID/head;"$(echo "${GITHUB_REF#refs/heads/}" | sed -e "s;refs/;;")";" ./.github/Dockerfile.build-ci
 
-  #     - name: Build and push docker image
-  #       uses: docker/build-push-action@v2
-  #       with:
-  #         context: ${{ env.DOCKER-CONTEXT }}
-  #         file: ${{ env.DOCKER-FILE-BUILD }}
-  #         builder: ${{ steps.buildx.outputs.name }}
-  #         push: true
-  #         tags: ${{ env.DOCKER-IMAGE-BUILD }}
+      - name: Build and push docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ env.DOCKER-CONTEXT }}
+          file: ${{ env.DOCKER-FILE-BUILD }}
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ env.DOCKER-IMAGE-BUILD }}
 
-  # Test:
-  #   runs-on: ubuntu-18.04
+  Test:
+    runs-on: ubuntu-18.04
 
-  #   needs: Build
-  #   steps:
-  #     - name: Test
-  #       run: |
-  #         docker run --init ubeike/raspicat-navigation-ros-melodic-ci /bin/bash -c "source /root/.bashrc && ./test/ci_test.sh"
+    needs: Build
+    steps:
+      - name: Test
+        run: |
+          docker run --init ubeike/raspicat-navigation-ros-melodic-ci /bin/bash -c "source /root/.bashrc && ./test/ci_test.sh"
