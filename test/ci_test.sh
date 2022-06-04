@@ -1,5 +1,5 @@
 #!/bin/bash -xve
-sudo apt install -y tmux 
+
 # Check ros node process
 top -n 1 -b | head -n 20
 while true; do sleep 10 | top -n 1 -b | head -n 20; done &
@@ -17,7 +17,7 @@ export DISPLAY=:44
 sleep 60
 
 # Record
-tmux new-session -d -s Record 'ffmpeg -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 12 /tmp/report/video.mp4'
+ffmpeg -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 12 /tmp/report/video.mp4 &
 
 # Execute start operation
 rostopic pub -1 /way_nav_start std_msgs/Empty
@@ -30,10 +30,8 @@ timeout 300 rostopic echo -n 1 /waypoint_goal_function
 
 # Printf result
 if [ $? -eq 0 ];then 
-  killall rosmaster
+  killall rosmaster ffmpeg
   printf '\033[42m%s\033[m\n' 'Docker Test SUCCEED'
-  top -n 1 -b | head -n 60
-  tmux send-keys -t Record q
   ls -gh
   exit 0
 else
