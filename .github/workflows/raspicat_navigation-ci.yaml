@@ -79,4 +79,4 @@ jobs:
     steps:
       - name: Test
         run: |
-          docker run --init ubeike/raspicat-navigation-ros-melodic-ci /bin/bash -c "source /home/.bashrc && ./test/ci_test.sh"
+          docker run --init ubeike/raspicat-navigation-ros-melodic-ci /bin/bash -c "source /root/.bashrc && ./test/ci_test.sh"
