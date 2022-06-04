@@ -14,7 +14,7 @@ xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch raspicat_navigati
   mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml \
   map_name:=tsudanuma_2_19 open_rviz:=true &
 export DISPLAY=:0
-ffmpeg -f x11grab -video_size 1920x1080 -i :0 -codec:v libx264 -r 10 video.mp4
+ffmpeg -f x11grab -video_size 1920x1080 -i :0 -codec:v libx264 -r 10 video.mp4 &
 sleep 60
 
 # Execute start operation
