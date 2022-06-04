@@ -56,6 +56,6 @@
   
   <!-- Rviz -->
   <node if="$(arg open_rviz)" pkg="rviz" type="rviz" name="rviz" required="true"
-    args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation.rviz">
+    args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation.rviz --fullscreen">
   </node>      
 </launch>

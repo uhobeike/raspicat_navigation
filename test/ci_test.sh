@@ -10,11 +10,11 @@ roslaunch raspicat_navigation raspicat_tsudanuma_2_19_world.launch \
 sleep 20
 
 # Rviz & Navigation launch
-xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch raspicat_navigation ci_test.launch \
+xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x1080x24" roslaunch raspicat_navigation ci_test.launch \
   mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml \
   map_name:=tsudanuma_2_19 open_rviz:=true &
-export DISPLAY=:0
-ffmpeg -f x11grab -video_size 1920x1080 -i :0 -codec:v libx264 -r 10 video.mp4 &
+export DISPLAY=:44
+tmux new-session -d -s Record 'ffmpeg -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 12 video.mp4'
 sleep 60
 
 # Execute start operation
@@ -30,6 +30,7 @@ timeout 300 rostopic echo -n 1 /waypoint_goal_function
 if [ $? -eq 0 ];then 
   killall rosmaster
   printf '\033[42m%s\033[m\n' 'Docker Test SUCCEED'
+  tmux send-keys -t Record q
   ls -gh
   exit 0
 else
