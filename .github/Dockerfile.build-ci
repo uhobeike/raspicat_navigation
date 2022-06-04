@@ -1,4 +1,4 @@
-FROM ubeike/raspicat-navigation-ros-melodic-ci
+FROM ubeike/raspicat-navigation-env-ros-melodic-ci
 
 SHELL ["/bin/bash", "-c"]
 
