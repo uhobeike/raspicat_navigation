@@ -14,7 +14,7 @@ xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x10
   mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml \
   map_name:=tsudanuma_2_19 open_rviz:=true &
 export DISPLAY=:44
-tmux new-session -d -s Record 'ffmpeg -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 12 video.mp4'
+tmux new-session -d -s Record 'ffmpeg -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 12 /tmp/report/video.mp4'
 sleep 60
 
 # Execute start operation

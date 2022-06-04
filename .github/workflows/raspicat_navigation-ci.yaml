@@ -80,4 +80,10 @@ jobs:
     steps:
       - name: Test
         run: |
-          docker run --init ubeike/raspicat-navigation-ros-melodic-ci /bin/bash -c "source /home/.bashrc && ./test/ci_test.sh"
+          mkdir -p /tmp/report
+          docker run --init ubeike/raspicat-navigation-ros-melodic-ci -v /tmp/report:/tmp/report /bin/bash -c "source /home/.bashrc && ./test/ci_test.sh"
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test report
+          path: /tmp/report
