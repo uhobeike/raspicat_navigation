@@ -14,8 +14,10 @@ xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x10
   mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml \
   map_name:=tsudanuma_2_19 open_rviz:=true &
 export DISPLAY=:44
-tmux new-session -d -s Record 'ffmpeg -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 12 /tmp/report/video.mp4'
 sleep 60
+
+# Record
+tmux new-session -d -s Record 'ffmpeg -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 12 /tmp/report/video.mp4'
 
 # Execute start operation
 rostopic pub -1 /way_nav_start std_msgs/Empty
@@ -30,6 +32,7 @@ timeout 300 rostopic echo -n 1 /waypoint_goal_function
 if [ $? -eq 0 ];then 
   killall rosmaster
   printf '\033[42m%s\033[m\n' 'Docker Test SUCCEED'
+  top -n 1 -b | head -n 60
   tmux send-keys -t Record q
   ls -gh
   exit 0
