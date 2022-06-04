@@ -1,0 +1,21 @@
+FROM ubeike/raspicat-navigation-env-ros-melodic-ci
+
+SHELL ["/bin/bash", "-c"]
+
+RUN mkdir -p /home/catkin_ws/src \
+  && echo "source /opt/ros/melodic/setup.bash" >> /home/.bashrc \
+  && echo "source /home/catkin_ws/devel/setup.bash" >> /home/.bashrc
+
+RUN cd /home/catkin_ws/src && \
+  git clone -b master https://github.com/uhobeike/raspicat_navigation.git && \
+  git clone -b master https://github.com/uhobeike/raspicat_navigation_msgs.git && \
+  git clone -b main https://github.com/rt-net/raspicat_sim.git && \
+  git clone -b main https://github.com/rt-net/raspicat_description.git && \
+  git clone -b master https://github.com/rt-net/raspimouse.git && \
+  if "false"; then cd raspicat_navigation;git fetch origin pull/ID/head:pull_request-ci;git checkout pull_request-ci;fi
+
+RUN source /opt/ros/melodic/setup.bash && \
+  cd /home/catkin_ws && rosdep install -r -y --from-paths --ignore-src . && \
+  catkin build
+
+WORKDIR /home/catkin_ws/src/raspicat_navigation

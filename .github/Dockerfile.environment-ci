@@ -1,0 +1,15 @@
+FROM osrf/ros:melodic-desktop-full
+
+SHELL ["/bin/bash", "-c"]
+
+ENV ROS_MASTER_URI=http://localhost:11311 \
+  ROS_HOSTNAME=localhost
+
+RUN apt update && apt upgrade -y && \ 
+  apt install -y \
+  xvfb \
+  psmisc \
+  python3-pip \
+  # Install ros related
+  python-catkin-tools && \
+  pip3 install rospkg catkin_pkg
