@@ -30,6 +30,7 @@ timeout 300 rostopic echo -n 1 /waypoint_goal_function
 if [ $? -eq 0 ];then 
   killall rosmaster
   printf '\033[42m%s\033[m\n' 'Docker Test SUCCEED'
+  ls -gh
   exit 0
 else
   printf '\033[31m%s\033[m\n' 'Docker Test FAILED'
