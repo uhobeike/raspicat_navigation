@@ -16,8 +16,8 @@ on:
 env:
   DOCKER-IMAGE: ubeike/raspicat-navigation-ros-melodic-ci
   DOCKER-CONTEXT: ./
-  DOCKER-FILE-ENVIRONMENT: ./.github/Dockerfile.ci
-  DOCKER-FILE-BUILD: ./.github/Dockerfile.ci
+  DOCKER-FILE-ENVIRONMENT: ./.github/Dockerfile.environment-ci
+  DOCKER-FILE-BUILD: ./.github/Dockerfile.build-ci
 
 jobs:
   Build:
