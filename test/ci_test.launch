@@ -6,9 +6,9 @@
   <arg name="move_forward_only"   default="false"/>
   <arg name="waypoint_navigation" default="true"/>
 
-  <arg name="map_name"          default="tsudanuma" doc="world_name type [tsudanuma_2_19, tsudanuma, tsukuba]"/>
-  <arg name="mcl_map_file"        default="$(find raspicat_navigation)/config/maps/$(arg world_name)/map_$(arg world_name).yaml"/>
-  <arg name="move_base_map_file"  default="$(find raspicat_navigation)/config/maps/for_move_base/map_$(arg world_name).yaml"/>
+  <arg name="map_name"          default="tsudanuma" doc="map_name type [tsudanuma_2_19, tsudanuma, tsukuba]"/>
+  <arg name="mcl_map_file"        default="$(find raspicat_navigation)/config/maps/$(arg map_name)/map_$(arg map_name).yaml"/>
+  <arg name="move_base_map_file"  default="$(find raspicat_navigation)/config/maps/for_move_base/map_$(arg map_name).yaml"/>
   <arg name="waypoint_yaml_file"  default="$(find raspicat_navigation)/config/waypoint/waypoint.yaml"/>
   <arg name="mcl"                 default="amcl" doc="model type [amcl, emcl2, mcl_ros]"/>
 
