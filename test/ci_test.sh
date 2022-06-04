@@ -17,7 +17,7 @@ export DISPLAY=:44
 # Navigation launch 
 roslaunch raspicat_navigation ci_test.launch \
   mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml \
-  map_name:=tsudanuma_2_19
+  map_name:=tsudanuma_2_19 &
 sleep 60
 
 # Record
