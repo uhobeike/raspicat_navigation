@@ -16,7 +16,8 @@ on:
 env:
   DOCKER-IMAGE: ubeike/raspicat-navigation-ros-melodic-ci
   DOCKER-CONTEXT: ./
-  DOCKER-FILE: ./.github/Dockerfile.ci
+  DOCKER-FILE-ENVIRONMENT: ./.github/Dockerfile.ci
+  DOCKER-FILE-BUILD: ./.github/Dockerfile.ci
 
 jobs:
   Build:
@@ -52,17 +53,26 @@ jobs:
           sed -i -e "s;false;true;" ./.github/Dockerfile.ci
           sed -i -e "s;pull/ID/head;"$(echo "${GITHUB_REF#refs/heads/}" | sed -e "s;refs/;;")";" ./.github/Dockerfile.ci
       
+      - name: Create environment docker image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ env.DOCKER-CONTEXT }}
+          file: ${{ env.DOCKER-FILE-ENVIRONMENT }}
+          builder: ${{ steps.buildx.outputs.name }}
+          tags: ${{ env.DOCKER-IMAGE }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+      
       - name: Build and push docker image
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: ${{ env.DOCKER-CONTEXT }}
-          file: ${{ env.DOCKER-FILE }}
+          file: ${{ env.DOCKER-FILE-BUILD }}
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: ${{ env.DOCKER-IMAGE }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
 
   Test:
     runs-on: ubuntu-18.04
