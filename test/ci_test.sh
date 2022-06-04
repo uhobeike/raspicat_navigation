@@ -5,17 +5,14 @@ top -n 1 -b | head -n 20
 while true; do sleep 10 | top -n 1 -b | head -n 20; done &
 
 # Gazebo launch
-roslaunch raspicat_navigation raspicat_tsudanuma_2_19_world.launch \
+xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch raspicat_navigation raspicat_tsudanuma_2_19_world.launch \
   x_gazebo:=0.155971128532 y_gazebo:=-0.0254326737864 yaw_gazebo:=0 open_gazebo_gui:=false &
 sleep 20
 
 # Rviz & Navigation launch
-xvfb-run --auto-servernum -s '-screen 0 1400x900x24' roslaunch raspicat_navigation ci_test.launch \
-  mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml &
+roslaunch raspicat_navigation ci_test.launch \
+  mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml open_rviz:=false &
 sleep 60
-
-# Check robot motion planning
-while true; do sleep 1 | rostopic echo -n 1 /move_base/feedback | grep -A 10 pose; done &
 
 # Execute start operation
 rostopic pub -1 /way_nav_start std_msgs/Empty
