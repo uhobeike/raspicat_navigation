@@ -18,7 +18,7 @@ export DISPLAY=:44
 roslaunch raspicat_navigation ci_test.launch \
   mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml \
   map_name:=tsudanuma_2_19 &
-sleep 60
+sleep 50
 
 # Record
 ffmpeg -nostdin -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 1 /tmp/report/video.mp4 &
@@ -36,7 +36,6 @@ timeout 300 rostopic echo -n 1 /waypoint_goal_function
 # Printf result
 if [ $? -eq 0 ];then 
   killall rosmaster ffmpeg
-  sleep 60
   ls -gh /tmp/report
   printf '\033[42m%s\033[m\n' 'Docker Test SUCCEED'
   exit 0
