@@ -11,7 +11,7 @@ roslaunch raspicat_navigation raspicat_tsudanuma_2_19_world.launch \
 sleep 20
 
 # Rviz 
-xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x1080x24" rosrun rviz rviz -d $(rospack find raspicat_navigation)/config/rviz/raspicat_navigation.rviz --fullscreen &
+xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x1080x32" rosrun rviz rviz -d $(rospack find raspicat_navigation)/config/rviz/raspicat_navigation.rviz &
 export DISPLAY=:44
 
 # Navigation launch 
