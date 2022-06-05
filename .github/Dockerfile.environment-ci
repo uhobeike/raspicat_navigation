@@ -13,6 +13,3 @@ RUN apt update && apt upgrade -y && \
   # Install ros related
   python-catkin-tools && \
   pip3 install rospkg catkin_pkg
-
-RUN  apt install -y \
-  ffmpeg \
