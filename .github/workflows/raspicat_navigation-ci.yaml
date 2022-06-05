@@ -41,7 +41,7 @@ jobs:
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
-          path: /tmp/.build-cache
+          path: /tmp/.buildx-cache
           key: ${{ github.ref }}-${{ github.sha }}
           restore-keys: |
             ${{ github.ref }}-${{ github.sha }}
@@ -55,8 +55,8 @@ jobs:
           file: ${{ env.DOCKER-FILE-ENVIRONMENT }}
           builder: ${{ steps.buildx.outputs.name }}
           tags: ${{ env.DOCKER-IMAGE-ENVIRONMENT }}
-          cache-from: type=local,src=/tmp/.build-cache
-          cache-to: type=local,dest=/tmp/.build-cache
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
       
       - name: Sed clone url
         if: ${{ github.event_name == 'pull_request' }}
