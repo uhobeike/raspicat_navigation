@@ -21,7 +21,7 @@ roslaunch raspicat_navigation ci_test.launch \
 sleep 60
 
 # Record
-ffmpeg -nostdin -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 30 /tmp/report/video.mp4 &
+ffmpeg -nostdin -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 1 /tmp/report/video.mp4 &
 sleep 10
 
 # Execute start operation
