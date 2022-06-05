@@ -11,7 +11,7 @@ roslaunch raspicat_navigation raspicat_tsudanuma_2_19_world.launch \
 sleep 20
 
 # Rviz 
-xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x1080x24" rosrun rviz rviz -d $(rospack find raspicat_navigation)/config/rviz/raspicat_navigation.rviz --fullscreen &
+xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x1080x16" rosrun rviz rviz -d $(rospack find raspicat_navigation)/config/rviz/raspicat_navigation.rviz --fullscreen &
 export DISPLAY=:44
 
 # Navigation launch 
@@ -35,7 +35,7 @@ timeout 300 rostopic echo -n 1 /waypoint_goal_function
 # Printf result
 if [ $? -eq 0 ];then 
   killall rosmaster ffmpeg
-  sleep 30
+  sleep 20
   ls -gh /tmp/report
   printf '\033[42m%s\033[m\n' 'Docker Test SUCCEED'
   exit 0
