@@ -1,6 +1,5 @@
 #!/bin/bash -xve
 
-sudo apt install -y ffmpeg
 # Check ros node process
 top -n 1 -b | head -n 20
 while true; do sleep 10 | top -n 1 -b | head -n 20; done &
@@ -36,7 +35,7 @@ timeout 300 rostopic echo -n 1 /waypoint_goal_function
 # Printf result
 if [ $? -eq 0 ];then 
   killall rosmaster ffmpeg
-  ls -gh /tmp/report
+  sleep 5
   printf '\033[42m%s\033[m\n' 'Docker Test SUCCEED'
   exit 0
 else

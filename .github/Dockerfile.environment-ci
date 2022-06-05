@@ -8,9 +8,11 @@ ENV ROS_MASTER_URI=http://localhost:11311 \
 RUN apt update && apt upgrade -y && \ 
   apt install -y \
   xvfb \
-  ffmpeg \
   psmisc \
   python3-pip \
   # Install ros related
   python-catkin-tools && \
   pip3 install rospkg catkin_pkg
+
+RUN  apt install -y \
+  ffmpeg \
