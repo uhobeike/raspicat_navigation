@@ -21,7 +21,7 @@ roslaunch raspicat_navigation ci_test.launch \
 sleep 60
 
 # Record
-ffmpeg -nostdin -f xcbgrab -video_size 1300x1000 -i :44 -codec:v libx264 -r 10 /tmp/report/video.mp4 &
+ffmpeg -nostdin -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 10 /tmp/report/video.mp4 &
 
 # Execute start operation
 rostopic pub -1 /way_nav_start std_msgs/Empty
