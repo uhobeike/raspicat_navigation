@@ -11,7 +11,7 @@ roslaunch raspicat_navigation raspicat_tsudanuma_2_19_world.launch \
 sleep 20
 
 # Rviz 
-xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x1080x24" rosrun rviz rviz -d $(rospack find raspicat_navigation)/config/rviz/raspicat_navigation.rviz --fullscreen &
+xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x1080x16" rosrun rviz rviz -d $(rospack find raspicat_navigation)/config/rviz/raspicat_navigation.rviz --fullscreen &
 export DISPLAY=:44
 
 # Navigation launch 
@@ -21,7 +21,7 @@ roslaunch raspicat_navigation ci_test.launch \
 sleep 60
 
 # Record
-ffmpeg  -max_muxing_queue_size 1024 -nostdin -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 10 /tmp/report/video.webm &
+ffmpeg  -max_muxing_queue_size 1024 -nostdin -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 10 /tmp/report/video.mp4 &
 
 # Execute start operation
 rostopic pub -1 /way_nav_start std_msgs/Empty
