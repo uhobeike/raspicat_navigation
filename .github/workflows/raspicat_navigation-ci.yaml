@@ -19,6 +19,7 @@ env:
   DOCKER-CONTEXT: ./
   DOCKER-FILE-ENVIRONMENT: ./.github/Dockerfile.environment-ci
   DOCKER-FILE-BUILD: ./.github/Dockerfile.build-ci
+  cache-version: v0.0.1
 
 jobs:
   Build:
@@ -42,7 +43,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ github.ref }}-${{ github.sha }}
+          key: ${{env.cache-version}}
           restore-keys: |
             ${{ github.ref }}-${{ github.sha }}
             ${{ github.ref }}

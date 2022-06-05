@@ -2,9 +2,6 @@ FROM osrf/ros:melodic-desktop-full
 
 SHELL ["/bin/bash", "-c"]
 
-env:
-  cache-version: v0.0.1
-
 ENV ROS_MASTER_URI=http://localhost:11311 \
   ROS_HOSTNAME=localhost
 
