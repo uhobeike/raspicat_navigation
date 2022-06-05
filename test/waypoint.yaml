@@ -7,7 +7,7 @@ waypoints:
       z: -0.0638248225954985
     properties:
       - function: variable_speed
-        vel_trans: 0.3
+        vel_trans: 0.8
   - id: 2
     position:
       x: 19.975597
@@ -37,13 +37,16 @@ waypoints:
     properties:
       - function: stop
       - function: variable_speed
-        vel_trans: 1.3
+        vel_trans: 0.9
   - id: 5
     position:
       x: -14.292275
       y: 0.630507
     euler_angle:
       z: -0.05675763783324143
+    properties:
+      - function: variable_speed
+        vel_trans: 0.8
   - id: 6
     position:
       x: 0.051527
@@ -51,5 +54,7 @@ waypoints:
     euler_angle:
       z: -0.07325240125722614
     properties:
+      - function: variable_speed
+        vel_trans: 0.8
       - function: goal
       - function: loop
