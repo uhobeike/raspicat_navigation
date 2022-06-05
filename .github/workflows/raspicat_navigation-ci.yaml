@@ -55,6 +55,7 @@ jobs:
           file: ${{ env.DOCKER-FILE-ENVIRONMENT }}
           builder: ${{ steps.buildx.outputs.name }}
           tags: ${{ env.DOCKER-IMAGE-ENVIRONMENT }}
+          cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
       
       - name: Sed clone url
