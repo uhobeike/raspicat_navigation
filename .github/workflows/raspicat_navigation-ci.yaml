@@ -19,6 +19,7 @@ env:
   DOCKER-CONTEXT: ./
   DOCKER-FILE-ENVIRONMENT: ./.github/Dockerfile.environment-ci
   DOCKER-FILE-BUILD: ./.github/Dockerfile.build-ci
+  cache-version: v0.0.1
 
 jobs:
   Build:
@@ -42,7 +43,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ github.ref }}-${{ github.sha }}
+          key: ${{env.cache-version}}
           restore-keys: |
             ${{ github.ref }}-${{ github.sha }}
             ${{ github.ref }}
@@ -55,6 +56,7 @@ jobs:
           file: ${{ env.DOCKER-FILE-ENVIRONMENT }}
           builder: ${{ steps.buildx.outputs.name }}
           tags: ${{ env.DOCKER-IMAGE-ENVIRONMENT }}
+          push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
       
@@ -80,4 +82,10 @@ jobs:
     steps:
       - name: Test
         run: |
-          docker run --init ubeike/raspicat-navigation-ros-melodic-ci /bin/bash -c "source /home/.bashrc && ./test/ci_test.sh"
+          mkdir -p /tmp/report
+          docker run --init -v /tmp/report:/tmp/report ubeike/raspicat-navigation-ros-melodic-ci /bin/bash -c "source /home/.bashrc && ./test/ci_test.sh"
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test report
+          path: /tmp/report

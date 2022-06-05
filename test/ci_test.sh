@@ -9,11 +9,19 @@ roslaunch raspicat_navigation raspicat_tsudanuma_2_19_world.launch \
   x_gazebo:=0.155971128532 y_gazebo:=-0.0254326737864 yaw_gazebo:=0 open_gui:=false &
 sleep 20
 
-# Rviz & Navigation launch
-xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch raspicat_navigation ci_test.launch \
+# Rviz 
+xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x1080x24" rosrun rviz rviz -d $(rospack find raspicat_navigation)/config/rviz/raspicat_navigation.rviz --fullscreen &
+export DISPLAY=:44
+
+# Navigation launch 
+roslaunch raspicat_navigation ci_test.launch \
   mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml \
-  map_name:=tsudanuma_2_19 open_rviz:=true &
-sleep 60
+  map_name:=tsudanuma_2_19 &
+sleep 50
+
+# Record
+ffmpeg -nostdin -draw_mouse 0 -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 1 /tmp/report/video.mp4 &
+sleep 10
 
 # Execute start operation
 rostopic pub -1 /way_nav_start std_msgs/Empty
@@ -26,7 +34,8 @@ timeout 300 rostopic echo -n 1 /waypoint_goal_function
 
 # Printf result
 if [ $? -eq 0 ];then 
-  killall rosmaster
+  killall rosmaster ffmpeg
+  sleep 5
   printf '\033[42m%s\033[m\n' 'Docker Test SUCCEED'
   exit 0
 else

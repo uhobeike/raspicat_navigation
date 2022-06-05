@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Arguments -->
-  <arg name="open_rviz"           default="true"/>
-
   <arg name="move_forward_only"   default="false"/>
   <arg name="waypoint_navigation" default="true"/>
 
@@ -53,9 +51,4 @@
   <node if="$(arg waypoint_navigation)" pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
     <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
   </node>
-  
-  <!-- Rviz -->
-  <node if="$(arg open_rviz)" pkg="rviz" type="rviz" name="rviz" required="true"
-    args="-d $(find raspicat_navigation)/config/rviz/raspicat_navigation.rviz">
-  </node>      
 </launch>
