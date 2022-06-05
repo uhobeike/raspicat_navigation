@@ -21,7 +21,7 @@ roslaunch raspicat_navigation ci_test.launch \
 sleep 60
 
 # Record
-ffmpeg -nostdin -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 10 /tmp/report/video.mp4 &
+ffmpeg -nostdin -f x11grab -video_size 1300x1000 -i :44 -codec:v libx264 -r 30 /tmp/report/video.mp4 &
 sleep 10
 
 # Execute start operation
@@ -36,7 +36,7 @@ timeout 300 rostopic echo -n 1 /waypoint_goal_function
 # Printf result
 if [ $? -eq 0 ];then 
   killall rosmaster ffmpeg
-  sleep 20
+  sleep 60
   ls -gh /tmp/report
   printf '\033[42m%s\033[m\n' 'Docker Test SUCCEED'
   exit 0
