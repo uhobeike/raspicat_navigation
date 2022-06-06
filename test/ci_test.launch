@@ -20,7 +20,6 @@
       <arg name="initial_pose_x"  value="$(arg x_mcl)"/>
       <arg name="initial_pose_y"  value="$(arg y_mcl)"/>
       <arg name="initial_pose_a"  value="$(arg a_mcl)"/>
-      <arg name="base_frame_id"   value="base_footprint"/>
     </include>
   </group>
 
@@ -35,9 +34,7 @@
   <!-- Move_base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
-    <arg name="raspicat_sim" value="true"/>
     <arg name="waypoint_nav" default="$(arg waypoint_navigation)"/>
-    <arg name="robot_base_frame" value="base_footprint"/>
   </include>
 
   <!-- Raspicat speak -->
