@@ -1,3 +1,6 @@
+odom_frame_id: odom
+base_frame_id: base_footprint
+
 min_particles: 500
 max_particles: 3000
 kld_err: 0.02

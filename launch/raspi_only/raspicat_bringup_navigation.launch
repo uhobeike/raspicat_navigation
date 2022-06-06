@@ -14,7 +14,7 @@
   <arg name="mcl_map_file"          default="$(find raspicat_navigation)/config/maps/tsudanuma/map_tsudanuma.yaml"/>
   <arg if="$(arg waypoint_navigation)"      name="move_base_map_file"    default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>
   <arg unless="$(arg waypoint_navigation)"  name="move_base_map_file"    default="$(arg mcl_map_file)"/>
-  <arg name="model"                 default="$(find raspicat_navigation)/config/urdf/raspicat.urdf.xacro"/>
+  <arg name="model"                 default="$(find raspicat_description)/urdf/raspicat.urdf.xacro"/>
   <arg name="waypoint_yaml_file"    default="$(find raspicat_navigation)/config/waypoint/waypoint.yaml"/>
 
   <arg name="mcl"                   default="amcl" doc="model type [amcl, emcl2, mcl_ros]"/>
@@ -60,7 +60,7 @@
     <arg name="initial_pose_a" value="$(arg mcl_init_pose_a)"/>
   </include>
 
-  <!-- Move_base -->
+  <!-- Move base -->
   <include file="$(find raspicat_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
     <arg name="waypoint_nav"      value="$(arg waypoint_navigation)"/>

@@ -10,8 +10,6 @@
   <arg name="initial_cov_yy" default="0.001"/>
   <arg name="initial_cov_aa" default="0.001"/>
 
-  <arg name="base_frame_id" default="base_link"/>
-
   <!-- Amcl -->
   <node pkg="amcl" type="amcl" name="amcl" clear_params="true" respawn="true" output="screen">
     <rosparam command="load" file="$(find raspicat_navigation)/config/param/amcl.yaml" />
@@ -21,11 +19,7 @@
     <param name="initial_cov_xx"            value="$(arg initial_cov_xx)"/>
     <param name="initial_cov_yy"            value="$(arg initial_cov_yy)"/>
     <param name="initial_cov_aa"            value="$(arg initial_cov_aa)"/>
-    <param name="gui_publish_rate"          value="50.0"/>
 
     <remap from="scan"                      to="$(arg scan_topic)"/>
-    
-    <param name="odom_frame_id"             value="odom"/>
-    <param name="base_frame_id"             value="$(arg base_frame_id)"/>
   </node>
 </launch>

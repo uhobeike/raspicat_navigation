@@ -4,9 +4,7 @@
   <arg name="model"             default="raspicat"/>
   <arg name="cmd_vel_topic"     default="/cmd_vel"/>
   <arg name="odom_topic"        default="/odom"/>
-  <arg name="robot_base_frame"  default="base_link"/>
 
-  <arg name="raspicat_sim"      default="false"/>
   <arg name="waypoint_nav"      default="false"/>
   <arg name="move_forward_only" default="false"/>
 
@@ -23,8 +21,6 @@
     <remap from="odom"    to="$(arg odom_topic)"/>
     <param if="$(arg move_forward_only)" name="DWAPlannerROS/min_vel_x" value="0.0"/>
     
-    <param if="$(arg raspicat_sim)" name="global_costmap/robot_base_frame"           value="$(arg robot_base_frame)"/>
-    <param if="$(arg raspicat_sim)" name="local_costmap/robot_base_frame"            value="$(arg robot_base_frame)"/>
     <param if="$(arg waypoint_nav)" name="global_costmap/static_layer/map_topic"     value="/move_base_map"/>
     <param if="$(arg waypoint_nav)" name="local_costmap/static_layer/map_topic"      value="/move_base_map"/>
     <param if="$(arg waypoint_nav)" name="global_costmap/obstacles_layer/scan/topic" value="/filter_scan"/>

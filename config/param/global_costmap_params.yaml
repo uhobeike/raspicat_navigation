@@ -1,5 +1,5 @@
 global_frame: map
-robot_base_frame: base_link
+robot_base_frame: base_footprint
 
 footprint: [[-0.37, -0.25], [-0.37, 0.25], [0.2, 0.25], [0.2, -0.25]]
 inflation_radius: 5.0

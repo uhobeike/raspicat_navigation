@@ -2,12 +2,11 @@
 <launch>
   <!-- Arguments -->
   <arg name="model"         default="$(find raspicat_description)/urdf/raspicat.urdf.xacro"/>
-  <arg name="gui"           default="false"/>
   <arg name="x_init_pos"    default="0.0"/>
   <arg name="y_init_pos"    default="0.0"/>
   <arg name="z_init_pos"    default="0.0"/>
   <arg name="yaw_init_pos"  default="0.0"/>
-  <arg name="gui"           default="false"/>
+  <arg name="open_gui"      default="true"/>
   
   <!-- Prameters -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
@@ -17,7 +16,7 @@
     <arg name="world_name"    value="$(find raspicat_navigation)config/map2gazebo/world/tsudanuma.world"/>
     <arg name="paused"        value="false"/>
     <arg name="use_sim_time"  value="true"/>
-    <arg name="gui"           value="$(arg gui)"/>
+    <arg name="gui"           value="$(arg open_gui)"/>
     <arg name="headless"      value="false"/>
     <arg name="debug"         value="false"/>
   </include>
