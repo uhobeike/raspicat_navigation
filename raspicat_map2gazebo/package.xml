@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>raspicat_map2gazebo</name>
+  <version>0.0.1</version>
+  <description>The raspicat_map2gazebo package</description>
+
+  <maintainer email="beike315@icloud.com">ikebe</maintainer>
+
+  <license>Apache-2.0 License</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>raspicat_gazebo</exec_depend>
+  <exec_depend>raspicat_description</exec_depend>
+
+  <export>
+    <gazebo_ros gazebo_media_path="${prefix}/config/map2gazebo/world"/>
+    <gazebo_ros gazebo_model_path="${prefix}/config/map2gazebo/models"/>
+  </export>
+</package>

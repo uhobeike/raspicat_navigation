@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<sdf version='1.6'>
+  <world name='default'>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://tsukuba</uri>
+    </include>
+
+    <model name='map_satellite_36.0835594_140.07664_400_400'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <pose frame=''>0 0 -0.5 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>617.733 617.733 1</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual0_0'>
+          <pose frame=''>-154.433 154.433 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>308.866 308.866 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+              <name>map_satellite_36.0835594_140.07664_400_400/0_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_1'>
+          <pose frame=''>154.433 154.433 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>308.866 308.866 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+              <name>map_satellite_36.0835594_140.07664_400_400/0_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_0'>
+          <pose frame=''>-154.433 -154.433 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>308.866 308.866 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+              <name>map_satellite_36.0835594_140.07664_400_400/1_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_1'>
+          <pose frame=''>154.433 -154.433 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>308.866 308.866 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/scripts</uri>
+              <uri>model://map_satellite_36.0835594_140.07664_400_400/materials/textures</uri>
+              <name>map_satellite_36.0835594_140.07664_400_400/1_1</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame=''>-69.3615 9.6139 0 0 -0 0.601607</pose>
+    </model>
+
+    <physics type="ode">
+      <real_time_update_rate>1000.0</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>150</iters>
+          <precon_iters>0</precon_iters>
+          <sor>1.400000</sor>
+          <use_dynamic_moi_rescaling>1</use_dynamic_moi_rescaling>
+        </solver>
+      </ode>
+    </physics>
+
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose frame=''>52.0481 0.836069 43.0774 0 0.483643 -2.65499</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+  </world>
+</sdf>
