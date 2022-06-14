@@ -3,7 +3,7 @@
   <!-- Arguments -->
   <arg name="model"         default="$(find raspicat_description)/urdf/raspicat.urdf.xacro"/>
   <arg name="x_init_pos"    default="0.0"/>
-  <arg name="y_init_pos"    default="-2.0"/>
+  <arg name="y_init_pos"    default="0.0"/>
   <arg name="z_init_pos"    default="0.0"/>
   <arg name="yaw_init_pos"  default="0.0"/>
   <arg name="open_gui"      default="true"/>
@@ -13,7 +13,7 @@
   
   <!-- Nodes -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name"    value="$(find raspicat_navigation)config/map2gazebo/world/tsukuba.world"/>
+    <arg name="world_name"    value="$(find raspicat_map2gazebo)config/world/tsukuba.world"/>
     <arg name="paused"        value="false"/>
     <arg name="use_sim_time"  value="true"/>
     <arg name="gui"           value="$(arg open_gui)"/>

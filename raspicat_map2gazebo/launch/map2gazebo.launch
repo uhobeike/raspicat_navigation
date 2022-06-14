@@ -1,38 +1,37 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Arguments -->
-  <arg name="map2gazebo_params_file"     default="$(find raspicat_navigation)/config/map2gazebo/defaults.yaml"/>
-  <arg name="map_file"                   default="$(find raspicat_navigation)/config/maps/tsudanuma/map_tsudanuma.yaml"/>
+  <arg name="map2gazebo_params_file"     default="$(find raspicat_map2gazebo)/config/defaults.yaml"/>
+  <arg name="map_file"                   default=""/>
 
-  <arg name="stl_export_dir"             default="$(find raspicat_navigation)/config/map2gazebo/models/tsudanuma/meshes"/>
-  <arg name="model_name"                 default="tsudanuma"/>
-  <arg name="world_name"                 default="tsudanuma"/>
-  <arg name="author_name"                default="Tatsuhiro Ikebe"/>
-  <arg name="email"                      default="beike315@icloud.com"/>
+  <arg name="world_name"                 default="hoge"/>
+  <arg name="author_name"                default=""/>
+  <arg name="email"                      default=""/>
+  <arg name="stl_export_dir"             default="$(find raspicat_map2gazebo)/config/models/$(arg world_name)/meshes"/>
 
   <!-- Mkdir -->
-  <param name="map2gazebo_model_dir" command="mkdir -p $(find raspicat_navigation)/config/map2gazebo/models/$(arg model_name)/meshes"/>
+  <param name="map2gazebo_model_dir" command="mkdir -p $(find raspicat_map2gazebo)/config/models/$(arg world_name)/meshes"/>
 
   <!-- Copy file -->
   <param name="map2gazebo_copy_config_sdf" 
     command="cp $(find map2gazebo)/models/map/model.config
                 $(find map2gazebo)/models/map/model.sdf
-                $(find raspicat_navigation)/config/map2gazebo/models/$(arg model_name)/"/>
+                $(find raspicat_map2gazebo)/config/models/$(arg world_name)/"/>
   
   <param name="map2gazebo_copy_world" 
     command="cp $(find map2gazebo)/worlds/map.sdf
-                $(find raspicat_navigation)/config/map2gazebo/world/$(arg world_name).world"/>
+                $(find raspicat_map2gazebo)/config/world/$(arg world_name).world"/>
 
   <!-- Code replace -->
   <param name="map2gazebo_code_replace_sdf"
-    command="sed -i -e 's/map/tsudanuma/g' $(find raspicat_navigation)/config/map2gazebo/models/$(arg model_name)/model.sdf"/>
+    command="sed -i -e 's/map/$(arg world_name)/g' $(find raspicat_map2gazebo)/config/models/$(arg world_name)/model.sdf"/>
   
   <param name="map2gazebo_code_replace_config"
     command="sed -i -e 's/map/$(arg world_name)/g' -e 's/Shiloh Curtis/$(arg author_name)/g' -e 's/shilohc@mit.edu/$(arg email)/g'
-                  $(find raspicat_navigation)/config/map2gazebo/models/$(arg model_name)/model.config"/>
+                  $(find raspicat_map2gazebo)/config/models/$(arg world_name)/model.config"/>
 
   <param name="map2gazebo_code_replace_world"
-    command="sed -i -e 's/map/tsudanuma/g' $(find raspicat_navigation)/config/map2gazebo//world/$(arg world_name).world"/>
+    command="sed -i -e 's/map/$(arg world_name)/g' $(find raspicat_map2gazebo)/config/world/$(arg world_name).world"/>
 
   <!-- Map_server -->
   <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg map_file)"/>
@@ -44,6 +43,10 @@
   </node>
 
   <!-- Rename file -->
-  <node pkg="raspicat_navigation" name="map2gazebo_rename_stl_file" type="map2gazebo_rename_stl_file.sh"
-    args="$(arg stl_export_dir) $(arg model_name)" output="screen"/>
+  <node pkg="raspicat_map2gazebo" name="map2gazebo_rename_stl_file" type="map2gazebo_rename_stl_file.sh"
+    args="$(arg stl_export_dir) $(arg world_name)" output="screen"/>
+  
+  <!-- Create World launch file -->
+  <node pkg="raspicat_map2gazebo" name="map2gazebo_create_world_launch" type="map2gazebo_create_world_launch.sh"
+    args="$(arg world_name)" output="screen"/>
 </launch>

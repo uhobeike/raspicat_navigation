@@ -13,7 +13,7 @@
   
   <!-- Nodes -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name"    value="$(find raspicat_navigation)config/map2gazebo/world/tsudanuma_2_19.world"/>
+    <arg name="world_name"    value="$(find raspicat_map2gazebo)config/world/tsudanuma_2_19.world"/>
     <arg name="paused"        value="false"/>
     <arg name="use_sim_time"  value="true"/>
     <arg name="gui"           value="$(arg open_gui)"/>

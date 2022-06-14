@@ -1,4 +1,7 @@
-<?xml version="1.0"?>
+#!/bin/bash -e
+
+echo -n \
+'<?xml version="1.0"?>
 <launch>
   <!-- Arguments -->
   <arg name="model"         default="$(find raspicat_description)/urdf/raspicat.urdf.xacro"/>
@@ -13,7 +16,7 @@
   
   <!-- Nodes -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name"    value="$(find raspicat_map2gazebo)config/world/tsudanuma.world"/>
+    <arg name="world_name"    value="$(find raspicat_map2gazebo)config/world/Free_Name.world"/>
     <arg name="paused"        value="false"/>
     <arg name="use_sim_time"  value="true"/>
     <arg name="gui"           value="$(arg open_gui)"/>
@@ -26,4 +29,6 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
   <include file="$(find raspicat_gazebo)/launch/raspicat_simulation.launch"/>
-</launch>
+</launch>' | sed -e 's/Free_Name/'$1'/g' > $(rospack find raspicat_map2gazebo)/launch/raspicat_$1_world.launch
+
+sleep 'infinity'
