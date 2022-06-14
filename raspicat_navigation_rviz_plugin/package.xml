@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>raspicat_navigation_rviz_plugin</name>
+  <version>0.0.0</version>
+  <description>
+    This is a navigation system developed for Raspberry Pi Cat. 
+  </description>
+  <license>Apache 2.0</license>
+  <author>ikebe</author>
+  <maintainer email="tatuhirobeike@gmail.com">ikebe</maintainer>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <depend>std_msgs</depend>
+  <depend>rviz</depend>
+
+  <build_export_depend>pluginlib</build_export_depend>
+  <export>
+    <rviz plugin="${prefix}/plugin.xml"/>
+    <gazebo_ros gazebo_media_path="${prefix}/config/map2gazebo/world"/>
+    <gazebo_ros gazebo_model_path="${prefix}/config/map2gazebo/models"/>
+  </export>
+</package>

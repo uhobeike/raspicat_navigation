@@ -1,0 +1,8 @@
+uint16 waypoint_current_id
+
+Property functions
+Flag flags
+
+float32 waypoint_current_distance
+geometry_msgs/Pose robot_pose
+float32 waypoint_radius_threshold
