@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>raspicat_waypoint_navigation</name>
+  <version>0.0.0</version>
+  <description>
+    This is a navigation system developed for Raspberry Pi Cat. 
+  </description>
+  <license>Apache 2.0</license>
+  <author>ikebe</author>
+  <maintainer email="tatuhirobeike@gmail.com">ikebe</maintainer>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>amcl</exec_depend>
+  <exec_depend>map_server</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <exec_depend>global_planner</exec_depend>
+  <exec_depend>dwa_local_planner</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>raspicat_gazebo</exec_depend>
+  <exec_depend>raspicat_description</exec_depend>
+
+  <depend>std_msgs</depend>
+  <depend>raspicat_navigation_msgs</depend>
+
+  <build_export_depend>pluginlib</build_export_depend>
+  <export>
+    <raspicat_navigation plugin="${prefix}/plugin.xml"/>
+  </export>
+</package>

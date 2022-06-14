@@ -1,0 +1,30 @@
+topics:
+  - topic: "/waypoint"
+    sentence: "ナビゲーションが立ち上がりました　にあん"
+    priority: 1
+  - topic: "/way_nav_start"
+    sentence: "ナビゲーションをスタートします　にあん"
+    priority: 1
+  - topic: "/waypoint_passed"
+    sentence: "ウェイポイントを通過しました　にあん"
+    priority: 1
+  - topic: "/waypoint_goal_function"
+    sentence: "ゴールしました　ナビゲーションを終了します　にあん"
+    priority: 1
+  - topic: "/waypoint_loop_function"
+    sentence: "ループモードが実行されました　にあん"
+    priority: 1
+  - topic: "/waypoint_stop_function"
+    sentence: "停止モードに移行しました　リスタートオペレーション　お願いします"
+  - topic: "/waypoint_attention_speak_function"
+    sentence: "ピコン　ピコン　ロボットが通ります　ご注意ください"
+    priority: 1
+  - topic: "/waypoint_slope_function"
+    sentence: "坂道モードに切り替わりました　にあん"
+    priority: 1
+  - topic: "/rosbag_record_start"
+    sentence: "ろすばぐの記録を開始します　にあん"
+    priority: 1
+  - topic: "/rosbag_record_finish"
+    sentence: "ろすばぐの記録をしました　にあん"
+    priority: 1

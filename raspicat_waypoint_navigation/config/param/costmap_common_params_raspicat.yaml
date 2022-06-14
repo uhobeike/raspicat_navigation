@@ -1,0 +1,80 @@
+shutdown_costmaps: false
+
+obstacles_layer:
+  enabled: true
+  combination_method: 1
+  footprint_clearing_enabled: true
+  track_unknown_space: false
+  obstacle_range: 3
+  raytrace_range: 3.5
+
+  observation_sources: scan left_side_usensor left_front_usensor right_front_usensor right_side_usensor
+  scan:
+    data_type: LaserScan
+    sensor_frame: lidar_link
+    topic: /scan
+    marking: true
+    clearing: true
+    inf_is_valid: false
+    observation_persistence: 0.0
+    expected_update_rate: 0.0
+    max_obstacle_height: 2.0
+    min_obstacle_height: 0.0
+  left_side_usensor:
+    data_type: LaserScan
+    sensor_frame: left_side_usensor_link
+    topic: /ls_scan
+    marking: true
+    clearing: true
+    inf_is_valid: false
+    observation_persistence: 1.0
+    expected_update_rate: 0.0
+    max_obstacle_height: 2.0
+    min_obstacle_height: 0.0
+  left_front_usensor:
+    data_type: LaserScan
+    sensor_frame: left_front_usensor_link
+    topic: /lf_scan
+    marking: true
+    clearing: true
+    inf_is_valid: false
+    observation_persistence: 1.0
+    expected_update_rate: 0.0
+    max_obstacle_height: 2.0
+    min_obstacle_height: 0.0
+  right_front_usensor:
+    data_type: LaserScan
+    sensor_frame: right_front_usensor_link
+    topic: /rf_scan
+    marking: true
+    clearing: true
+    inf_is_valid: false
+    observation_persistence: 1.0
+    expected_update_rate: 0.0
+    max_obstacle_height: 2.0
+    min_obstacle_height: 0.0
+  right_side_usensor:
+    data_type: LaserScan
+    sensor_frame: right_side_usensor_link
+    topic: /rs_scan
+    marking: true
+    clearing: true
+    inf_is_valid: false
+    observation_persistence: 1.0
+    expected_update_rate: 0.0
+    max_obstacle_height: 2.0
+    min_obstacle_height: 0.0
+
+static_layer:
+  enabled: true
+  map_topic: /map
+  first_map_only: false
+  lethal_cost_threshold: 100
+  subscribe_to_updates: false
+  track_unknown_space: false
+  trinary_costmap: false
+  unknown_cost_value: -1
+  use_maximum: false
+
+inflation_layer:
+  enabled: true
