@@ -40,9 +40,11 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
       tf_(tf),
       ac_move_base_("move_base", true),
       dynamic_reconfigure_client_("/move_base/DWAPlannerROS"),
-      waypoint_server_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointServer"),
-      waypoint_rviz_loader_("raspicat_navigation", "raspicat_navigation::BaseWaypointRviz"),
-      waypoint_nav_helper_loader_("raspicat_navigation",
+      waypoint_server_loader_("raspicat_waypoint_navigation",
+                              "raspicat_navigation::BaseWaypointServer"),
+      waypoint_rviz_loader_("raspicat_waypoint_navigation",
+                            "raspicat_navigation::BaseWaypointRviz"),
+      waypoint_nav_helper_loader_("raspicat_waypoint_navigation",
                                   "raspicat_navigation::WaypointNavHelperPlugin"),
       waypoint_radius_(3.0)
 {
@@ -133,7 +135,8 @@ void WaypointNav::initClassLoader()
 {
   try
   {
-    way_srv_ = waypoint_server_loader_.createInstance("raspicat_navigation/WaypointServer");
+    way_srv_ =
+        waypoint_server_loader_.createInstance("raspicat_waypoint_navigation/WaypointServer");
     way_srv_->initialize(waypoint_server_);
     way_srv_->run();
     // way_srv_->checkWaypointYmal(pnh_);
@@ -146,7 +149,7 @@ void WaypointNav::initClassLoader()
 
   try
   {
-    way_rviz_ = waypoint_rviz_loader_.createInstance("raspicat_navigation/WaypointRviz");
+    way_rviz_ = waypoint_rviz_loader_.createInstance("raspicat_waypoint_navigation/WaypointRviz");
     way_rviz_->initialize(waypoint_rviz_);
     way_rviz_->run();
     WaypointNavStatus_.waypoint_radius_threshold = waypoint_radius_;
@@ -161,8 +164,8 @@ void WaypointNav::initClassLoader()
 
   try
   {
-    way_helper_ =
-        waypoint_nav_helper_loader_.createInstance("raspicat_navigation/SlopeObstacleAvoidance");
+    way_helper_ = waypoint_nav_helper_loader_.createInstance(
+        "raspicat_waypoint_navigation/SlopeObstacleAvoidance");
     way_helper_->initialize(waypoint_nav_helper_);
     way_helper_->run();
   }

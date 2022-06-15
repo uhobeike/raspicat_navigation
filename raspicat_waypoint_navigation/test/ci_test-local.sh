@@ -5,7 +5,7 @@ roslaunch turtlebot3_gazebo turtlebot3_world.launch &
 sleep 10
 
 # Rviz|Navigation launch
-roslaunch raspicat_navigation ci_test.launch &
+roslaunch raspicat_waypoint_navigation ci_test.launch &
 sleep 10
 
 # 2D-PoseEstimate publish

@@ -7,8 +7,7 @@ RUN mkdir -p /home/catkin_ws/src \
   && echo "source /home/catkin_ws/devel/setup.bash" >> /home/.bashrc
 
 RUN cd /home/catkin_ws/src && \
-  git clone -b master https://github.com/uhobeike/raspicat_navigation.git && \
-  git clone -b master https://github.com/uhobeike/raspicat_navigation_msgs.git && \
+  git clone -b master https://github.com/CIT-Autonomous-Robot-Lab/raspicat_navigation.git && \
   git clone -b main https://github.com/rt-net/raspicat_sim.git && \
   git clone -b main https://github.com/rt-net/raspicat_description.git && \
   git clone -b master https://github.com/rt-net/raspimouse.git && \
@@ -18,4 +17,4 @@ RUN source /opt/ros/melodic/setup.bash && \
   cd /home/catkin_ws && rosdep install -r -y --from-paths --ignore-src . && \
   catkin build
 
-WORKDIR /home/catkin_ws/src/raspicat_navigation
+WORKDIR /home/catkin_ws/src/raspicat_navigation/raspicat_waypoint_navigation
