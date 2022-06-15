@@ -5,17 +5,17 @@ top -n 1 -b | head -n 20
 while true; do sleep 10 | top -n 1 -b | head -n 20; done &
 
 # Gazebo launch
-roslaunch raspicat_navigation raspicat_tsudanuma_2_19_world.launch \
+roslaunch raspicat_waypoint_navigation raspicat_tsudanuma_2_19_world.launch \
   x_gazebo:=0.155971128532 y_gazebo:=-0.0254326737864 yaw_gazebo:=0 open_gui:=false &
 sleep 20
 
 # RViz 
-xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x1080x24" rosrun rviz rviz -d $(rospack find raspicat_navigation)/config/rviz/raspicat_navigation.rviz --fullscreen &
+xvfb-run --listen-tcp -n 44 --auth-file /tmp/xvfb.auth -s "-ac -screen 0 1920x1080x24" rosrun rviz rviz -d $(rospack find raspicat_waypoint_navigation)/config/rviz/raspicat_waypoint_navigation.rviz --fullscreen &
 export DISPLAY=:44
 
 # Navigation launch 
-roslaunch raspicat_navigation ci_test.launch \
-  mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_navigation)/test/waypoint.yaml \
+roslaunch raspicat_waypoint_navigation ci_test.launch \
+  mcl:=amcl waypoint_yaml_file:=$(rospack find raspicat_waypoint_navigation)/test/waypoint.yaml \
   map_name:=tsudanuma_2_19 &
 sleep 50
 
