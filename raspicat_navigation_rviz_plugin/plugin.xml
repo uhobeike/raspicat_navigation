@@ -1,4 +1,4 @@
-<library path="lib/libraspicat_navigation_rviz">
+<library path="lib/libraspicat_navigation_rviz_plugin">
   <class
     name="rviz/SetWaypoint"
     type="rviz::WaypointPoseTool"

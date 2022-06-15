@@ -11,11 +11,11 @@
   <arg name="usens_conv"            default="true"/>
   <arg name="speak"                 default="true"/>
   <arg name="move_forward_only"     default="false"/>
-  <arg name="mcl_map_file"          default="$(find raspicat_navigation)/config/maps/tsudanuma/map_tsudanuma.yaml"/>
-  <arg if="$(arg waypoint_navigation)"      name="move_base_map_file"    default="$(find raspicat_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>
+  <arg name="mcl_map_file"          default="$(find raspicat_waypoint_navigation)/config/maps/tsudanuma/map_tsudanuma.yaml"/>
+  <arg if="$(arg waypoint_navigation)"      name="move_base_map_file"    default="$(find raspicat_waypoint_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>
   <arg unless="$(arg waypoint_navigation)"  name="move_base_map_file"    default="$(arg mcl_map_file)"/>
   <arg name="model"                 default="$(find raspicat_description)/urdf/raspicat.urdf.xacro"/>
-  <arg name="waypoint_yaml_file"    default="$(find raspicat_navigation)/config/waypoint/waypoint.yaml"/>
+  <arg name="waypoint_yaml_file"    default="$(find raspicat_waypoint_navigation)/config/waypoint/waypoint.yaml"/>
 
   <arg name="mcl"                   default="amcl" doc="model type [amcl, emcl2, mcl_ros]"/>
   <arg name="mcl_init_pose_x"       default="0.0"/>
@@ -36,7 +36,7 @@
   <include file="$(find raspicat)/launch/raspicat.launch"/>
 
   <!-- Motor on off -->
-  <node pkg="raspicat_navigation" name="motor_start" type="motor_start.py" required="true" output="screen"/>
+  <node pkg="raspicat_waypoint_navigation" name="motor_start" type="motor_start.py" required="true" output="screen"/>
 
   <!-- Urg node -->
   <node pkg="urg_node" name="urg_node" type="urg_node" required="true">
@@ -54,14 +54,14 @@
   </node>
   
   <!-- Amcl -->
-  <include if="$(eval mcl=='amcl')" file="$(find raspicat_navigation)/launch/amcl.launch">
+  <include if="$(eval mcl=='amcl')" file="$(find raspicat_waypoint_navigation)/launch/amcl.launch">
     <arg name="initial_pose_x" value="$(arg mcl_init_pose_x)"/>
     <arg name="initial_pose_y" value="$(arg mcl_init_pose_y)"/>
     <arg name="initial_pose_a" value="$(arg mcl_init_pose_a)"/>
   </include>
 
   <!-- Move base -->
-  <include file="$(find raspicat_navigation)/launch/move_base.launch">
+  <include file="$(find raspicat_waypoint_navigation)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
     <arg name="waypoint_nav"      value="$(arg waypoint_navigation)"/>
   </include>
@@ -75,12 +75,12 @@
   <!-- Raspicat speak -->
   <node if="$(arg speak)" pkg="raspicat_speak" type="raspicat_speak_node" name="raspicat_speak_node" 
         clear_params="true" respawn="true" output="screen">
-    <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/speak_list.yaml"/>
-    <rosparam command="load" file="$(find raspicat_navigation)/config/raspicat_speak/voice_config.yaml"/>
+    <rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/raspicat_speak/speak_list.yaml"/>
+    <rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/raspicat_speak/voice_config.yaml"/>
   </node>
 
   <!-- Waypoint Nav -->
-  <node if="$(arg waypoint_navigation)" pkg="raspicat_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
+  <node if="$(arg waypoint_navigation)" pkg="raspicat_waypoint_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
       <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
   </node>
 </launch>

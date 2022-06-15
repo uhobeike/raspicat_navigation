@@ -254,7 +254,7 @@ void waypoint_rviz::finish_and_file_write_waypoint(vector<vector<string>>& waypo
     }
   }
   std::string yaml_path =
-      ros::package::getPath("raspicat_navigation") + "/config/waypoint/waypoint.yaml";
+      ros::package::getPath("raspicat_waypoint_navigation") + "/config/waypoint/waypoint.yaml";
   std::ofstream fout(yaml_path);
   fout << waypoints << std::endl;
   fout.close();

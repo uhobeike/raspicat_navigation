@@ -91,7 +91,7 @@ if __name__=="__main__":
           find_node('waypoint_rviz_set')
           if(flag == 0):
             args = sys.argv
-            proc = Popen(["rosrun", "raspicat_navigation", "waypoint_rviz_set", args[1]])
+            proc = Popen(["rosrun", "raspicat_waypoint_navigation", "waypoint_rviz_set", args[1]])
             rospy.loginfo("waypoint_set node RUN")
           elif(flag == 1):
             rospy.loginfo("already waypoint_rviz_set node RUN\n")

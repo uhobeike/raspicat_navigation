@@ -1,6 +1,6 @@
-<library path="lib/libraspicat_navigation">
+<library path="lib/libraspicat_waypoint_navigation">
   <class
-    name="raspicat_navigation/WaypointServer"
+    name="raspicat_waypoint_navigation/WaypointServer"
     type="raspicat_navigation::WaypointServer"
     base_class_type="raspicat_navigation::BaseWaypointServer">
     <description>
@@ -9,7 +9,7 @@
   </class>
 
   <class
-    name="raspicat_navigation/WaypointRviz"
+    name="raspicat_waypoint_navigation/WaypointRviz"
     type="raspicat_navigation::WaypointRviz"
     base_class_type="raspicat_navigation::BaseWaypointRviz">
     <description>
@@ -18,7 +18,7 @@
   </class>
 
   <class
-    name="raspicat_navigation/WaypointParamChange"
+    name="raspicat_waypoint_navigation/WaypointParamChange"
     type="raspicat_navigation::WaypointParamChange"
     base_class_type="raspicat_navigation::BaseWaypointParamChange">
     <description>
@@ -27,7 +27,7 @@
   </class>
 
   <class
-    name="raspicat_navigation/SlopeObstacleAvoidance"
+    name="raspicat_waypoint_navigation/SlopeObstacleAvoidance"
     type="raspicat_navigation::SlopeObstacleAvoidance"
     base_class_type="raspicat_navigation::WaypointNavHelperPlugin">
     <description>

@@ -28,6 +28,6 @@
 
   <build_export_depend>pluginlib</build_export_depend>
   <export>
-    <raspicat_navigation plugin="${prefix}/plugin.xml"/>
+    <raspicat_waypoint_navigation plugin="${prefix}/plugin.xml"/>
   </export>
 </package>

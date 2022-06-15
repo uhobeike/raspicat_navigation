@@ -3,11 +3,11 @@ project(raspicat_navigation_rviz_plugin)
 
 add_compile_options(-std=c++14)
 
-link_libraries(yaml-cpp)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   rviz
+  pluginlib
   roslib
 )
 
@@ -20,9 +20,8 @@ set(QT_LIBRARIES Qt5::Widgets)
 add_definitions(-DQT_NO_KEYWORDS)
 
 catkin_package(
-  INCLUDE_DIRS
-  LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp std_msgs 
+  LIBRARIES ${PROJECT_NAME} rviz
+  CATKIN_DEPENDS roscpp std_msgs
 )
 
 include_directories(
@@ -32,7 +31,7 @@ include_directories(
 
 add_library(
   ${PROJECT_NAME}
-  src/waypoint_pose_tool.cpp
+  src/rviz/waypoint_pose_tool.cpp
 )
 
 target_link_libraries(
@@ -41,10 +40,10 @@ target_link_libraries(
   ${QT_LIBRARIES}
 )
 
-install(DIRECTORY src 
+install(DIRECTORY src
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
-install(FILES plugin_rviz.xml
+install(FILES plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
