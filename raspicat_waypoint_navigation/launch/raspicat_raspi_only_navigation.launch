@@ -11,6 +11,7 @@
   <arg name="lidar_serial_port" default="/dev/ttyACM0"/>
   <arg name="lidar_ip_address"  default="192.16.0.10"/>
 
+  <arg name="navigation"            default="true"/>
   <arg name="waypoint_navigation"   default="true"/>
   <arg name="usens_conv"            default="false"/>
   <arg name="speak"                 default="true"/>
@@ -40,44 +41,46 @@
 
   <!-- Motor on off -->
   <node pkg="raspicat_waypoint_navigation" name="motor_start" type="motor_start.py" required="true" output="screen"/>
-
-  <!-- Map server -->
-  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
-
-  <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
-    <remap from="map"        to="/move_base_map"/>
-    <remap from="static_map" to="/move_base_static_map"/>
-  </node>
   
-  <!-- Amcl -->
-  <include if="$(eval mcl=='amcl')" file="$(find raspicat_waypoint_navigation)/launch/amcl.launch">
-    <arg name="initial_pose_x" value="$(arg mcl_init_pose_x)"/>
-    <arg name="initial_pose_y" value="$(arg mcl_init_pose_y)"/>
-    <arg name="initial_pose_a" value="$(arg mcl_init_pose_a)"/>
-  </include>
+  <group if="$(arg navigation)">
+	  <!-- Map server -->
+	  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
 
-  <!-- Move base --> 
-  <include file="$(find raspicat_waypoint_navigation)/launch/move_base.launch">
-    <arg name="move_forward_only" value="$(arg move_forward_only)"/>
-    <arg name="waypoint_nav"      value="$(arg waypoint_navigation)"/>
-  </include>
-  
-  <!-- Analog distance sensor to laserscan -->
-  <include if="$(arg usens_conv)" file="$(find analog_distance_sensor_to_laserscan)/launch/analog_distance_sensor_to_laserscan.launch">
-    <arg name="nodelet"                 value="true"/>
-    <arg name="usensor_max_threshold"   value="200"/>
-    <arg name="usensor_min_threshold"   value="30"/>
-  </include>
+	  <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
+	    <remap from="map"        to="/move_base_map"/>
+	    <remap from="static_map" to="/move_base_static_map"/>
+	  </node>
+	  
+	  <!-- Amcl -->
+	  <include if="$(eval mcl=='amcl')" file="$(find raspicat_waypoint_navigation)/launch/amcl.launch">
+	    <arg name="initial_pose_x" value="$(arg mcl_init_pose_x)"/>
+	    <arg name="initial_pose_y" value="$(arg mcl_init_pose_y)"/>
+	    <arg name="initial_pose_a" value="$(arg mcl_init_pose_a)"/>
+	  </include>
 
-  <!-- Raspicat speak -->
-  <node if="$(arg speak)" pkg="raspicat_speak" type="raspicat_speak_node" name="raspicat_speak_node" 
-        clear_params="true" respawn="true" output="screen">
-    <rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/raspicat_speak/speak_list.yaml"/>
-    <rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/raspicat_speak/voice_config.yaml"/>
-  </node>
+	  <!-- Move base --> 
+	  <include file="$(find raspicat_waypoint_navigation)/launch/move_base.launch">
+	    <arg name="move_forward_only" value="$(arg move_forward_only)"/>
+	    <arg name="waypoint_nav"      value="$(arg waypoint_navigation)"/>
+	  </include>
+	  
+	  <!-- Analog distance sensor to laserscan -->
+	  <include if="$(arg usens_conv)" file="$(find analog_distance_sensor_to_laserscan)/launch/analog_distance_sensor_to_laserscan.launch">
+	    <arg name="nodelet"                 value="true"/>
+	    <arg name="usensor_max_threshold"   value="200"/>
+	    <arg name="usensor_min_threshold"   value="30"/>
+	  </include>
 
-  <!-- Waypoint Nav -->
-  <node if="$(arg waypoint_navigation)" pkg="raspicat_waypoint_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
-      <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
-  </node>
+	  <!-- Waypoint Nav -->
+	  <node if="$(arg waypoint_navigation)" pkg="raspicat_waypoint_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
+	      <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
+	  </node>
+	  
+	  <!-- Raspicat speak -->
+	  <node if="$(arg speak)" pkg="raspicat_speak" type="raspicat_speak_node" name="raspicat_speak_node" 
+		clear_params="true" respawn="true" output="screen">
+	    <rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/raspicat_speak/speak_list.yaml"/>
+	    <rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/raspicat_speak/voice_config.yaml"/>
+	  </node>
+  </group>
 </launch>
