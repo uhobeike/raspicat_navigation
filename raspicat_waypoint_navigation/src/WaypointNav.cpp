@@ -21,6 +21,7 @@
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include "tf2/utils.h"
 
 #include "raspicat_waypoint_navigation/WaypointNav.hpp"
 
@@ -52,7 +53,7 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
   initActionClient();
   initPubSub();
   initClassLoader();
-  initTimerCb();
+  getRbotPoseTimer();
   initServiceClient();
 }
 
@@ -63,14 +64,53 @@ void WaypointNav::readParam()
   pnh_.getParam("/move_base/DWAPlannerROS/max_vel_trans", vel_trans_);
 }
 
-void WaypointNav::initTimerCb()
+void WaypointNav::getRbotPoseTimer()
 {
   ros::Duration duration(1.0);
   duration.sleep();
-  timer_ = nh_.createTimer(ros::Duration(0.1),
-                           [&](auto &) { way_srv_->getRobotPose(tf_, WaypointNavStatus_); });
+  get_robot_pose_timer_ = nh_.createTimer(
+      ros::Duration(0.1), [&](auto &) { way_srv_->getRobotPose(tf_, WaypointNavStatus_); });
 }
 
+void WaypointNav::initMclPose()
+{
+  ros::Duration duration(1.0);
+  duration.sleep();
+  set_initail_robot_pose_ = nh_.createTimer(ros::Duration(5.0), [&](auto &) {
+    geometry_msgs::TransformStamped tx_odom;
+    geometry_msgs::PoseWithCovarianceStamped msg;
+    // double angle_z;
+
+    // pnh_.getParam("/WaypointNav_node/initial_pose_x", msg.pose.pose.position.x);
+    // pnh_.getParam("/WaypointNav_node/initial_pose_y", msg.pose.pose.position.y);
+    // pnh_.getParam("/WaypointNav_node/initial_pose_a", angle_z);
+
+    // tf2::Quaternion q;
+    // q.setRPY(0, 0, static_cast<double>(angle_z));
+
+    // msg.pose.pose.orientation.z = q.getZ();
+    // msg.pose.pose.orientation.w = q.getW();
+    try
+    {
+      tx_odom = tf_.lookupTransform("base_footprint", msg.header.stamp, "base_footprint",
+                                    ros::Time::now(), "odom", ros::Duration(0.5));
+    }
+    catch (tf2::TransformException e)
+    {
+      tf2::convert(tf2::Transform::getIdentity(), tx_odom.transform);
+    }
+
+    // tf2::Transform tx_odom_tf2;
+    // tf2::convert(tx_odom.transform, tx_odom_tf2);
+    // tf2::Transform pose_old, pose_new;
+    // tf2::convert(msg.pose.pose, pose_old);
+    // pose_new = pose_old * tx_odom_tf2;
+
+    // ROS_INFO("Setting pose (%.6f): %.3f %.3f %.3f", ros::Time::now().toSec(),
+    //          pose_new.getOrigin().x(), pose_new.getOrigin().y(),
+    //          tf2::getYaw(pose_new.getRotation()));
+  });
+}
 void WaypointNav::initPubSub()
 {
   sub_movebase_goal_ = nh_.subscribe("/move_base/status", 1, &WaypointNav::GoalReachedCb, this);
@@ -94,11 +134,13 @@ void WaypointNav::initPubSub()
 void WaypointNav::initActionClient()
 {
   ROS_INFO("Waiting for move_base Action Server to active.");
+  initMclPose();
   while (!ac_move_base_.waitForServer(ros::Duration(100.0)))
   {
     ROS_ERROR("move_base Action Server is not active.");
     exit(0);
   }
+  set_initail_robot_pose_.stop();
   ROS_INFO("move_base Action Server is active.");
 }
 
