@@ -72,24 +72,13 @@ void WaypointNav::getRbotPoseTimer()
       ros::Duration(0.1), [&](auto &) { way_srv_->getRobotPose(tf_, WaypointNavStatus_); });
 }
 
-void WaypointNav::initMclPose()
+void WaypointNav::resolve_tf_between_map_and_robot_link()
 {
   ros::Duration duration(1.0);
   duration.sleep();
-  set_initail_robot_pose_ = nh_.createTimer(ros::Duration(5.0), [&](auto &) {
+  resolve_tf_timer_ = nh_.createTimer(ros::Duration(5.0), [&](auto &) {
     geometry_msgs::TransformStamped tx_odom;
     geometry_msgs::PoseWithCovarianceStamped msg;
-    // double angle_z;
-
-    // pnh_.getParam("/WaypointNav_node/initial_pose_x", msg.pose.pose.position.x);
-    // pnh_.getParam("/WaypointNav_node/initial_pose_y", msg.pose.pose.position.y);
-    // pnh_.getParam("/WaypointNav_node/initial_pose_a", angle_z);
-
-    // tf2::Quaternion q;
-    // q.setRPY(0, 0, static_cast<double>(angle_z));
-
-    // msg.pose.pose.orientation.z = q.getZ();
-    // msg.pose.pose.orientation.w = q.getW();
     try
     {
       tx_odom = tf_.lookupTransform("base_footprint", msg.header.stamp, "base_footprint",
@@ -99,16 +88,6 @@ void WaypointNav::initMclPose()
     {
       tf2::convert(tf2::Transform::getIdentity(), tx_odom.transform);
     }
-
-    // tf2::Transform tx_odom_tf2;
-    // tf2::convert(tx_odom.transform, tx_odom_tf2);
-    // tf2::Transform pose_old, pose_new;
-    // tf2::convert(msg.pose.pose, pose_old);
-    // pose_new = pose_old * tx_odom_tf2;
-
-    // ROS_INFO("Setting pose (%.6f): %.3f %.3f %.3f", ros::Time::now().toSec(),
-    //          pose_new.getOrigin().x(), pose_new.getOrigin().y(),
-    //          tf2::getYaw(pose_new.getRotation()));
   });
 }
 void WaypointNav::initPubSub()
@@ -134,13 +113,13 @@ void WaypointNav::initPubSub()
 void WaypointNav::initActionClient()
 {
   ROS_INFO("Waiting for move_base Action Server to active.");
-  initMclPose();
+  resolve_tf_between_map_and_robot_link();
   while (!ac_move_base_.waitForServer(ros::Duration(100.0)))
   {
     ROS_ERROR("move_base Action Server is not active.");
     exit(0);
   }
-  set_initail_robot_pose_.stop();
+  resolve_tf_timer_.stop();
   ROS_INFO("move_base Action Server is active.");
 }
 

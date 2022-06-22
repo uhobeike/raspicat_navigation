@@ -53,7 +53,7 @@ class WaypointNav
   void initServiceClient();
   void initClassLoader();
 
-  void initMclPose();
+  void resolve_tf_between_map_and_robot_link();
 
   void Run();
 
@@ -68,7 +68,7 @@ class WaypointNav
  private:
   ros::NodeHandle &nh_, &pnh_;
   tf2_ros::Buffer& tf_;
-  ros::Timer set_initail_robot_pose_, get_robot_pose_timer_;
+  ros::Timer resolve_tf_timer_, get_robot_pose_timer_;
   std::map<std::string, ros::Timer> timer_for_function_;
 
   ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_, sub_way_start_,
