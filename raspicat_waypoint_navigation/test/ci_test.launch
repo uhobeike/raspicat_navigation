@@ -47,5 +47,8 @@
   <!-- Waypoint_nav -->
   <node if="$(arg waypoint_navigation)" pkg="raspicat_waypoint_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
     <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
+    <param name="initial_pose_x"  value="$(arg x_mcl)"/>
+    <param name="initial_pose_y"  value="$(arg y_mcl)"/>
+    <param name="initial_pose_a"  value="$(arg a_mcl)"/>
   </node>
 </launch>

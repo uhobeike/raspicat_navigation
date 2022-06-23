@@ -50,10 +50,11 @@ WaypointNav::WaypointNav(ros::NodeHandle &nodeHandle, ros::NodeHandle &private_n
       waypoint_radius_(3.0)
 {
   readParam();
+  initPub();
   initActionClient();
-  initPubSub();
+  initSub();
   initClassLoader();
-  getRbotPoseTimer();
+  getRobotPoseTimer();
   initServiceClient();
 }
 
@@ -64,37 +65,39 @@ void WaypointNav::readParam()
   pnh_.getParam("/move_base/DWAPlannerROS/max_vel_trans", vel_trans_);
 }
 
-void WaypointNav::getRbotPoseTimer()
+void WaypointNav::getRobotPoseTimer()
 {
-  ros::Duration duration(1.0);
-  duration.sleep();
+  sleep(1.0);
   get_robot_pose_timer_ = nh_.createTimer(
       ros::Duration(0.1), [&](auto &) { way_srv_->getRobotPose(tf_, WaypointNavStatus_); });
 }
 
 void WaypointNav::resolve_tf_between_map_and_robot_link()
 {
-  ros::Duration duration(1.0);
-  duration.sleep();
-  resolve_tf_timer_ = nh_.createTimer(ros::Duration(5.0), [&](auto &) {
-    geometry_msgs::TransformStamped tx_odom;
+  sleep(1.0);
+  resolve_tf_timer_ = nh_.createTimer(ros::Duration(1.0), [&](auto &) {
     geometry_msgs::PoseWithCovarianceStamped msg;
-    try
-    {
-      tx_odom = tf_.lookupTransform("base_footprint", msg.header.stamp, "base_footprint",
-                                    ros::Time::now(), "odom", ros::Duration(0.5));
-    }
-    catch (tf2::TransformException e)
-    {
-      tf2::convert(tf2::Transform::getIdentity(), tx_odom.transform);
-    }
+    double angle_z;
+    pnh_.getParam("/WaypointNav_node/initial_pose_x", msg.pose.pose.position.x);
+    pnh_.getParam("/WaypointNav_node/initial_pose_y", msg.pose.pose.position.y);
+    pnh_.getParam("/WaypointNav_node/initial_pose_a", angle_z);
+
+    tf2::Quaternion q;
+    q.setRPY(0, 0, static_cast<double>(angle_z));
+    msg.pose.pose.orientation.z = q.getZ();
+    msg.pose.pose.orientation.w = q.getW();
+    msg.pose.covariance.at(0) = 0.25;
+    msg.pose.covariance.at(7) = 0.25;
+    msg.pose.covariance.at(35) = 0.06853892326654787;
+    msg.header.frame_id = "map";
+    msg.header.stamp = ros::Time::now();
+    mcl_init_pose_.publish(msg);
   });
 }
-void WaypointNav::initPubSub()
+
+void WaypointNav::initPub()
 {
-  sub_movebase_goal_ = nh_.subscribe("/move_base/status", 1, &WaypointNav::GoalReachedCb, this);
-  sub_way_start_ = nh_.subscribe("/way_nav_start", 1, &WaypointNav::WaypointNavStartCb, this);
-  sub_way_restart_ = nh_.subscribe("/way_nav_restart", 1, &WaypointNav::WaypointNavRestartCb, this);
+  mcl_init_pose_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1, true);
 
   way_pose_array_ = nh_.advertise<geometry_msgs::PoseArray>("/waypoint", 1, true);
   way_area_array_ = nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_area", 1, true);
@@ -110,11 +113,20 @@ void WaypointNav::initPubSub()
       nh_.advertise<std_msgs::Empty>("/waypoint_attention_speak_function", 1, true);
 }
 
+void WaypointNav::initSub()
+{
+  sub_movebase_goal_ = nh_.subscribe("/move_base/status", 1, &WaypointNav::GoalReachedCb, this);
+  sub_way_start_ = nh_.subscribe("/way_nav_start", 1, &WaypointNav::WaypointNavStartCb, this);
+  sub_way_restart_ = nh_.subscribe("/way_nav_restart", 1, &WaypointNav::WaypointNavRestartCb, this);
+}
+
 void WaypointNav::initActionClient()
 {
   ROS_INFO("Waiting for move_base Action Server to active.");
   resolve_tf_between_map_and_robot_link();
-  while (!ac_move_base_.waitForServer(ros::Duration(100.0)))
+  sleep(3.0);
+  ros::spinOnce();
+  while (!ac_move_base_.waitForServer(ros::Duration(120.0)))
   {
     ROS_ERROR("move_base Action Server is not active.");
     exit(0);
@@ -330,8 +342,8 @@ void WaypointNav::WaypointNavRestartCb(const std_msgs::EmptyConstPtr &msg)
   WaypointNavStatus_.flags.restart = true;
 }
 
-void WaypointNav::sleep(double rate) { ros::Duration(rate).sleep(); }
+void WaypointNav::sleep(double time_s) { ros::Duration(time_s).sleep(); }
 
-void WaypointNav::sleep(double &rate) { ros::Duration(rate).sleep(); }
+void WaypointNav::sleep(double &time_s) { ros::Duration(time_s).sleep(); }
 
 }  // namespace waypoint_nav

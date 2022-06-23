@@ -47,8 +47,9 @@ class WaypointNav
   virtual ~WaypointNav();
 
   void readParam();
-  void getRbotPoseTimer();
-  void initPubSub();
+  void getRobotPoseTimer();
+  void initPub();
+  void initSub();
   void initActionClient();
   void initServiceClient();
   void initClassLoader();
@@ -73,8 +74,8 @@ class WaypointNav
 
   ros::Subscriber sub_robot_pose_, sub_movebase_goal_, sub_goal_command_, sub_way_start_,
       sub_way_restart_;
-  ros::Publisher way_pose_array_, way_area_array_, way_number_txt_array_, way_passed_, way_stop_,
-      way_slope_, way_goal_, way_loop_, way_attention_speak_;
+  ros::Publisher mcl_init_pose_, way_pose_array_, way_area_array_, way_number_txt_array_,
+      way_passed_, way_stop_, way_slope_, way_goal_, way_loop_, way_attention_speak_;
 
   std::map<std::string, ros::ServiceClient> slope_obstacle_avoidanc_client_;
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac_move_base_;
