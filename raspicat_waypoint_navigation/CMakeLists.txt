@@ -52,6 +52,7 @@ add_library(${PROJECT_NAME}
   src/WaypointRviz.cpp
   src/WaypointParamChange.cpp
   src/SlopeObstacleAvoidance.cpp
+  src/ClearCostMap.cpp
 )
 
 install(DIRECTORY launch src config scripts

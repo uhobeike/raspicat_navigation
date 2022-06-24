@@ -1,4 +1,5 @@
 uint16 waypoint_current_id
+uint16 waypoint_previous_id
 
 Property functions
 Flag flags

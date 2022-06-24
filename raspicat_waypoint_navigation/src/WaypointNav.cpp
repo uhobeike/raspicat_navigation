@@ -197,10 +197,21 @@ void WaypointNav::initClassLoader()
 
   try
   {
-    way_helper_ = waypoint_nav_helper_loader_.createInstance(
+    way_helper_["SlopeObstacleAvoidance"] = waypoint_nav_helper_loader_.createInstance(
         "raspicat_waypoint_navigation/SlopeObstacleAvoidance");
-    way_helper_->initialize(waypoint_nav_helper_);
-    way_helper_->run();
+    way_helper_["SlopeObstacleAvoidance"]->initialize(waypoint_nav_helper_);
+    way_helper_["SlopeObstacleAvoidance"]->run();
+  }
+  catch (pluginlib::PluginlibException &ex)
+  {
+    ROS_ERROR("failed to load add plugin. Error: %s", ex.what());
+  }
+
+  try
+  {
+    way_helper_["ClearCostMap"] =
+        waypoint_nav_helper_loader_.createInstance("raspicat_waypoint_navigation/ClearCostMap");
+    way_helper_["ClearCostMap"]->initialize(waypoint_nav_helper_);
   }
   catch (pluginlib::PluginlibException &ex)
   {
@@ -217,6 +228,8 @@ void WaypointNav::Run()
 
   while (ros::ok())
   {
+    WaypointNavStatus_.waypoint_previous_id = WaypointNavStatus_.waypoint_current_id;
+
     // set function
     way_srv_->setWaypointFunction(dynamic_reconfigure_client_, waypoint_yaml_, WaypointNavStatus_);
 
@@ -306,6 +319,10 @@ void WaypointNav::Run()
     // variable waypoint radius function
     if (not WaypointNavStatus_.functions.variable_waypoint_radius.function)
       WaypointNavStatus_.waypoint_radius_threshold = waypoint_radius_;
+
+    // Call /move_base/clear_costmap service when waypoint is reached.
+    if (WaypointNavStatus_.waypoint_previous_id != WaypointNavStatus_.waypoint_current_id)
+      way_helper_["ClearCostMap"]->run();
 
     way_srv_->debug(WaypointNavStatus_);
     way_srv_->eraseTimer(WaypointNavStatus_, timer_for_function_);

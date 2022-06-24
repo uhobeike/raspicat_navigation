@@ -34,4 +34,13 @@
       Plugin to stable navigation on slopes.
     </description>
   </class>
+
+  <class
+    name="raspicat_waypoint_navigation/ClearCostMap"
+    type="raspicat_navigation::ClearCostMap"
+    base_class_type="raspicat_navigation::WaypointNavHelperPlugin">
+    <description>
+      Plugin to run clear cost map for each waypoint.
+    </description>
+  </class>
 </library>

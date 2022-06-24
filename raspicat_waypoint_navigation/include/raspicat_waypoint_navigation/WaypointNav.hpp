@@ -85,7 +85,8 @@ class WaypointNav
   pluginlib::ClassLoader<raspicat_navigation::WaypointNavHelperPlugin> waypoint_nav_helper_loader_;
   boost::shared_ptr<raspicat_navigation::BaseWaypointServer> way_srv_;
   boost::shared_ptr<raspicat_navigation::BaseWaypointRviz> way_rviz_;
-  boost::shared_ptr<raspicat_navigation::WaypointNavHelperPlugin> way_helper_;
+  std::map<std::string, boost::shared_ptr<raspicat_navigation::WaypointNavHelperPlugin>>
+      way_helper_;
 
   string waypoint_server_, waypoint_rviz_, waypoint_nav_helper_;
 
