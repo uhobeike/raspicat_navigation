@@ -6,9 +6,8 @@ waypoints:
     euler_angle:
       z: -0.0638248225954985
     properties:
-      - function: clear_costmap
       - function: variable_speed
-        vel_trans: 0.3
+        vel_trans: 0.8
   - id: 2
     position:
       x: 19.975597
