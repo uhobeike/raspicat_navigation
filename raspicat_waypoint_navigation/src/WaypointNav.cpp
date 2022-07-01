@@ -111,6 +111,7 @@ void WaypointNav::initPub()
   way_loop_ = nh_.advertise<std_msgs::Empty>("/waypoint_loop_function", 1, true);
   way_attention_speak_ =
       nh_.advertise<std_msgs::Empty>("/waypoint_attention_speak_function", 1, true);
+  way_clear_costmap_ = nh_.advertise<std_msgs::Empty>("/waypoint_clear_costmap_function", 1, true);
 }
 
 void WaypointNav::initSub()
@@ -327,7 +328,10 @@ void WaypointNav::Run()
       ac_move_base_.cancelAllGoals();
       sleep(1);
       way_helper_["ClearCostMap"]->run();
-      sleep(10);
+      sleep(5);
+      std_msgs::Empty msg;
+      way_clear_costmap_.publish(msg);
+      sleep(5);
       way_srv_->sendWaypoint(ac_move_base_, goal_);
     }
 
