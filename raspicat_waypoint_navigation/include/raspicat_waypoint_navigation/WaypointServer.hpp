@@ -45,6 +45,8 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
   void setWaypoint(actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base_,
                    move_base_msgs::MoveBaseGoal &goal, XmlRpc::XmlRpcValue &waypoint_yaml,
                    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
+  void sendWaypoint(actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base,
+                    move_base_msgs::MoveBaseGoal &goal);
   void setNextWaypoint(actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base,
                        move_base_msgs::MoveBaseGoal &goal, XmlRpc::XmlRpcValue &waypoint_yaml,
                        raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);

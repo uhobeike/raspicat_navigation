@@ -17,6 +17,7 @@ add_message_files(
   DIRECTORY msg/function
   FILES
   attention_speak.msg
+  clear_costmap.msg
   loop.msg
   goal.msg
   next_waypoint.msg

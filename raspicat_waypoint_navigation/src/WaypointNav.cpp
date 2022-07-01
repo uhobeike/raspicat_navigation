@@ -321,8 +321,15 @@ void WaypointNav::Run()
       WaypointNavStatus_.waypoint_radius_threshold = waypoint_radius_;
 
     // Call /move_base/clear_costmap service when waypoint is reached.
-    if (WaypointNavStatus_.waypoint_previous_id != WaypointNavStatus_.waypoint_current_id)
+    if ((WaypointNavStatus_.waypoint_previous_id != WaypointNavStatus_.waypoint_current_id) &&
+        WaypointNavStatus_.functions.clear_costmap.function)
+    {
+      ac_move_base_.cancelAllGoals();
+      sleep(1);
       way_helper_["ClearCostMap"]->run();
+      sleep(10);
+      way_srv_->sendWaypoint(ac_move_base_, goal_);
+    }
 
     way_srv_->debug(WaypointNavStatus_);
     way_srv_->eraseTimer(WaypointNavStatus_, timer_for_function_);
@@ -331,7 +338,7 @@ void WaypointNav::Run()
     ros::spinOnce();
     loop_rate.sleep();
   }
-}
+}  // namespace waypoint_nav
 
 void WaypointNav::WaypointNavStartCb(const std_msgs::EmptyConstPtr &msg)
 {

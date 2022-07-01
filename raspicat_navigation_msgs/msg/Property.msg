@@ -1,4 +1,5 @@
 attention_speak attention_speak
+clear_costmap clear_costmap
 loop loop
 goal goal
 next_waypoint next_waypoint

@@ -96,6 +96,13 @@ void WaypointServer::setWaypoint(
   ac_move_base.sendGoal(goal);
 }
 
+void WaypointServer::sendWaypoint(
+    actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base,
+    move_base_msgs::MoveBaseGoal &goal)
+{
+  ac_move_base.sendGoal(goal);
+}
+
 void WaypointServer::setNextWaypoint(
     actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &ac_move_base,
     move_base_msgs::MoveBaseGoal &goal, XmlRpc::XmlRpcValue &waypoint_yaml,
@@ -230,6 +237,12 @@ void WaypointServer::setWaypointFunction(
           "attention_speak")
       {
         WaypointNavStatus.functions.attention_speak.function = true;
+      }
+
+      else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
+               "clear_costmap")
+      {
+        WaypointNavStatus.functions.clear_costmap.function = true;
       }
 
       else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
