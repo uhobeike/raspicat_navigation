@@ -58,6 +58,13 @@
 	    <arg name="initial_pose_a" value="$(arg mcl_init_pose_a)"/>
 	  </include>
 
+    <!-- Emcl2 -->
+    <include if="$(eval mcl=='emcl2')" file="$(find raspicat_waypoint_navigation)/launch/emcl2.launch">
+      <arg name="initial_pose_x"  value="$(arg mcl_init_pose_x)"/>
+      <arg name="initial_pose_y"  value="$(arg mcl_init_pose_y)"/>
+      <arg name="initial_pose_a"  value="$(arg mcl_init_pose_z)"/>
+    </include>
+
 	  <!-- Move base --> 
 	  <include file="$(find raspicat_waypoint_navigation)/launch/move_base.launch">
 	    <arg name="move_forward_only" value="$(arg move_forward_only)"/>
