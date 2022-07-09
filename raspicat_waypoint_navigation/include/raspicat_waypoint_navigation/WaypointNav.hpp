@@ -78,7 +78,9 @@ class WaypointNav
       way_passed_, way_stop_, way_slope_, way_goal_, way_loop_, way_attention_speak_,
       way_clear_costmap_;
 
-  std::map<std::string, ros::ServiceClient> slope_obstacle_avoidanc_client_;
+  ros::ServiceServer srv_way_nav_start_, srv_way_nav_restart_;
+  std::map<std::string, ros::ServiceClient> slope_obstacle_avoidance_client_;
+  std::map<std::string, ros::ServiceClient> waypoint_nav_start_restart_client_;
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac_move_base_;
 
   pluginlib::ClassLoader<raspicat_navigation::BaseWaypointServer> waypoint_server_loader_;

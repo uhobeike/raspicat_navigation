@@ -24,10 +24,10 @@ ffmpeg -nostdin -draw_mouse 0 -f x11grab -video_size 1300x1000 -i :44 -codec:v l
 sleep 10
 
 # Execute start operation
-rostopic pub -1 /way_nav_start std_msgs/Empty
+rosservice call --wait /way_nav_start  &
 
 # Execute restart operation
-rostopic echo -n 1 /waypoint_stop_function;rostopic pub -1 /way_nav_restart std_msgs/Empty
+rostopic echo -n 1 /waypoint_stop_function;rosservice call --wait /way_nav_restart & 
 
 # Check goal
 rostopic echo -n 1 /waypoint_goal_function

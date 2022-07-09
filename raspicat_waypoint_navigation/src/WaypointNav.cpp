@@ -138,12 +138,12 @@ void WaypointNav::initActionClient()
 
 void WaypointNav::initServiceClient()
 {
-  slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_on"] =
+  slope_obstacle_avoidance_client_["slope_obstacle_avoidance_on"] =
       nh_.serviceClient<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
           "slope_obstacle_avoidance_on");
 
   ROS_INFO("Waiting for SlopeObstacleAvoidance Server to active.");
-  if (!slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_on"].waitForExistence(
+  if (!slope_obstacle_avoidance_client_["slope_obstacle_avoidance_on"].waitForExistence(
           ros::Duration(100.0)))
   {
     ROS_ERROR("SlopeObstacleAvoidance Server is not active.");
@@ -151,18 +151,63 @@ void WaypointNav::initServiceClient()
   }
   ROS_INFO("SlopeObstacleAvoidance Server is active.");
 
-  slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_off"] =
+  slope_obstacle_avoidance_client_["slope_obstacle_avoidance_off"] =
       nh_.serviceClient<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
           "slope_obstacle_avoidance_off");
 
   ROS_INFO("Waiting for SlopeObstacleAvoidance Server to active.");
-  if (!slope_obstacle_avoidanc_client_["slope_obstacle_avoidance_off"].waitForExistence(
+  if (!slope_obstacle_avoidance_client_["slope_obstacle_avoidance_off"].waitForExistence(
           ros::Duration(100.0)))
   {
     ROS_ERROR("SlopeObstacleAvoidance Server is not active.");
     exit(0);
   }
   ROS_INFO("SlopeObstacleAvoidance Server is active.");
+
+  srv_way_nav_start_ = nh_.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
+      "way_nav_start", [&](auto &req, auto &res) {
+        ROS_INFO("Called service way_nav_start.");
+        static bool call_once = true;
+        if (call_once)
+        {
+          call_once = false;
+          Run();
+        }
+        res.message = "Waypoint Navigation Start";
+        res.success = true;
+        return true;
+      });
+
+  waypoint_nav_start_restart_client_["way_nav_start"] =
+      nh_.serviceClient<std_srvs::TriggerRequest, std_srvs::TriggerResponse>("way_nav_start");
+
+  ROS_INFO("Waiting for WaypointNav Start Server to active.");
+  if (!waypoint_nav_start_restart_client_["way_nav_start"].waitForExistence(ros::Duration(100.0)))
+  {
+    ROS_ERROR("WaypointNav Start Server is not active.");
+    exit(0);
+  }
+  ROS_INFO("WaypointNav Start Server is active.");
+
+  srv_way_nav_restart_ = nh_.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
+      "way_nav_restart", [&](auto &req, auto &res) {
+        ROS_INFO("Called service way_nav_restart.");
+        WaypointNavStatus_.flags.restart = true;
+        res.message = "Waypoint Navigation Restart";
+        res.success = true;
+        return true;
+      });
+
+  waypoint_nav_start_restart_client_["way_nav_restart"] =
+      nh_.serviceClient<std_srvs::TriggerRequest, std_srvs::TriggerResponse>("way_nav_restart");
+
+  ROS_INFO("Waiting for WaypointNav Restart Server to active.");
+  if (!waypoint_nav_start_restart_client_["way_nav_restart"].waitForExistence(ros::Duration(100.0)))
+  {
+    ROS_ERROR("WaypointNav Restart Server is not active.");
+    exit(0);
+  }
+  ROS_INFO("WaypointNav Restart Server is active.");
 }
 
 void WaypointNav::initClassLoader()
