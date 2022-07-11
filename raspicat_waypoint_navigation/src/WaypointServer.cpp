@@ -213,14 +213,14 @@ void WaypointServer::setFalseWaypointFunction(
 void WaypointServer::setFalseWaypointFlag(
     raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus, bool allFalse)
 {
-  if (not WaypointNavStatus.functions.goal.function) WaypointNavStatus.flags.goal_reach = false;
-  if (not WaypointNavStatus.functions.stop.function) WaypointNavStatus.flags.restart = false;
+  // if (not WaypointNavStatus.functions.goal.function) WaypointNavStatus.flags.goal_reach = false;
+  // if (not WaypointNavStatus.functions.stop.function) WaypointNavStatus.flags.restart = false;
 
-  if (allFalse)
-  {
-    raspicat_navigation_msgs::WaypointNavStatus setFalse;
-    WaypointNavStatus.flags = setFalse.flags;
-  }
+  // if (allFalse)
+  // {
+  raspicat_navigation_msgs::WaypointNavStatus setFalse;
+  WaypointNavStatus.flags = setFalse.flags;
+  // }
 }
 
 void WaypointServer::setWaypointFunction(
