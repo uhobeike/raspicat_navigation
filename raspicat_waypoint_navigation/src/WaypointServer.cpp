@@ -133,6 +133,20 @@ bool WaypointServer::checkWaypointArea(
     XmlRpc::XmlRpcValue &waypoint_yaml,
     raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus, ros::Publisher &way_passed)
 {
+  if (WaypointNavStatus.waypoint_current_distance <= WaypointNavStatus.waypoint_radius_threshold)
+  {
+    std_msgs::Empty data;
+    way_passed.publish(data);
+    ROS_INFO("WayPoint Passing");
+    return true;
+  }
+  return false;
+}
+
+void WaypointServer::checkWaypointDistance(
+    XmlRpc::XmlRpcValue &waypoint_yaml,
+    raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
+{
   WaypointNavStatus.waypoint_current_distance =
       sqrt(pow(static_cast<double>(
                    waypoint_yaml[WaypointNavStatus.waypoint_current_id]["position"]["x"]) -
@@ -142,15 +156,6 @@ bool WaypointServer::checkWaypointArea(
                    waypoint_yaml[WaypointNavStatus.waypoint_current_id]["position"]["y"]) -
                    WaypointNavStatus.robot_pose.position.y,
                2));
-
-  if (WaypointNavStatus.waypoint_current_distance <= WaypointNavStatus.waypoint_radius_threshold)
-  {
-    std_msgs::Empty data;
-    way_passed.publish(data);
-    ROS_INFO("WayPoint Passing");
-    return true;
-  }
-  return false;
 }
 
 void WaypointServer::getRobotPose(tf2_ros::Buffer &tf_,

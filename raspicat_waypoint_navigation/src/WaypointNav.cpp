@@ -276,6 +276,9 @@ void WaypointNav::Run()
   {
     WaypointNavStatus_.waypoint_previous_id = WaypointNavStatus_.waypoint_current_id;
 
+    // Check the distance between the robot and the waypoint
+    way_srv_->checkWaypointDistance(waypoint_yaml_, WaypointNavStatus_);
+
     // set function
     way_srv_->setWaypointFunction(dynamic_reconfigure_client_, waypoint_yaml_, WaypointNavStatus_);
 

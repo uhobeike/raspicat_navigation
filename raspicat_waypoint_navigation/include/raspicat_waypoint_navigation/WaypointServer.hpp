@@ -57,6 +57,8 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
   bool checkWaypointArea(XmlRpc::XmlRpcValue &waypoint_yaml,
                          raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
                          ros::Publisher &way_passed);
+  void checkWaypointDistance(XmlRpc::XmlRpcValue &waypoint_yaml,
+                             raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
 
   bool checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
 

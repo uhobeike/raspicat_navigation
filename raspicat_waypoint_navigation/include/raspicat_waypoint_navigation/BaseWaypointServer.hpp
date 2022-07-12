@@ -50,6 +50,9 @@ class BaseWaypointServer
   virtual bool checkWaypointArea(XmlRpc::XmlRpcValue &waypoint_yaml,
                                  raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
                                  ros::Publisher &way_passed) = 0;
+  virtual void checkWaypointDistance(
+      XmlRpc::XmlRpcValue &waypoint_yaml,
+      raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
   virtual bool checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 

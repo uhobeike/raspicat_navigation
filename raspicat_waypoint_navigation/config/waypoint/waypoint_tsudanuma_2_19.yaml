@@ -20,10 +20,10 @@ waypoints:
         waypoint_radius: 1.0
   - id: 3
     position:
-      x: 20.716635
-      y: 8.790593
+      x: 14.3
+      y: 9.123
     euler_angle:
-      z: 3.114575838346497
+      z: 3.098
     properties:
       - function: attention_speak
       - function: variable_waypoint_radius
