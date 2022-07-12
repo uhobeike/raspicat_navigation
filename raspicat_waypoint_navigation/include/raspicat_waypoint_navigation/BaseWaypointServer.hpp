@@ -61,8 +61,8 @@ class BaseWaypointServer
 
   virtual void setFalseWaypointFunction(
       raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
-  virtual void setFalseWaypointFlag(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
-                                    bool allFalse = false) = 0;
+  virtual void setFalseWaypointFlag(
+      raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
   virtual void setWaypointFunction(
       dynamic_reconfigure::Client<dwa_local_planner::DWAPlannerConfig> &dynamic_reconfigure_client,

@@ -65,8 +65,7 @@ class WaypointServer : public raspicat_navigation::BaseWaypointServer
   void eraseTimer(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
                   std::map<std::string, ros::Timer> &timer_for_function);
   void setFalseWaypointFunction(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
-  void setFalseWaypointFlag(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
-                            bool allFalse = false);
+  void setFalseWaypointFlag(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus);
 
   void setWaypointFunction(
       dynamic_reconfigure::Client<dwa_local_planner::DWAPlannerConfig> &dynamic_reconfigure_client,

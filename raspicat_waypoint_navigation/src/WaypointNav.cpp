@@ -192,7 +192,9 @@ void WaypointNav::initServiceClient()
   srv_way_nav_restart_ = nh_.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
       "way_nav_restart", [&](auto &req, auto &res) {
         ROS_INFO("Called service way_nav_restart.");
-        WaypointNavStatus_.flags.restart = true;
+        timer_for_function_.erase("speak_stop");
+        way_srv_->setNextWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
+        way_srv_->setFalseWaypointFlag(WaypointNavStatus_);
         res.message = "Waypoint Navigation Restart";
         res.success = true;
         return true;
@@ -295,7 +297,7 @@ void WaypointNav::Run()
         {
           timer_for_function_.erase("speak_stop");
           way_srv_->setNextWaypoint(ac_move_base_, goal_, waypoint_yaml_, WaypointNavStatus_);
-          way_srv_->setFalseWaypointFlag(WaypointNavStatus_, true);
+          way_srv_->setFalseWaypointFlag(WaypointNavStatus_);
         }
         else
         {
