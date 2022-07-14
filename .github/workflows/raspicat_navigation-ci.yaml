@@ -19,7 +19,7 @@ env:
   DOCKER-CONTEXT: ./
   DOCKER-FILE-ENVIRONMENT: ./.github/Dockerfile.environment-ci
   DOCKER-FILE-BUILD: ./.github/Dockerfile.build-ci
-  cache-version: v0.0.1
+  cache-version: v0.0.2
 
 jobs:
   Build:

@@ -168,6 +168,10 @@
     <rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/raspicat_speak/speak_list.yaml"/>
     <rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/raspicat_speak/voice_config.yaml"/>
   </node>
+
+	<!-- Obstacle detector -->
+	<rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/param/obstacle_detector.yaml"/>
+  <node name="obstacle_extractor" pkg="obstacle_detector" type="obstacle_extractor_node" clear_params="true" output="screen"/>
   
   <!-- RViz -->
   <node if="$(arg open_rviz)" pkg="rviz" type="rviz" name="rviz" required="true"

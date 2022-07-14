@@ -51,4 +51,8 @@
     <param name="initial_pose_y"  value="$(arg y_mcl)"/>
     <param name="initial_pose_a"  value="$(arg a_mcl)"/>
   </node>
+	
+	<!-- Obstacle detector -->
+	<rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/param/obstacle_detector.yaml"/>
+  <node name="obstacle_extractor" pkg="obstacle_detector" type="obstacle_extractor_node" clear_params="true" output="screen"/>
 </launch>
