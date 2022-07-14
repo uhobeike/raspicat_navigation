@@ -93,14 +93,9 @@ class waypoint_rviz
   bool waypoint_marker_id_check(vector<uint16_t>& waypoint_marker_id, bool& marker_flag,
                                 uint16_t& waypoint_number);
 
-  const vector<string> function_list = {"goal",
-                                        "step",
-                                        "slop",
-                                        "stop",
-                                        "waiting_line",
-                                        "variable_speed",
-                                        "attention_speak",
-                                        "variable_waypoint_radius"};
+  const vector<string> function_list = {
+      "goal",         "step",           "slope",           "stop",
+      "waiting_line", "variable_speed", "attention_speak", "variable_waypoint_radius"};
 
  public:
   waypoint_rviz(std::string file_name);

@@ -29,7 +29,7 @@ Add functionality to waypoint:
 5  : Attention Speak Function
 6  : Variable Speed Function
 7  : Step Function
-8  : Slop Function
+8  : slope Function
 """
 
 def getKey():
@@ -145,9 +145,9 @@ if __name__=="__main__":
           rospy.loginfo("Step Function Set!!")
 
         elif key == '8':
-          str = "slop"
+          str = "slope"
           pub_way.publish(str)
-          rospy.loginfo("Slop Function Set!!")
+          rospy.loginfo("slope Function Set!!")
 
 
         else:

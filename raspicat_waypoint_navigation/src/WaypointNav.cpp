@@ -77,13 +77,14 @@ void WaypointNav::resolve_tf_between_map_and_robot_link()
   sleep(1.0);
   resolve_tf_timer_ = nh_.createTimer(ros::Duration(1.0), [&](auto &) {
     geometry_msgs::PoseWithCovarianceStamped msg;
-    double angle_z;
-    pnh_.getParam("/WaypointNav_node/initial_pose_x", msg.pose.pose.position.x);
-    pnh_.getParam("/WaypointNav_node/initial_pose_y", msg.pose.pose.position.y);
-    pnh_.getParam("/WaypointNav_node/initial_pose_a", angle_z);
+    pnh_.getParam("/WaypointNav_node/initial_pose_x", WaypointNavStatus_.initial_pose_x);
+    pnh_.getParam("/WaypointNav_node/initial_pose_y", WaypointNavStatus_.initial_pose_y);
+    pnh_.getParam("/WaypointNav_node/initial_pose_a", WaypointNavStatus_.initial_pose_a);
 
     tf2::Quaternion q;
-    q.setRPY(0, 0, static_cast<double>(angle_z));
+    q.setRPY(0, 0, static_cast<double>(WaypointNavStatus_.initial_pose_a));
+    msg.pose.pose.orientation.x = WaypointNavStatus_.initial_pose_x;
+    msg.pose.pose.orientation.y = WaypointNavStatus_.initial_pose_y;
     msg.pose.pose.orientation.z = q.getZ();
     msg.pose.pose.orientation.w = q.getW();
     msg.pose.covariance.at(0) = 0.25;
@@ -371,6 +372,44 @@ void WaypointNav::Run()
     if (not WaypointNavStatus_.functions.variable_waypoint_radius.function)
       WaypointNavStatus_.waypoint_radius_threshold = waypoint_radius_;
 
+    // slope function
+    if (WaypointNavStatus_.functions.slope.function)
+    {
+      static bool once_flag = false;
+
+      if (!WaypointNavStatus_.flags.slope)
+      {
+        std_srvs::TriggerRequest req;
+        std_srvs::TriggerResponse resp;
+        if (!slope_obstacle_avoidance_client_["slope_obstacle_avoidance_on"].call(req, resp))
+        {
+          ROS_ERROR("Failed to invoke slope_obstacle_avoidance_on services.");
+          exit(0);
+        }
+
+        WaypointNavStatus_.flags.slope = true;
+        once_flag = false;
+      }
+
+      if (WaypointNavStatus_.flags.slope)
+      {
+        if (WaypointNavStatus_.slope_circle_area != 0 && not once_flag)
+        {
+          if (way_srv_->checkDistance(waypoint_yaml_, WaypointNavStatus_, "Circle"))
+          {
+            std_srvs::TriggerRequest req;
+            std_srvs::TriggerResponse resp;
+            if (!slope_obstacle_avoidance_client_["slope_obstacle_avoidance_off"].call(req, resp))
+            {
+              ROS_ERROR("Failed to invoke slope_obstacle_avoidance_off services.");
+              exit(0);
+            }
+            once_flag = true;
+          }
+        }
+      }
+    }
+
     // Call /move_base/clear_costmap service when waypoint is reached.
     if ((WaypointNavStatus_.waypoint_previous_id != WaypointNavStatus_.waypoint_current_id) &&
         WaypointNavStatus_.functions.clear_costmap.function)
@@ -388,7 +427,8 @@ void WaypointNav::Run()
     way_srv_->debug(WaypointNavStatus_);
     way_srv_->eraseTimer(WaypointNavStatus_, timer_for_function_);
     way_srv_->setFalseWaypointFunction(WaypointNavStatus_);
-    way_srv_->setFalseWaypointFlag(WaypointNavStatus_);
+    if (WaypointNavStatus_.waypoint_previous_id != WaypointNavStatus_.waypoint_current_id)
+      way_srv_->setFalseWaypointFlag(WaypointNavStatus_);
     ros::spinOnce();
     loop_rate.sleep();
   }
@@ -396,10 +436,10 @@ void WaypointNav::Run()
 
 void WaypointNav::WaypointNavStartCb(const std_msgs::EmptyConstPtr &msg)
 {
-  static bool call_once = true;
-  if (call_once)
+  static bool once_flag = true;
+  if (once_flag)
   {
-    call_once = false;
+    once_flag = false;
     Run();
   }
 }

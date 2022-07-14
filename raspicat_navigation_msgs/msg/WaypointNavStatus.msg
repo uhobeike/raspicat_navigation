@@ -7,3 +7,9 @@ Flag flags
 float32 waypoint_current_distance
 geometry_msgs/Pose robot_pose
 float32 waypoint_radius_threshold
+
+float32 slope_circle_area
+
+float32 initial_pose_x
+float32 initial_pose_y
+float32 initial_pose_a

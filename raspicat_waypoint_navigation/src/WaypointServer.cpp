@@ -43,7 +43,7 @@ void WaypointServer::checkWaypointYmal(ros::NodeHandle &pnh)
         cout << waypoint_yaml[i]["properties"][j]["speak_interval"] << "\n";
       }
 
-      else if (waypoint_yaml[i]["properties"][j]["function"] == "slop")
+      else if (waypoint_yaml[i]["properties"][j]["function"] == "slope")
       {
         cout << waypoint_yaml[i]["properties"][j]["scan_range_limit"] << "\n";
       }
@@ -191,6 +191,44 @@ void WaypointServer::getRobotPose(tf2_ros::Buffer &tf_,
   }
 }
 
+bool WaypointServer::checkDistance(XmlRpc::XmlRpcValue &waypoint_yaml,
+                                   raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
+                                   std::string type)
+{
+  if (type == "Circle")
+  {
+    double distance;
+
+    if (WaypointNavStatus.waypoint_current_id == 0)
+    {
+      distance = sqrt(pow(static_cast<double>(WaypointNavStatus.initial_pose_x) -
+                              WaypointNavStatus.robot_pose.position.x,
+                          2) +
+                      pow(static_cast<double>(WaypointNavStatus.initial_pose_y) -
+                              WaypointNavStatus.robot_pose.position.y,
+                          2));
+    }
+    else
+    {
+      distance =
+          sqrt(pow(static_cast<double>(
+                       waypoint_yaml[WaypointNavStatus.waypoint_current_id - 1]["position"]["x"]) -
+                       WaypointNavStatus.robot_pose.position.x,
+                   2) +
+               pow(static_cast<double>(
+                       waypoint_yaml[WaypointNavStatus.waypoint_current_id - 1]["position"]["y"]) -
+                       WaypointNavStatus.robot_pose.position.y,
+                   2));
+    }
+    if (WaypointNavStatus.slope_circle_area <= distance)
+    {
+      ROS_INFO("Slope Circle area Passing");
+      return true;
+    }
+    return false;
+  }
+}
+
 bool WaypointServer::checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
   if (WaypointNavStatus.flags.goal_reach)
@@ -257,9 +295,14 @@ void WaypointServer::setWaypointFunction(
       }
 
       else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==
-               "slop")
+               "slope")
       {
-        WaypointNavStatus.functions.slop.function = true;
+        WaypointNavStatus.functions.slope.function = true;
+        if (not static_cast<double>(waypoint_yaml[WaypointNavStatus.waypoint_current_id]
+                                                 ["properties"][i]["slope_circle_area"]) == 0)
+          WaypointNavStatus.slope_circle_area =
+              static_cast<double>(waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"]
+                                               [i]["slope_circle_area"]);
       }
 
       else if (waypoint_yaml[WaypointNavStatus.waypoint_current_id]["properties"][i]["function"] ==

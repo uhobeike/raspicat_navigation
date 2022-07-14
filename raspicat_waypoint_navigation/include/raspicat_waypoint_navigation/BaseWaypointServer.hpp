@@ -54,6 +54,10 @@ class BaseWaypointServer
       XmlRpc::XmlRpcValue &waypoint_yaml,
       raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
+  virtual bool checkDistance(XmlRpc::XmlRpcValue &waypoint_yaml,
+                             raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,
+                             std::string type) = 0;
+
   virtual bool checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus) = 0;
 
   virtual void eraseTimer(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus,

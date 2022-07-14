@@ -6,6 +6,8 @@ waypoints:
     euler_angle:
       z: -0.0638248225954985
     properties:
+      - function: slope
+        slope_circle_area: 3.0
       - function: clear_costmap
       - function: variable_speed
         vel_trans: 0.8
@@ -16,6 +18,8 @@ waypoints:
     euler_angle:
       z: 1.502107171059494
     properties:
+      - function: slope
+        slope_circle_area: 3.0
       - function: attention_speak
       - function: variable_waypoint_radius
         waypoint_radius: 1.0
@@ -26,6 +30,8 @@ waypoints:
     euler_angle:
       z: 3.114575838346497
     properties:
+      - function: slope
+        slope_circle_area: 3.0
       - function: attention_speak
       - function: variable_waypoint_radius
         waypoint_radius: 2.0
@@ -36,6 +42,8 @@ waypoints:
     euler_angle:
       z: -1.603556631084992
     properties:
+      - function: slope
+        slope_circle_area: 10.0
       - function: stop
       - function: variable_speed
         vel_trans: 0.9

@@ -21,7 +21,7 @@ add_message_files(
   loop.msg
   goal.msg
   next_waypoint.msg
-  slop.msg
+  slope.msg
   step.msg
   stop.msg
   variable_speed.msg

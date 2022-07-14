@@ -3,7 +3,7 @@ clear_costmap clear_costmap
 loop loop
 goal goal
 next_waypoint next_waypoint
-slop slop
+slope slope
 step step
 stop stop
 variable_speed variable_speed
