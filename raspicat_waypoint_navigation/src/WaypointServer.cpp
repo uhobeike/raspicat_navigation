@@ -231,6 +231,7 @@ bool WaypointServer::checkDistance(XmlRpc::XmlRpcValue &waypoint_yaml,
 
 bool WaypointServer::checkGoalReach(raspicat_navigation_msgs::WaypointNavStatus &WaypointNavStatus)
 {
+  if (WaypointNavStatus.waypoint_current_distance > 1.0) WaypointNavStatus.flags.goal_reach = false;
   if (WaypointNavStatus.flags.goal_reach)
   {
     ROS_INFO("Goal Reached");
