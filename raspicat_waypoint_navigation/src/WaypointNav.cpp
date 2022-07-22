@@ -83,8 +83,8 @@ void WaypointNav::resolve_tf_between_map_and_robot_link()
 
     tf2::Quaternion q;
     q.setRPY(0, 0, static_cast<double>(WaypointNavStatus_.initial_pose_a));
-    msg.pose.pose.orientation.x = WaypointNavStatus_.initial_pose_x;
-    msg.pose.pose.orientation.y = WaypointNavStatus_.initial_pose_y;
+    msg.pose.pose.position.x = WaypointNavStatus_.initial_pose_x;
+    msg.pose.pose.position.y = WaypointNavStatus_.initial_pose_y;
     msg.pose.pose.orientation.z = q.getZ();
     msg.pose.pose.orientation.w = q.getW();
     msg.pose.covariance.at(0) = 0.25;
@@ -432,7 +432,7 @@ void WaypointNav::Run()
     ros::spinOnce();
     loop_rate.sleep();
   }
-}  // namespace waypoint_nav
+}
 
 void WaypointNav::WaypointNavStartCb(const std_msgs::EmptyConstPtr &msg)
 {
