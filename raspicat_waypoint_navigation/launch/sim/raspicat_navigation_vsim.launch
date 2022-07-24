@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arguments -->
+  <arg name="open_rviz"           default="true"/>
+  <arg name="open_gazebo"         default="true"/>
+
+  <arg name="move_forward_only"   default="false"/>
+  <arg name="waypoint_navigation" default="true"/>
+
+  <arg name="world_name"          default="tsudanuma_2_19" doc="world_name type [tsudanuma_2_19, tsudanuma, tsukuba]"/>
+  <arg name="mcl_map_file"        default="$(find raspicat_waypoint_navigation)/config/maps/$(arg world_name)/map_$(arg world_name).yaml"/>
+  <arg name="move_base_map_file"  default="$(find raspicat_waypoint_navigation)/config/maps/for_move_base/map_$(arg world_name).yaml"/>
+  <arg name="waypoint_yaml_file"  default="$(find raspicat_waypoint_navigation)/config/waypoint/waypoint_$(arg world_name).yaml"/>
+  <arg name="mcl"                 default="amcl" doc="model type [amcl, emcl2, mcl_ros]"/>
+
+  <!-- Tsudanuma 2 19 -->
+  <group if="$(eval world_name=='tsudanuma_2_19')">
+    <arg name="x_gazebo"    default="0.155971128532"/>
+    <arg name="y_gazebo"    default="-0.0254326737864"/>
+    <arg name="yaw_gazebo"  default="0"/>
+
+    <arg name="x_mcl"       default="-0.309"/>
+    <arg name="y_mcl"       default="0.112"/>
+    <arg name="a_mcl"       default="-0.013"/>
+
+    <!-- Gazebo -->
+    <include file="$(find raspicat_map2gazebo)/launch/raspicat_$(arg world_name)_world.launch">
+      <arg name="x_init_pos"    value="$(arg x_gazebo)"/>
+      <arg name="y_init_pos"    value="$(arg y_gazebo)"/>
+      <arg name="yaw_init_pos"  value="$(arg yaw_gazebo)"/>
+      <arg name="open_gui"      value="$(arg open_gazebo)"/>
+    </include>
+    
+    <!-- Amcl -->
+    <group if="$(eval mcl=='amcl')">
+      <include file="$(find raspicat_waypoint_navigation)/launch/amcl.launch">
+        <arg name="initial_pose_x"  value="$(arg x_mcl)"/>
+        <arg name="initial_pose_y"  value="$(arg y_mcl)"/>
+        <arg name="initial_pose_a"  value="$(arg a_mcl)"/>
+      </include>
+    </group>
+
+    <!-- Emcl2 -->
+    <group if="$(eval mcl=='emcl2')">
+      <include file="$(find raspicat_waypoint_navigation)/launch/emcl2.launch">
+        <arg name="initial_pose_x"  value="$(arg x_mcl)"/>
+        <arg name="initial_pose_y"  value="$(arg y_mcl)"/>
+        <arg name="initial_pose_a"  value="$(arg a_mcl)"/>
+      </include>
+    </group>
+
+    <!-- Waypoint_nav -->
+    <node if="$(arg waypoint_navigation)" pkg="raspicat_waypoint_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
+      <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
+      <param name="initial_pose_x"  value="$(arg x_mcl)"/>
+      <param name="initial_pose_y"  value="$(arg y_mcl)"/>
+      <param name="initial_pose_a"  value="$(arg a_mcl)"/>
+    </node>
+  </group>
+
+  <!-- Tsudanuma -->
+  <group if="$(eval world_name=='tsudanuma')">
+    <arg name="x_gazebo"    default="58.1535747159"/>
+    <arg name="y_gazebo"    default="-64.2634867703"/>
+    <arg name="yaw_gazebo"  default="1.5"/>
+
+    <arg name="x_mcl"       default="-10.352"/>
+    <arg name="y_mcl"       default="-69.350"/>
+    <arg name="a_mcl"       default="1.626"/>
+
+    <!-- Gazebo -->
+    <include file="$(find raspicat_map2gazebo)/launch/raspicat_$(arg world_name)_world.launch">
+      <arg name="x_init_pos"    value="$(arg x_gazebo)"/>
+      <arg name="y_init_pos"    value="$(arg y_gazebo)"/>
+      <arg name="yaw_init_pos"  value="$(arg yaw_gazebo)"/>
+      <arg name="open_gui"      value="$(arg open_gazebo)"/>
+    </include>
+    
+    <!-- Amcl -->
+    <group if="$(eval mcl=='amcl')">
+      <include file="$(find raspicat_waypoint_navigation)/launch/amcl.launch">
+        <arg name="initial_pose_x"  value="$(arg x_mcl)"/>
+        <arg name="initial_pose_y"  value="$(arg y_mcl)"/>
+        <arg name="initial_pose_a"  value="$(arg a_mcl)"/>
+      </include>
+    </group>
+
+    <!-- Emcl2 -->
+    <group if="$(eval mcl=='emcl2')">
+      <include file="$(find raspicat_waypoint_navigation)/launch/emcl2.launch">
+        <arg name="initial_pose_x"  value="$(arg x_mcl)"/>
+        <arg name="initial_pose_y"  value="$(arg y_mcl)"/>
+        <arg name="initial_pose_a"  value="$(arg a_mcl)"/>
+      </include>
+    </group>
+
+    <!-- Waypoint_nav -->
+    <node if="$(arg waypoint_navigation)" pkg="raspicat_waypoint_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
+      <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
+      <param name="initial_pose_x"  value="$(arg x_mcl)"/>
+      <param name="initial_pose_y"  value="$(arg y_mcl)"/>
+      <param name="initial_pose_a"  value="$(arg a_mcl)"/>
+    </node>
+  </group>
+
+  <!-- Tsukuba -->
+  <group if="$(eval world_name=='tsukuba')">
+    <arg name="x_gazebo"    default="-0.8"/>
+    <arg name="y_gazebo"    default="-31.9"/>
+    <arg name="yaw_gazebo"  default="-2.6"/>
+
+    <arg name="x_mcl"       default="213.980"/>
+    <arg name="y_mcl"       default="102.940"/>
+    <arg name="a_mcl"       default="-0.016"/>
+
+    <!-- Gazebo -->
+    <include file="$(find raspicat_map2gazebo)/launch/raspicat_$(arg world_name)_world.launch">
+      <arg name="x_init_pos"    value="$(arg x_gazebo)"/>
+      <arg name="y_init_pos"    value="$(arg y_gazebo)"/>
+      <arg name="yaw_init_pos"  value="$(arg yaw_gazebo)"/>
+      <arg name="open_gui"      value="$(arg open_gazebo)"/>
+    </include>
+    
+    <!-- Amcl -->
+    <group if="$(eval mcl=='amcl')">
+      <include file="$(find raspicat_waypoint_navigation)/launch/amcl.launch">
+        <arg name="initial_pose_x"  value="$(arg x_mcl)"/>
+        <arg name="initial_pose_y"  value="$(arg y_mcl)"/>
+        <arg name="initial_pose_a"  value="$(arg a_mcl)"/>
+      </include>
+    </group>
+
+    <!-- Emcl2 -->
+    <group if="$(eval mcl=='emcl2')">
+      <include file="$(find raspicat_waypoint_navigation)/launch/emcl2.launch">
+        <arg name="initial_pose_x"  value="$(arg x_mcl)"/>
+        <arg name="initial_pose_y"  value="$(arg y_mcl)"/>
+        <arg name="initial_pose_a"  value="$(arg a_mcl)"/>
+      </include>
+    </group>
+
+    <!-- Waypoint_nav -->
+    <node if="$(arg waypoint_navigation)" pkg="raspicat_waypoint_navigation" name="WaypointNav_node" type="WaypointNav_node" output="screen">
+      <rosparam command="load" file="$(arg waypoint_yaml_file)"/>
+      <param name="initial_pose_x"  value="$(arg x_mcl)"/>
+      <param name="initial_pose_y"  value="$(arg y_mcl)"/>
+      <param name="initial_pose_a"  value="$(arg a_mcl)"/>
+    </node>
+  </group>
+
+  <!-- Map_server -->
+  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg mcl_map_file)"/>
+
+  <node pkg="map_server" name="move_base_map_server" type="map_server" args="$(arg move_base_map_file)">
+    <remap from="map" to="/move_base_map"/>
+    <remap from="static_map" to="/move_base_static_map"/>
+  </node>
+
+  <!-- Move_base -->
+  <include file="$(find raspicat_waypoint_navigation)/launch/move_base.launch">
+    <arg name="move_forward_only" value="$(arg move_forward_only)"/>
+    <arg name="waypoint_nav" default="$(arg waypoint_navigation)"/>
+  </include>
+
+  <!-- Raspicat speak -->
+  <node pkg="raspicat_speak" type="raspicat_speak_node" name="raspicat_speak_node" 
+        clear_params="true" respawn="true" output="screen">
+    <rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/raspicat_speak/speak_list.yaml"/>
+    <rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/raspicat_speak/voice_config.yaml"/>
+  </node>
+
+	<!-- Obstacle detector -->
+	<rosparam command="load" file="$(find raspicat_waypoint_navigation)/config/param/obstacle_detector.yaml"/>
+  <node name="obstacle_extractor" pkg="obstacle_detector" type="obstacle_extractor_node" clear_params="true" output="screen"/>
+  
+  <!-- RViz -->
+  <node if="$(arg open_rviz)" pkg="rviz" type="rviz" name="rviz" required="true"
+    args="-d $(find raspicat_waypoint_navigation)/config/rviz/raspicat_waypoint_navigation.rviz">
+  </node>      
+</launch>

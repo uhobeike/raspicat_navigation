@@ -1,0 +1,73 @@
+waypoints:
+  - id: 1
+    position:
+      x: 237.314377
+      y: 104.165321
+    euler_angle:
+      z: -0.01000004666635666
+  - id: 2
+    position:
+      x: 275.970276
+      y: 94.125702
+    euler_angle:
+      z: -1.022200036911148
+  - id: 3
+    position:
+      x: 287.626984
+      y: 85.037170
+    euler_angle:
+      z: -0.0100020466423463
+  - id: 4
+    position:
+      x: 302.637573
+      y: 93.404198
+    euler_angle:
+      z: 1.574125386123987
+  - id: 5
+    position:
+      x: 300.488525
+      y: 104.565247
+    euler_angle:
+      z: -3.14106465360206
+    properties:
+      - function: clear_costmap
+  - id: 6
+    position:
+      x: 275.983582
+      y: 91.639481
+    euler_angle:
+      z: -3.119856226952084
+  - id: 7
+    position:
+      x: 248.245071
+      y: 89.558083
+    euler_angle:
+      z: -2.366190990433116
+  - id: 8
+    position:
+      x: 220.922379
+      y: 83.213295
+    euler_angle:
+      z: -2.35126795257169
+  - id: 9
+    position:
+      x: 189.619476
+      y: 75.237335
+    euler_angle:
+      z: -3.102252134541805
+    properties:
+      - function: stop
+  - id: 10
+    position:
+      x: 177.109299
+      y: 68.959526
+    euler_angle:
+      z: -3.121750332332562
+  - id: 11
+    position:
+      x: 160.298508
+      y: 65.574883
+    euler_angle:
+      z: 3.116441992432978
+    properties:
+      - function: goal

@@ -1,0 +1,22 @@
+obstacle_extractor:
+  active:                     true
+
+  use_scan:                   true
+  use_pcl:                    false
+  use_split_and_merge:        true
+
+  circles_from_visibles:      true
+  discard_converted_segments: true
+  transform_coordinates:      true
+
+  min_group_points:           2
+  max_group_distance:         0.2
+
+  distance_proportion:        0.00628
+  max_split_distance:         0.5
+  max_merge_separation:       0.5
+  max_merge_spread:           0.5
+  max_circle_radius:          2.0
+  radius_enlargement:         1.0
+
+  frame_id:                   map

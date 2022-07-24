@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arguments -->
+  <arg name="map2gazebo_params_file"     default="$(find raspicat_map2gazebo)/config/defaults.yaml"/>
+  <arg name="map_file"                   default=""/>
+
+  <arg name="world_name"                 default="hoge"/>
+  <arg name="author_name"                default=""/>
+  <arg name="email"                      default=""/>
+  <arg name="stl_export_dir"             default="$(find raspicat_map2gazebo)/config/models/$(arg world_name)/meshes"/>
+
+  <!-- Mkdir -->
+  <param name="map2gazebo_model_dir" command="mkdir -p $(find raspicat_map2gazebo)/config/models/$(arg world_name)/meshes"/>
+
+  <!-- Copy file -->
+  <param name="map2gazebo_copy_config_sdf" 
+    command="cp $(find map2gazebo)/models/map/model.config
+                $(find map2gazebo)/models/map/model.sdf
+                $(find raspicat_map2gazebo)/config/models/$(arg world_name)/"/>
+  
+  <param name="map2gazebo_copy_world" 
+    command="cp $(find map2gazebo)/worlds/map.sdf
+                $(find raspicat_map2gazebo)/config/world/$(arg world_name).world"/>
+
+  <!-- Code replace -->
+  <param name="map2gazebo_code_replace_sdf"
+    command="sed -i -e 's/map/$(arg world_name)/g' $(find raspicat_map2gazebo)/config/models/$(arg world_name)/model.sdf"/>
+  
+  <param name="map2gazebo_code_replace_config"
+    command="sed -i -e 's/map/$(arg world_name)/g' -e 's/Shiloh Curtis/$(arg author_name)/g' -e 's/shilohc@mit.edu/$(arg email)/g'
+                  $(find raspicat_map2gazebo)/config/models/$(arg world_name)/model.config"/>
+
+  <param name="map2gazebo_code_replace_world"
+    command="sed -i -e 's/map/$(arg world_name)/g' $(find raspicat_map2gazebo)/config/world/$(arg world_name).world"/>
+
+  <!-- Map_server -->
+  <node pkg="map_server" name="mcl_map_server" type="map_server" args="$(arg map_file)"/>
+
+  <!-- Map2gazebo -->
+  <node name="map2gazebo" pkg="map2gazebo" type="map2gazebo.py" output="screen">
+    <param name="export_dir" value="$(arg stl_export_dir)"/>
+    <rosparam command="load" file="$(arg map2gazebo_params_file)"/>
+  </node>
+
+  <!-- Rename file -->
+  <node pkg="raspicat_map2gazebo" name="map2gazebo_rename_stl_file" type="map2gazebo_rename_stl_file.sh"
+    args="$(arg stl_export_dir) $(arg world_name)" output="screen"/>
+  
+  <!-- Create World launch file -->
+  <node pkg="raspicat_map2gazebo" name="map2gazebo_create_world_launch" type="map2gazebo_create_world_launch.sh"
+    args="$(arg world_name)" output="screen"/>
+</launch>

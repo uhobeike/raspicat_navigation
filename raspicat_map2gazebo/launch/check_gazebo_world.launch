@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arguments -->
+  <arg name="world_name"  default="tsudanuma"/>
+  <arg name="debug"       default="false"/>
+  <arg name="gui"         default="true"/>
+  <arg name="headless"    default="false"/>
+  <arg name="verbose"     default="true"/>
+
+  <!-- Environment variable -->
+  <env name="GAZEBO_MODEL_PATH" value="$(find raspicat_map2gazebo)/config/models/:$(optenv GAZEBO_MODEL_PATH)"/>
+
+  <!-- Gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="debug"         value="$(arg debug)" />
+    <arg name="gui"           value="$(arg gui)" />
+    <arg name="paused"        value="false"/>
+    <arg name="use_sim_time"  value="true"/>
+    <arg name="headless"      value="$(arg headless)"/>
+    <arg name="verbose"       value="$(arg verbose)"/>
+    <arg name="world_name"    value="$(find raspicat_map2gazebo)/config/world/$(arg world_name).world"/>
+  </include>
+</launch>

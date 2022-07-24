@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arguments -->
+  <arg name="open_rviz" default="true"/>
+  <arg name="map_file" default="$(find raspicat_waypoint_navigation)/config/maps/for_move_base/map_tsudanuma.yaml"/>
+  <arg name="csv_file" default="$(find raspicat_waypoint_navigation)/config/csv/"/>
+
+  <!-- Map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!-- Waypoint_view node -->
+  <node pkg="raspicat_waypoint_navigation" name="waypoint_rviz_view" type="waypoint_rviz_view" args="$(arg csv_file)" required="true" output="screen"/>
+
+   <!-- Rviz -->
+  <group if="$(arg open_rviz)"> 
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find raspicat_waypoint_navigation)/config/rviz/waypoint.rviz"/>
+  </group>
+</launch>
